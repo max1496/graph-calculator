@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quadratic Function y = ax² + bx + c: Vertex, Roots, Discriminant</title>
+<meta name="description" content="Interactive quadratic function graph. Move the a, b and c sliders to see the parabola, vertex, axis of symmetry, discriminant and roots, and learn how to find each one.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.eq sup,.m sup,.f sup{font-size:.62em;line-height:0}
+.stage{width:min(100%,520px);aspect-ratio:1/1;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+.ctl{display:grid;grid-template-columns:auto 1fr 84px;gap:8px 10px;align-items:center;margin-top:6px}
+.ctl i{font-size:17px}
+input[type=range]{width:100%}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:6px 8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:12px}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:17px}
+.msg{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.f{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:18px;background:var(--panel);border-radius:8px;padding:8px 14px;margin:8px 0;text-align:center}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a></div>
+<h1 class="w">Quadratic Function: <i>y</i> = <i>a</i><i>x</i><sup>2</sup> + <i>b</i><i>x</i> + <i>c</i></h1>
+<div class="eq" id="eq"></div>
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="ctl">
+    <i>a</i><input type="range" id="sa" min="-5" max="5" step="0.1" value="1"><input type="number" id="na" step="0.1" value="1" aria-label="a">
+    <i>b</i><input type="range" id="sb" min="-10" max="10" step="0.1" value="-4"><input type="number" id="nb" step="0.1" value="-4" aria-label="b">
+    <i>c</i><input type="range" id="sc" min="-10" max="10" step="0.1" value="3"><input type="number" id="nc" step="0.1" value="3" aria-label="c">
+  </div>
+  <div id="out"></div>
+
+  <h2>What is a quadratic function?</h2>
+  <p>A quadratic function has the form <i>y</i> = <i>a</i><i>x</i><sup>2</sup> + <i>b</i><i>x</i> + <i>c</i>, where <i>a</i> is not 0. Its graph is a U-shaped curve called a parabola.</p>
+
+  <h2>What <i>a</i>, <i>b</i> and <i>c</i> do</h2>
+  <ul>
+    <li><b><i>a</i></b> sets the direction and width. A positive <i>a</i> opens upward, a negative <i>a</i> opens downward, and a larger |<i>a</i>| makes the parabola narrower.</li>
+    <li><b><i>c</i></b> is the y-intercept. The parabola crosses the y-axis at (0, <i>c</i>).</li>
+    <li><b><i>b</i></b> works together with <i>a</i> to move the vertex sideways, because the vertex sits at <i>x</i> = −<i>b</i> / (2<i>a</i>).</li>
+  </ul>
+
+  <h2>How to find the vertex</h2>
+  <p>The x-coordinate of the vertex is</p>
+  <div class="f"><i>h</i> = −<i>b</i> / (2<i>a</i>)</div>
+  <p>Put that value back into the function to get the y-coordinate <i>k</i> = <i>a</i><i>h</i><sup>2</sup> + <i>b</i><i>h</i> + <i>c</i>. The vertex is (<i>h</i>, <i>k</i>), and the vertical line <i>x</i> = <i>h</i> is the axis of symmetry.</p>
+  <p>Example: for <i>y</i> = <i>x</i><sup>2</sup> − 4<i>x</i> + 3, <i>h</i> = −(−4) / (2 × 1) = 2 and <i>k</i> = 4 − 8 + 3 = −1, so the vertex is (2, −1). The sliders above start with these values.</p>
+  <p>The vertex is the lowest point when <i>a</i> &gt; 0 (a minimum) and the highest point when <i>a</i> &lt; 0 (a maximum).</p>
+
+  <h2>Vertex form</h2>
+  <p>Completing the square rewrites the function as</p>
+  <div class="f"><i>y</i> = <i>a</i>(<i>x</i> − <i>h</i>)<sup>2</sup> + <i>k</i></div>
+  <p>In this form the vertex (<i>h</i>, <i>k</i>) can be read directly. The page above shows both forms for any <i>a</i>, <i>b</i> and <i>c</i> you choose.</p>
+
+  <h2>Discriminant and roots</h2>
+  <p>The roots are the x-values where the parabola crosses the x-axis, that is, where <i>y</i> = 0. The quadratic formula gives them:</p>
+  <div class="f"><i>x</i> = (−<i>b</i> ± √(<i>b</i><sup>2</sup> − 4<i>a</i><i>c</i>)) / (2<i>a</i>)</div>
+  <p>The part under the square root is the discriminant, <i>D</i> = <i>b</i><sup>2</sup> − 4<i>a</i><i>c</i>. It tells you how many real roots there are before you solve anything.</p>
+  <ul>
+    <li><i>D</i> &gt; 0: two different real roots, so the parabola crosses the x-axis twice.</li>
+    <li><i>D</i> = 0: one repeated real root, so the vertex sits exactly on the x-axis.</li>
+    <li><i>D</i> &lt; 0: no real roots, so the parabola never reaches the x-axis. The two roots are complex numbers.</li>
+  </ul>
+  <p>Example: for <i>y</i> = <i>x</i><sup>2</sup> − 4<i>x</i> + 3, <i>D</i> = 16 − 12 = 4, so the roots are (4 ± 2) / 2, which gives <i>x</i> = 1 and <i>x</i> = 3.</p>
+
+  <h2>Common questions</h2>
+  <ul>
+    <li><b>What if <i>a</i> = 0?</b> The <i>x</i><sup>2</sup> term disappears and the function becomes a line. See the <a href="/linear-function.html">linear function page</a>.</li>
+    <li><b>How do I tell if there is a maximum or a minimum?</b> Look at the sign of <i>a</i>. Positive means a minimum, negative means a maximum.</li>
+    <li><b>Want to plot your own equation?</b> Type it into the <a href="/">graphing calculator</a>, then open Details of graph to see its extrema, intercepts and derivatives.</li>
+  </ul>
+</div>
+
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const n=v=>{const r=+(+v).toFixed(4);return String(Object.is(r,-0)?0:r).replace('-','−')};
+const sgn=(v,t)=>(v>0?' + ':' − ')+t;
+function eqStd(a,b,c){
+  let t=(a===1?'':a===-1?'−':n(a))+'<i>x</i><sup>2</sup>';
+  if(b!==0)t+=sgn(b,(Math.abs(b)===1?'':n(Math.abs(b)))+'<i>x</i>');
+  if(c!==0)t+=sgn(c,n(Math.abs(c)));
+  return '<i>y</i> = '+t;
+}
+function eqVertex(a,h,k){
+  const co=a===1?'':a===-1?'−':n(a);
+  const sq=h===0?'<i>x</i><sup>2</sup>':'(<i>x</i> '+(h>0?'−':'+')+' '+n(Math.abs(h))+')<sup>2</sup>';
+  return '<i>y</i> = '+co+sq+(k!==0?sgn(k,n(Math.abs(k))):'');
+}
+function vals(){
+  const v=['na','nb','nc'].map(id=>parseFloat($(id).value));
+  return v.some(isNaN)?null:v.map(x=>+x.toFixed(4));
+}
+let cur=[1,-4,3];
+function draw(){
+  const [a,b,c]=cur;
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),col=k=>cs.getPropertyValue(k).trim();
+  const R=10,s=W/(2*R),X=u=>W/2+u*s,Y=u=>H/2-u*s;
+  ctx.fillStyle=col('--bg');ctx.fillRect(0,0,W,H);
+  ctx.lineWidth=1;ctx.strokeStyle=col('--grid');ctx.beginPath();
+  for(let u=-R;u<=R;u++){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H);ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.lineWidth=1.5;ctx.strokeStyle=col('--axis');ctx.beginPath();
+  ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=col('--sub');ctx.font='11px sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='top';
+  [-5,5].forEach(u=>ctx.fillText(u,X(u),Y(0)+4));
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  [-5,5].forEach(u=>ctx.fillText(u,X(0)-5,Y(u)));
+  ctx.lineWidth=3;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  for(let px=0;px<=W;px++){const x=-R+px/s,y=a*x*x+b*x+c;px?ctx.lineTo(px,Y(y)):ctx.moveTo(px,Y(y))}
+  ctx.stroke();
+  const dot=(u,w,color)=>{if(Math.abs(u)>R||Math.abs(w)>R)return;ctx.fillStyle=color;ctx.beginPath();ctx.arc(X(u),Y(w),5,0,7);ctx.fill()};
+  if(a!==0){
+    const h=-b/(2*a),k=c-b*b/(4*a);
+    let D=b*b-4*a*c;if(Math.abs(D)<1e-9)D=0;
+    if(D>=0){const q=Math.sqrt(D);dot((-b-q)/(2*a),0,'#1f9d6b');if(D>0)dot((-b+q)/(2*a),0,'#1f9d6b')}
+    dot(0,c,'#d98a00');
+    dot(h,k,'#e0483e');
+  }else dot(0,c,'#d98a00');
+}
+function update(){
+  const v=vals();if(!v)return;
+  cur=v;const [a,b,c]=v;
+  const out=$('out');
+  if(a===0){
+    $('eq').innerHTML='<i>y</i> = '+(b===0?n(c):(Math.abs(b)===1?(b<0?'−':''):n(b))+'<i>x</i>'+(c!==0?sgn(c,n(Math.abs(c))):''));
+    out.innerHTML='<div class="msg">When <i>a</i> = 0 the <i>x</i><sup>2</sup> term disappears, so the graph is a straight line, not a parabola. Set <i>a</i> to any other number to see a parabola.</div>';
+    draw();return;
+  }
+  $('eq').innerHTML=eqStd(a,b,c);
+  const h=-b/(2*a),k=c-b*b/(4*a);
+  let D=b*b-4*a*c;if(Math.abs(D)<1e-9)D=0;
+  let roots;
+  if(D>0){const q=Math.sqrt(D),r=[(-b-q)/(2*a),(-b+q)/(2*a)].sort((p,s)=>p-s);roots='<i>x</i> = '+n(r[0])+' and <i>x</i> = '+n(r[1])+' (two real roots)'}
+  else if(D===0)roots='<i>x</i> = '+n(h)+' (one repeated root)';
+  else{const im=Math.sqrt(-D)/(2*Math.abs(a));roots='<i>x</i> = '+n(h)+' ± '+n(im)+'<i>i</i> (no real roots)'}
+  const rows=[
+    ['Opens',a>0?'Upward':'Downward'],
+    ['Vertex','('+n(h)+', '+n(k)+')'],
+    ['Axis of symmetry','<i>x</i> = '+n(h)],
+    [a>0?'Minimum value':'Maximum value','<i>y</i> = '+n(k)],
+    ['Discriminant','<i>D</i> = '+n(D)],
+    ['Roots (x-intercepts)',roots],
+    ['y-intercept','(0, '+n(c)+')'],
+    ['Vertex form',eqVertex(a,h,k)]
+  ];
+  out.innerHTML='<table>'+rows.map(r=>'<tr><td>'+r[0]+'</td><td class="m">'+r[1]+'</td></tr>').join('')+'</table>';
+  draw();
+}
+['a','b','c'].forEach(k=>{
+  $('s'+k).addEventListener('input',()=>{$('n'+k).value=$('s'+k).value;update()});
+  $('n'+k).addEventListener('input',()=>{$('s'+k).value=$('n'+k).value;update()});
+});
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+</body>
+</html>

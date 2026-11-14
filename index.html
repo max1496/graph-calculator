@@ -46,6 +46,8 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .det .m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:16px}
 .det .m sup{font-size:.62em;line-height:0}
 .det .note{color:var(--sub);font-size:12px;margin-top:8px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -90,6 +92,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
   <h2>Learn</h2>
   <ul>
     <li><a href="/linear-function.html">Linear function y = ax + b: interactive graph with sliders</a></li>
+    <li><a href="/quadratic-function.html">Quadratic function y = ax² + bx + c: vertex, discriminant and roots</a></li>
     <li><a href="/regression.html">Linear regression calculator: slope, R² and standard deviation</a></li>
   </ul>
 </section>
@@ -612,5 +615,6 @@ new ResizeObserver(draw).observe(document.getElementById('stage'));
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 build();
 </script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
 </body>
 </html>
