@@ -27,6 +27,13 @@ canvas{width:100%;height:100%;display:block;cursor:grab}
 .panel{width:min(100%,760px);display:flex;flex-direction:column;gap:10px}
 .row{display:flex;gap:10px;align-items:flex-start}
 .dot{width:12px;height:12px;border-radius:50%;margin-top:15px;flex:none}
+input.dot{width:24px;height:24px;padding:0;border:0;border-radius:50%;margin-top:11px;background:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+input.dot::-webkit-color-swatch-wrapper{padding:0}
+input.dot::-webkit-color-swatch{border:2px solid var(--bg);border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+input.dot::-moz-color-swatch{border:2px solid var(--bg);border-radius:50%}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--sub)}
+.ex button{border:1px dashed var(--line);background:none;color:#2f6fed;border-radius:14px;padding:4px 10px;font-size:13px;cursor:pointer}
+.pv .iv{font-family:inherit;font-size:13px;color:var(--sub);margin-left:10px}
 .fld{flex:1;min-width:0}
 input{width:100%;font:inherit;font-size:17px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
 input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
@@ -91,7 +98,19 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <button type="button" data-v="floor(" title="round down">floor</button>
     <button type="button" data-v="ceil(" title="round up">ceil</button>
     <button type="button" data-v="e" title="Euler's number">e</button>
+    <button type="button" data-v="{" title="restrict a piece, e.g. x+1 {x>=2}">{</button>
+    <button type="button" data-v="}">}</button>
+    <button type="button" data-v="<">&lt;</button>
+    <button type="button" data-v=">">&gt;</button>
+    <button type="button" data-v="≤">≤</button>
+    <button type="button" data-v="≥">≥</button>
     <button type="button" class="add" id="add">+ Add equation</button>
+  </div>
+  <div class="ex" id="ex">Try:
+    <button type="button" data-ex="x {x<2}, x+1 {x>=2}">piecewise</button>
+    <button type="button" data-ex="y>x">inequality</button>
+    <button type="button" data-ex="(x+2)(x-3)">two roots</button>
+    <button type="button" data-ex="tan(x)">tan(x)</button>
   </div>
 </div>
 
@@ -103,6 +122,9 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e. The buttons sin⁻¹, cos⁻¹ and tan⁻¹ insert asin, acos and atan, the inverse trigonometric functions. ln is the natural logarithm and log is base 10.</li>
     <li>Equations with both x and y also work, such as x^2+y^2=1 or y^2=x.</li>
     <li>Under any y = f(x) equation, click Details of graph to see intercepts, maximum and minimum points, inflection points, asymptotes, end behavior and derivatives.</li>
+    <li>Piecewise functions: add a condition in braces, for example <b>x {x&lt;2}, x+1 {x&gt;=2}</b>. Open circles mark points that are not included, filled circles mark points that are, and the interval such as [2, ∞) is shown under the equation. Use one equation per piece or separate pieces with a comma.</li>
+    <li>Inequalities: type <b>y&gt;x</b>, <b>y&lt;=x^2</b> or <b>x&gt;=2</b> to shade the solution. A dashed boundary means the line itself is not included.</li>
+    <li>Click the colored circle next to an equation to change its color.</li>
     <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
   </ul>
   <h2>Learn</h2>
@@ -119,7 +141,7 @@ const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,a
 const CONST={pi:Math.PI,e:Math.E};
 const NAMES=['asin','acos','atan','sqrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
 
-function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/^y=/,'')}
+function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/^y=/,'')}
 
 function tokenize(s){
   const t=[];let i=0;
@@ -189,9 +211,78 @@ function parse(s){
   return f;
 }
 
+function splitTop(s){
+  const out=[];let d=0,cur='';
+  for(const c of s){
+    if(c==='{'||c==='(')d++;else if(c==='}'||c===')')d--;
+    if(d<0)throw new Error('bad');
+    if(d===0&&(c===','||c===';')){out.push(cur);cur=''}else cur+=c;
+  }
+  if(d!==0)throw new Error('bad');
+  out.push(cur);return out;
+}
+/* condition such as x<2, x>=2, -1<x<=3 */
+function parseCond(c){
+  const parts=c.split(/(<=|>=|<|>)/);
+  if(parts.length<3||parts.length%2===0||parts.length>5)throw new Error('bad');
+  const fs=[],ops=[],isX=[],isC=[];
+  parts.forEach((t,i)=>{
+    if(i%2){ops.push(t);return}
+    if(!t)throw new Error('bad');
+    const g=parse(t);fs.push(g);isX.push(t==='x');
+    isC.push(!/x|y/.test(t.replace(/exp|asin|acos|atan|sqrt|floor|ceil|abs/g,''))&&Number.isFinite(g(0,0)));
+  });
+  const cmp={'<':(a,b)=>a<b,'<=':(a,b)=>a<=b,'>':(a,b)=>a>b,'>=':(a,b)=>a>=b};
+  const fn=x=>{for(let i=0;i<ops.length;i++)if(!cmp[ops[i]](fs[i](x,0),fs[i+1](x,0)))return false;return true};
+  let iv=null;
+  const lt=o=>o==='<'||o==='<=',inc=o=>o.length===2;
+  const mk=()=>({lo:-Infinity,hi:Infinity,loInc:false,hiInc:false});
+  if(ops.length===1){
+    const [o]=ops;
+    if(isX[0]&&isC[1]){const c0=fs[1](0,0);iv=mk();if(lt(o)){iv.hi=c0;iv.hiInc=inc(o)}else{iv.lo=c0;iv.loInc=inc(o)}}
+    else if(isC[0]&&isX[1]){const c0=fs[0](0,0);iv=mk();if(lt(o)){iv.lo=c0;iv.loInc=inc(o)}else{iv.hi=c0;iv.hiInc=inc(o)}}
+  }else if(ops.length===2&&isC[0]&&isX[1]&&isC[2]&&lt(ops[0])===lt(ops[1])){
+    const a=fs[0](0,0),b=fs[2](0,0);iv=mk();
+    if(lt(ops[0])){iv.lo=a;iv.loInc=inc(ops[0]);iv.hi=b;iv.hiInc=inc(ops[1])}
+    else{iv.hi=a;iv.hiInc=inc(ops[0]);iv.lo=b;iv.loInc=inc(ops[1])}
+  }
+  return {fn,iv};
+}
+function parsePiece(str){
+  str=str.replace(/^y=/,'');
+  const m=/^(.*?)\{(.*)\}$/.exec(str);
+  const ex=m?m[1]:str,ct=m?m[2]:null;
+  if(!ex||ex.includes('{')||ex.includes('}')||(ct!==null&&/[{}]/.test(ct)))throw new Error('bad');
+  const g=parse(ex);
+  let cond=null,iv=null;
+  if(ct!==null){const r=parseCond(ct);cond=r.fn;iv=r.iv}
+  return {g,cond,iv,expr:ex,ctext:ct};
+}
 function compile(text){
   const s=clean(text);
   if(!s)return null;
+  if(s.includes('{')){
+    const pcs=splitTop(s).map(parsePiece);
+    const f=x=>{for(const p of pcs)if(!p.cond||p.cond(x))return p.g(x,0);return NaN};
+    const holes=[];
+    pcs.forEach(p=>{
+      if(!p.iv)return;
+      [[p.iv.lo,p.iv.loInc],[p.iv.hi,p.iv.hiInc]].forEach(([x,inc])=>{
+        if(!isFinite(x))return;
+        const y=p.g(x,0);
+        if(isFinite(y))holes.push({x,y,open:!inc});
+      });
+    });
+    return {imp:false,pw:pcs,holes,f};
+  }
+  if(/[<>]/.test(s)){
+    const m=/^(.*?)(<=|>=|<|>)(.*)$/.exec(s);
+    if(!m||!m[1]||!m[3]||/[<>]/.test(m[3]))throw new Error('bad');
+    const L=parse(m[1]),R=parse(m[3]);
+    let iv=null;
+    if(!/y/.test(s)){try{iv=parseCond(s).iv}catch(e){}}
+    return {imp:true,ineq:m[2],iv,f:(x,y)=>L(x,y)-R(x,y)};
+  }
   if(s.includes('=')){
     const parts=s.split('=');
     if(parts.length!==2||!parts[0]||!parts[1])throw new Error('bad');
@@ -296,7 +387,10 @@ function draw(){
   rows.forEach(r=>{
     if(!r.f)return;
     ctx.strokeStyle=r.c;
-    if(r.imp){drawImplicit(r.f,W,H,x0,y1);return}
+    if(r.imp){
+      if(r.ineq){shade(r,W,H,x0,y1);ctx.setLineDash(r.ineq.length===1?[7,5]:[])}
+      drawImplicit(r.f,W,H,x0,y1);ctx.setLineDash([]);return;
+    }
     ctx.beginPath();
     let pen=false,prev=0;
     for(let px=0;px<=W;px+=1){
@@ -309,6 +403,16 @@ function draw(){
       prev=py;
     }
     ctx.stroke();
+  });
+  rows.forEach(r=>{
+    if(!r.f||!r.holes||!r.holes.length)return;
+    [true,false].forEach(open=>r.holes.filter(h=>h.open===open).forEach(h=>{
+      const px=X(h.x),py=Y(h.y);
+      if(px<-9||px>W+9||py<-9||py>H+9)return;
+      ctx.beginPath();ctx.arc(px,py,4.5,0,7);
+      ctx.fillStyle=open?col('--bg'):r.c;ctx.fill();
+      ctx.lineWidth=2;ctx.strokeStyle=r.c;ctx.stroke();
+    }));
   });
   rows.forEach(r=>{
     if(!r.f||r.imp)return;
@@ -334,6 +438,20 @@ function asyms(r){
     if(e.k==='obl'&&!o.some(z=>z.t==='o'&&z.m===e.m&&z.c===e.c))o.push({t:'o',m:e.m,c:e.c});
   });
   return o;
+}
+
+function shade(r,W,H,x0,y1){
+  const cell=4,sc=v.s,gt=r.ineq[0]==='>';
+  ctx.save();ctx.globalAlpha=.16;ctx.fillStyle=r.c;
+  for(let py=0;py<H;py+=cell){
+    const y=y1-(py+cell/2)/sc;let st=-1;
+    for(let px=0;px<W;px+=cell){
+      const val=r.f(x0+(px+cell/2)/sc,y),on=gt?val>0:val<0;
+      if(on&&st<0)st=px;
+      if(st>=0&&(!on||px+cell>=W)){ctx.fillRect(st,py,(on?px+cell:px)-st,cell);st=-1}
+    }
+  }
+  ctx.restore();
 }
 
 function drawImplicit(f,W,H,x0,y1){
@@ -416,13 +534,16 @@ function hover(cx,cy){
     if(!r.f||r.imp)return;
     const a=r.an;
     /* key points */
+    const kp=[];
+    (r.holes||[]).forEach(q=>kp.push([q.x,q.y,q.open?'Open point (not included)':'Endpoint (included)']));
     if(a){
-      const kp=[];
       (a.ex||[]).forEach(q=>kp.push([q.x,q.y,q.t==='max'?'Local max':q.t==='min'?'Local min':'Flat point']));
       (a.roots||[]).forEach(q=>kp.push([typeof q==='number'?q:q.x,0,'x-intercept']));
       if(a.yint!=null&&isFinite(a.yint))kp.push([0,a.yint,'y-intercept']);
       (a.infl||[]).forEach(q=>kp.push([q.x,q.y,'Inflection point']));
-      kp.forEach(k=>{const d=Math.hypot(X(k[0])-mx,Y(k[1])-my);if(d<14)cand(d-6,{c:r.c,x:k[0],y:k[1],px:X(k[0]),py:Y(k[1]),name:k[2]})});
+    }
+    kp.forEach(k=>{const d=Math.hypot(X(k[0])-mx,Y(k[1])-my);if(d<14)cand(d-6,{c:r.c,x:k[0],y:k[1],px:X(k[0]),py:Y(k[1]),name:k[2]})});
+    if(a){
       asyms(r).forEach(o=>{
         if(o.t==='v'){const d=Math.abs(X(o.x)-mx);if(d<7)cand(d*.8,{c:r.c,x:o.x,px:X(o.x),py:my,as:'v'})}
         else if(o.t==='h'){const d=Math.abs(Y(o.y)-my);if(d<7)cand(d*.8,{c:r.c,y:o.y,px:mx,py:Y(o.y),as:'h'})}
@@ -683,7 +804,7 @@ function showDetails(r,box){
 
 function detailsSync(r,d,now){
   const bt=d.querySelector('.dt'),box=d.querySelector('.det');
-  const ok=!!r.f&&!r.imp;
+  const ok=!!r.f&&!r.imp&&!r.pw;
   bt.hidden=!ok;
   bt.textContent=r.open?'Hide details':'Details of graph';
   clearTimeout(r.tm);
@@ -693,16 +814,24 @@ function detailsSync(r,d,now){
 
 const list=document.getElementById('list'),addBtn=document.getElementById('add');
 
+const ivN=n=>n===Infinity?'∞':n===-Infinity?'−∞':xText(n);
+function ivText(iv){return (iv.loInc?'[':'(')+ivN(iv.lo)+', '+ivN(iv.hi)+(iv.hiInc?']':')')}
+const spaced=t=>t.replace(/<=|≤/g,'≤').replace(/>=|≥/g,'≥').replace(/([<>≤≥])/g,' $1 ').replace(/\s+/g,' ').trim();
+function previewHtml(c,t){
+  if(c.pw)return c.pw.map(p=>'<i>y</i> = '+pretty(p.expr)+(p.iv?'<span class="iv">for <i>x</i> ∈ '+ivText(p.iv)+'</span>':p.ctext!==null?'<span class="iv">for '+pretty(spaced(p.ctext))+'</span>':'')).join('<br>');
+  if(c.ineq)return pretty(spaced(t))+(c.iv?'<span class="iv"><i>x</i> ∈ '+ivText(c.iv)+'</span>':'');
+  return (c.imp?'':'<i>y</i> = ')+pretty(t);
+}
 function upd(r,d){
   const pv=d.querySelector('.pv'),t=r.t.trim();
-  r.f=null;r.an=null;clearTimeout(r.at);
+  r.f=null;r.an=null;r.pw=null;r.ineq=null;r.holes=[];clearTimeout(r.at);
   if(!t){pv.className='pv hint';pv.textContent='Enter an equation'}
   else{
-    try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;pv.className='pv';pv.innerHTML=(c.imp?'':'<i>y</i> = ')+pretty(t)}
+    try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;r.pw=c.pw||null;r.ineq=c.ineq||null;r.holes=c.holes||[];pv.className='pv';pv.innerHTML=previewHtml(c,t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
   detailsSync(r,d);
-  if(r.f&&!r.imp){const tt=r.t,ff=r.f;r.at=setTimeout(()=>{if(r.f!==ff)return;try{r.an=analyze(ff);r.anT=tt}catch(e){r.an=null}draw()},200)}
+  if(r.f&&!r.imp&&!r.pw){const tt=r.t,ff=r.f;r.at=setTimeout(()=>{if(r.f!==ff)return;try{r.an=analyze(ff);r.anT=tt}catch(e){r.an=null}draw()},200)}
   draw();
 }
 
@@ -710,9 +839,10 @@ function build(){
   list.innerHTML='';
   rows.forEach((r,i)=>{
     const d=document.createElement('div');d.className='row';
-    d.innerHTML='<span class="dot"></span><div class="fld"><input type="text" placeholder="e.g. x^2, sin(x), x^2+y^2=1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div><button type="button" class="dt" hidden>Details of graph</button><div class="det" hidden></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
-    d.querySelector('.dot').style.background=r.c;
-    const inp=d.querySelector('input');inp.value=r.t;
+    d.innerHTML='<input type="color" class="dot" aria-label="Line color"><div class="fld"><input type="text" placeholder="e.g. x^2, sin(x), x^2+y^2=1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div><button type="button" class="dt" hidden>Details of graph</button><div class="det" hidden></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
+    const dot=d.querySelector('.dot');dot.value=r.c;
+    dot.addEventListener('input',()=>{r.c=dot.value;draw()});
+    const inp=d.querySelector('input[type=text]');inp.value=r.t;
     inp.addEventListener('input',()=>{r.t=inp.value;upd(r,d)});
     inp.addEventListener('focus',()=>{focusIdx=i});
     d.querySelector('.dt').onclick=()=>{r.open=!r.open;detailsSync(r,d,true)};
@@ -727,13 +857,13 @@ function build(){
 addBtn.onclick=()=>{
   const c=COLORS.find(c=>!rows.some(r=>r.c===c));
   rows.push({t:'',c});build();
-  const ins=list.querySelectorAll('input');ins[ins.length-1].focus();
+  const ins=list.querySelectorAll('input[type=text]');ins[ins.length-1].focus();
 };
 
 document.querySelectorAll('#tools button[data-v]').forEach(b=>{
   b.addEventListener('mousedown',e=>e.preventDefault());
   b.onclick=()=>{
-    const inp=list.querySelectorAll('input')[focusIdx]||list.querySelector('input');
+    const inp=list.querySelectorAll('input[type=text]')[focusIdx]||list.querySelector('input[type=text]');
     const s=inp.selectionStart==null?inp.value.length:inp.selectionStart;
     const e2=inp.selectionEnd==null?s:inp.selectionEnd;
     inp.setRangeText(b.dataset.v,s,e2,'end');
@@ -741,10 +871,18 @@ document.querySelectorAll('#tools button[data-v]').forEach(b=>{
   };
 });
 
+document.querySelectorAll('#ex button[data-ex]').forEach(b=>{
+  b.onclick=()=>{
+    const inp=list.querySelectorAll('input[type=text]')[focusIdx]||list.querySelector('input[type=text]');
+    inp.value=b.dataset.ex;inp.focus();inp.dispatchEvent(new Event('input'));
+  };
+});
+const YT_URL='';/* paste your YouTube channel URL between the quotes, e.g. 'https://www.youtube.com/@yourchannel' */
+if(YT_URL){const a=document.getElementById('yt');a.href=YT_URL;a.hidden=false}
 new ResizeObserver(draw).observe(document.getElementById('stage'));
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 build();
 </script>
-<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a><a id="yt" href="#" rel="noopener" target="_blank" hidden>YouTube</a></div>
 </body>
 </html>
