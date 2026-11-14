@@ -9,6 +9,8 @@ Newest first. Dates are in Korean time.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
 ### Calculator (latest)
+- Up to 6 equations can be plotted at once (was 4).
+- Polar curves: type r=cos(4t) (t is the angle). Fun shapes buttons: flower, 3 petals, daisy, cardioid, spiral, butterfly and a 6-flower bouquet.
 - Details of graph now has Function properties: domain, range, function?, one-to-one, onto, symmetry, increasing/decreasing, concave up/down, continuous?, differentiable?
 - Add inverse button; implicit curves get a vertical line test message.
 - Make tangent: moves the selected graph to touch another graph; press again for the next position.

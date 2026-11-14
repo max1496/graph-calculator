@@ -185,6 +185,15 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <button type="button" data-ex="(x+2)(x-3)">two roots</button>
     <button type="button" data-ex="tan(x)">tan(x)</button>
   </div>
+  <div class="ex" id="fun">Fun shapes:
+    <button type="button" data-fun='["r=cos(4t)"]'>🌸 flower</button>
+    <button type="button" data-fun='["r=cos(3t)"]'>🍀 3 petals</button>
+    <button type="button" data-fun='["r=2+cos(8t)"]'>🌼 daisy</button>
+    <button type="button" data-fun='["r=1-sin(t)"]'>❤ cardioid</button>
+    <button type="button" data-fun='["r=t/4"]'>🌀 spiral</button>
+    <button type="button" data-fun='["r=exp(sin(t))-2cos(4t)+sin((2t-pi)/24)^5"]'>🦋 butterfly</button>
+    <button type="button" data-fun='["r=4cos(2t)","r=3.4cos(4t)","r=2.8cos(6t)","r=2.2cos(8t)","r=1.6cos(10t)","r=1+0.4cos(12t)"]'>💐 bouquet (6)</button>
+  </div>
 </div>
 
 <details class="hist" id="hist"><summary>History (<span id="hn">0</span>)</summary><div class="hl" id="hl"></div><button type="button" class="hc" id="hclr">Clear history</button></details>
@@ -210,7 +219,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
       <li>Piecewise functions: add a condition in braces, for example <b>x {x&lt;2}, x+1 {x&gt;=2}</b>. Open circles mark points that are not included, filled circles mark points that are, and the interval such as [2, ∞) is shown under the equation. Use one equation per piece or separate pieces with a comma.</li>
       <li>Inequalities: type <b>y&gt;x</b>, <b>y&lt;=x^2</b> or <b>x&gt;=2</b> to shade the solution. A dashed boundary means the line itself is not included.</li>
       <li>Click the colored circle next to an equation to change its color.</li>
-      <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
+      <li>You can leave out the multiplication sign (2x works). Up to 6 equations can be plotted at once. For flowers and spirals type a polar curve such as <b>r=cos(4t)</b> (t is the angle in radians), or press a button under Fun shapes.</li>
     </ul>
   </details>
   <h2>Study pages</h2>
@@ -382,6 +391,11 @@ function compile(text){
     if(!/y/.test(s)){try{iv=parseCond(s).iv}catch(e){}}
     return {imp:true,ineq:m[2],iv,f:(x,y)=>L(x,y)-R(x,y)};
   }
+  if(/^r=/.test(s)&&s.indexOf('=')===1){
+    const body=s.slice(2).replace(/theta|θ/g,'x').replace(/(^|[^a-z])t(?![a-z])/g,'$1x');
+    const g=parse(body);
+    return {imp:true,pol:true,f:(x,y)=>NaN,g:th=>g(th,0)};
+  }
   if(s.includes('=')){
     const parts=s.split('=');
     if(parts.length!==2||!parts[0]||!parts[1])throw new Error('bad');
@@ -427,7 +441,7 @@ function pretty(raw){
 /* ---- 그래프 ---- */
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const v={cx:0,cy:0,s:48};
-const COLORS=['#2f6fed','#e0483e','#1f9d6b','#d98a00'];
+const COLORS=['#2f6fed','#e0483e','#1f9d6b','#d98a00','#8e44ad','#00a3a3'];
 const rows=[{t:'x^2',c:COLORS[0]}];
 let focusIdx=0;
 const marks=[];let mmode='look';let mdec=null;
@@ -489,6 +503,17 @@ function draw(){
   rows.forEach(r=>{
     if(!r.f)return;
     ctx.strokeStyle=r.c;
+    if(r.pol){
+      const T=24*Math.PI,N=14000;ctx.beginPath();let pen=false;
+      for(let i=0;i<=N;i++){
+        const th=T*i/N,rr=r.g(th);
+        if(!isFinite(rr)){pen=false;continue}
+        const px=X(rr*Math.cos(th)),py=Y(rr*Math.sin(th));
+        if(Math.abs(px)>1e6||Math.abs(py)>1e6){pen=false;continue}
+        if(!pen){ctx.moveTo(px,py);pen=true}else ctx.lineTo(px,py);
+      }
+      ctx.stroke();return;
+    }
     if(r.imp){
       if(r.ineq){shade(r,W,H,x0,y1);ctx.setLineDash(r.ineq.length===1?[7,5]:[])}
       drawImplicit(r.f,W,H,x0,y1);ctx.setLineDash([]);return;
@@ -1237,9 +1262,10 @@ const spaced=t=>t.replace(/<=|≤/g,'≤').replace(/>=|≥/g,'≥').replace(/([<
 function previewHtml(c,t){
   if(c.pw)return c.pw.map(p=>'<i>y</i> = '+pretty(p.expr)+(p.iv?'<span class="iv">for <i>x</i> ∈ '+ivText(p.iv)+'</span>':p.ctext!==null?'<span class="iv">for '+pretty(spaced(p.ctext))+'</span>':'')).join('<br>');
   if(c.ineq)return pretty(spaced(t))+(c.iv?'<span class="iv"><i>x</i> ∈ '+ivText(c.iv)+'</span>':'');
-  return (c.imp?'':'<i>y</i> = ')+pretty(t);
+  return (c.imp?'':'<i>y</i> = ')+pretty(t).replace(/^r=/,'<i>r</i> = ');
 }
 function classify(r,t){
+  if(r.pol)return {n:'Polar curve (flower, rose, spiral…)',u:null};
   if(r.pw||r.ineq)return null;
   const c=t.toLowerCase().replace(/\s+/g,'').replace(/^y=/,'').replace(/π/g,'pi').replace(/√/g,'sqrt');
   if(r.imp){
@@ -1286,7 +1312,7 @@ function setType(r,d){
   if(!ty){ty=document.createElement('div');ty.className='ty';pv.after(ty)}
   let k=null;try{k=r.f||r.imp?classify(r,r.t.trim()):null}catch(e){}
   let extra='';
-  if(r.f&&r.imp&&!r.ineq){try{extra=vlt(r)?'Passes the vertical line test, so <i>y</i> is a function of <i>x</i>':'Fails the vertical line test, so it is <b>not a function</b> of <i>x</i>'}catch(e){}}
+  if(r.f&&r.imp&&!r.ineq&&!r.pol){try{extra=vlt(r)?'Passes the vertical line test, so <i>y</i> is a function of <i>x</i>':'Fails the vertical line test, so it is <b>not a function</b> of <i>x</i>'}catch(e){}}
   if(!k&&!extra){ty.hidden=true;ty.textContent='';return}
   ty.hidden=false;ty.innerHTML=(k?k.n+(k.u?'<a href="'+k.u+'">Learn more</a>':''):'')+(k&&extra?' · ':'')+extra;
 }
@@ -1295,7 +1321,7 @@ function upd(r,d){
   r.f=null;r.pvh='';r.an=null;r.pw=null;r.ineq=null;r.holes=[];clearTimeout(r.at);
   if(!t){pv.className='pv hint';pv.textContent='Enter an equation'}
   else{
-    try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;r.pw=c.pw||null;r.ineq=c.ineq||null;r.holes=c.holes||[];pv.className='pv';pv.innerHTML=r.pvh=previewHtml(c,t)}
+    try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;r.pol=!!c.pol;r.g=c.g||null;r.pw=c.pw||null;r.ineq=c.ineq||null;r.holes=c.holes||[];pv.className='pv';pv.innerHTML=r.pvh=previewHtml(c,t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
   detailsSync(r,d);updLegend();renderMarks();interSoon();setType(r,d);
@@ -1344,6 +1370,15 @@ document.querySelectorAll('#ex button[data-ex]').forEach(b=>{
   b.onclick=()=>{
     const inp=list.querySelectorAll('input[type=text]')[focusIdx]||list.querySelector('input[type=text]');
     inp.value=b.dataset.ex;inp.focus();inp.dispatchEvent(new Event('input'));
+  };
+});
+document.querySelectorAll('#fun button[data-fun]').forEach(b=>{
+  b.onclick=()=>{
+    const list2=JSON.parse(b.dataset.fun);
+    rows.length=0;list2.forEach((t,i)=>rows.push({t,c:COLORS[i]}));
+    marks.length=0;
+    const [W,H]=fit();v.cx=0;v.cy=0;v.s=Math.min(W,H)/(list2.length>1?9:/exp/.test(list2[0])?10:/t\/4/.test(list2[0])?14:/^r=2\+/.test(list2[0])?6.4:/^r=1-/.test(list2[0])?4.6:2.7);
+    focusIdx=0;build();draw();
   };
 });
 const YT_URL='https://www.youtube.com/@graph-calculator';/* paste your YouTube channel URL between the quotes, e.g. 'https://www.youtube.com/@yourchannel' */
@@ -1538,7 +1573,7 @@ function histRender(){
     b.innerHTML=h.e.map((t,i)=>'<span style="color:'+(/^#[0-9a-f]{6}$/i.test(h.c[i]||'')?h.c[i]:'#2f6fed')+'">●</span> '+t.replace(/&/g,'&amp;').replace(/</g,'&lt;')).join('&nbsp;&nbsp; ');
     b.onclick=()=>{
       rows.length=0;marks.length=0;focusIdx=0;
-      h.e.slice(0,4).forEach((t,i)=>rows.push({t,c:/^#[0-9a-f]{6}$/i.test(h.c[i]||'')?h.c[i]:(COLORS.find(c=>!rows.some(r=>r.c===c))||COLORS[0])}));
+      h.e.slice(0,COLORS.length).forEach((t,i)=>rows.push({t,c:/^#[0-9a-f]{6}$/i.test(h.c[i]||'')?h.c[i]:(COLORS.find(c=>!rows.some(r=>r.c===c))||COLORS[0])}));
       build();draw();
     };
     hl.appendChild(b);
@@ -1610,7 +1645,7 @@ document.getElementById('savePng').onclick=function(){
 (function(){
   try{
     const h=location.hash.slice(1);if(!h)return;
-    const p=new URLSearchParams(h),es=p.getAll('e').slice(0,4),cs=p.getAll('c');
+    const p=new URLSearchParams(h),es=p.getAll('e').slice(0,COLORS.length),cs=p.getAll('c');
     if(es.length){
       rows.length=0;
       es.forEach((t,i)=>{
