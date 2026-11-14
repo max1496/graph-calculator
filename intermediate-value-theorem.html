@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intermediate Value Theorem Calculator with Graph</title>
+<meta name="description" content="Check whether the Intermediate Value Theorem guarantees a solution f(c) = k on [a, b]. Enter a function, an interval and a value, then see f(a), f(b), the continuity check and the graph.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/descartes-rule-of-signs.html">Descartes' rule</a></div>
+<h1 class="w">Intermediate Value Theorem Calculator</h1>
+<div class="w"><p>Enter a function <i>f</i>(<i>x</i>), an interval [<i>a</i>, <i>b</i>] and a target value <i>k</i>. The tool checks whether the Intermediate Value Theorem guarantees a number <i>c</i> in [<i>a</i>, <i>b</i>] with <i>f</i>(<i>c</i>) = <i>k</i>. Use <i>k</i> = 0 to show that an equation has a root.</p></div>
+
+<div class="w">
+  <label><i>f</i>(<i>x</i>) =<input type="text" id="fx" value="x^3-x-1" autocomplete="off" spellcheck="false" autocapitalize="off"></label>
+  <div class="pts">
+    <label><i>a</i><input type="text" id="a" value="1" autocomplete="off"></label>
+    <label><i>b</i><input type="text" id="b" value="2" autocomplete="off"></label>
+  </div>
+  <label>Target value <i>k</i><input type="text" id="k" value="0" autocomplete="off"></label>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="facts" id="out"></div>
+
+  <h2>What is the Intermediate Value Theorem?</h2>
+  <p>If <i>f</i> is continuous on the closed interval [<i>a</i>, <i>b</i>] and <i>k</i> is any number between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), then there is at least one number <i>c</i> in [<i>a</i>, <i>b</i>] such that <i>f</i>(<i>c</i>) = <i>k</i>. In words: a continuous function cannot skip a value. To go from <i>f</i>(<i>a</i>) to <i>f</i>(<i>b</i>) its graph has to pass through every height in between.</p>
+
+  <h2>How to use it</h2>
+  <ol>
+    <li>Check that <i>f</i> is continuous on [<i>a</i>, <i>b</i>]. Polynomials, sin, cos and exp are continuous everywhere, but 1/<i>x</i> and tan(<i>x</i>) are not continuous at points where they are undefined.</li>
+    <li>Compute <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>).</li>
+    <li>Check that <i>k</i> lies between them.</li>
+    <li>Conclude that some <i>c</i> in [<i>a</i>, <i>b</i>] has <i>f</i>(<i>c</i>) = <i>k</i>.</li>
+  </ol>
+
+  <h2>Worked example: showing a root exists</h2>
+  <p>Show that <i>x</i>³ − <i>x</i> − 1 = 0 has a solution between 1 and 2. Let <i>f</i>(<i>x</i>) = <i>x</i>³ − <i>x</i> − 1. It is a polynomial, so it is continuous. <i>f</i>(1) = −1 and <i>f</i>(2) = 5, and 0 lies between −1 and 5. By the Intermediate Value Theorem there is a <i>c</i> in [1, 2] with <i>f</i>(<i>c</i>) = 0. The calculator above finds <i>c</i> ≈ 1.3247.</p>
+
+  <h2>Common mistakes</h2>
+  <ul>
+    <li><b>Forgetting continuity.</b> For <i>f</i>(<i>x</i>) = 1/<i>x</i> on [−1, 1], <i>f</i>(−1) = −1 and <i>f</i>(1) = 1, but <i>f</i>(<i>x</i>) is never 0. The function is not continuous at 0, so the theorem does not apply.</li>
+    <li><b>Reading it backwards.</b> If <i>k</i> is not between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), the theorem says nothing. A solution may still exist, because the graph can go beyond the endpoints and come back.</li>
+    <li><b>Expecting exactly one <i>c</i>.</b> The theorem only promises at least one. The tool lists every solution it finds on the interval.</li>
+    <li><b>Related result.</b> The special case <i>k</i> = 0, where <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>) have opposite signs, is sometimes called Bolzano's theorem. It is the idea behind the bisection method for finding roots.</li>
+  </ul>
+  <p>The continuity check here is numerical, so treat it as a helpful warning rather than a proof. To explore a function on its own, use the <a href="/">graphing calculator</a>, or see the <a href="/polynomial-from-roots.html">polynomial from roots</a> page.</p>
+</div>
+
+<script>
+const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,log:Math.log10,exp:Math.exp,floor:Math.floor,ceil:Math.ceil};
+const CONST={pi:Math.PI,e:Math.E};
+const NAMES=['asin','acos','atan','sqrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
+
+function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/^y=/,'')}
+
+function tokenize(s){
+  const t=[];let i=0;
+  while(i<s.length){
+    const r=s.slice(i);let m;
+    if(m=/^(\d+\.?\d*|\.\d+)/.exec(r)){t.push({k:'n',v:+m[1]});i+=m[1].length;continue}
+    const nm=NAMES.find(n=>r.startsWith(n));
+    if(nm){t.push({k:FN[nm]?'f':'i',v:nm});i+=nm.length;continue}
+    if('+-*/^()'.includes(r[0])){t.push({k:'o',v:r[0]});i++;continue}
+    throw new Error('bad');
+  }
+  return t;
+}
+
+function parse(s){
+  const T=tokenize(s);
+  let p=0;
+  const peek=()=>T[p];
+  const isO=v=>peek()&&peek().k==='o'&&peek().v===v;
+  const need=v=>{if(!isO(v))throw new Error('bad');p++};
+  function expr(){
+    let a=term();
+    while(isO('+')||isO('-')){
+      const o=T[p++].v,b=term(),l=a;
+      a=o==='+'?(x,y)=>l(x,y)+b(x,y):(x,y)=>l(x,y)-b(x,y);
+    }
+    return a;
+  }
+  function term(){
+    let a=unary();
+    while(peek()){
+      const q=peek();
+      if(isO('*')||isO('/')){
+        p++;const b=unary(),l=a;
+        a=q.v==='*'?(x,y)=>l(x,y)*b(x,y):(x,y)=>l(x,y)/b(x,y);
+      }else if(q.k==='n'||q.k==='i'||q.k==='f'||isO('(')){
+        const b=power(),l=a;a=(x,y)=>l(x,y)*b(x,y);
+      }else break;
+    }
+    return a;
+  }
+  function unary(){
+    if(isO('-')){p++;const a=unary();return (x,y)=>-a(x,y)}
+    if(isO('+')){p++;return unary()}
+    return power();
+  }
+  function power(){
+    const a=atom();
+    if(isO('^')){p++;const b=unary();return (x,y)=>Math.pow(a(x,y),b(x,y))}
+    return a;
+  }
+  function atom(){
+    const q=peek();
+    if(!q)throw new Error('bad');
+    if(q.k==='n'){p++;return()=>q.v}
+    if(q.k==='i'){p++;return q.v==='x'?(x,y)=>x:q.v==='y'?(x,y)=>y:()=>CONST[q.v]}
+    if(q.k==='f'){
+      p++;const fn=FN[q.v];let a;
+      if(isO('(')){p++;a=expr();need(')')}else a=power();
+      return (x,y)=>fn(a(x,y));
+    }
+    if(isO('(')){p++;const a=expr();need(')');return a}
+    throw new Error('bad');
+  }
+  const f=expr();
+  if(p<T.length)throw new Error('bad');
+  return f;
+}
+
+
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const N=v=>!Number.isFinite(+v)?'undefined':Math.abs(v)<1e-12?'0':String(+(+v).toPrecision(6)).replace('-','\u2212');
+function val(t){
+  const s=clean(t);if(!s||/[=<>{}]/.test(s))return NaN;
+  try{return parse(s)(0,0)}catch(e){return NaN}
+}
+let S=null;
+function readInput(){
+  const err=$('err');err.textContent='';
+  const ft=$('fx').value.trim();
+  let g;
+  try{const s=clean(ft);if(!s||/[=<>{},;]/.test(s))throw 0;g=parse(s)}catch(e){err.textContent='Check the function. Use x, for example x^3-x-1 or sin(x).';return null}
+  const f=x=>g(x,0);
+  const a=val($('a').value),b=val($('b').value),k=val($('k').value);
+  if(![a,b,k].every(Number.isFinite)){err.textContent='a, b and k must be numbers (pi is allowed).';return null}
+  if(a>=b){err.textContent='Choose a < b.';return null}
+  return {f,a,b,k};
+}
+/* numeric continuity check on [a,b] */
+function discontinuity(f,a,b){
+  const M=20000,ys=new Array(M+1);
+  let lo=Infinity,hi=-Infinity;
+  for(let i=0;i<=M;i++){
+    const x=a+(b-a)*i/M,y=f(x);ys[i]=y;
+    if(!Number.isFinite(y))return {x,why:'undefined'};
+    if(Math.abs(y)>1e9)return {x,why:'blows up'};
+    lo=Math.min(lo,y);hi=Math.max(hi,y);
+  }
+  const range=Math.max(hi-lo,1e-12);
+  let tot=0;for(let i=1;i<=M;i++)tot+=Math.abs(ys[i]-ys[i-1]);
+  const mean=tot/M;
+  for(let i=1;i<=M;i++){
+    const d=Math.abs(ys[i]-ys[i-1]);
+    if(d<=8*mean||d<1e-3*range)continue;
+    let x0=a+(b-a)*(i-1)/M,x1=a+(b-a)*i/M;
+    for(let k=0;k<45;k++){
+      const m=(x0+x1)/2,l=Math.abs(f(m)-f(x0)),r=Math.abs(f(x1)-f(m));
+      if(l>=r)x1=m;else x0=m;
+    }
+    const jump=Math.abs(f(x1)-f(x0));
+    if(!Number.isFinite(jump)||jump>0.25*d)return {x:(x0+x1)/2,why:'jumps'};
+  }
+  return null;
+}
+function solutions(f,a,b,k){
+  const M=4000,out=[];
+  let px=a,py=f(a)-k;
+  if(py===0)out.push(a);
+  for(let i=1;i<=M;i++){
+    const x=a+(b-a)*i/M,y=f(x)-k;
+    if(!Number.isFinite(y)||!Number.isFinite(py)){px=x;py=y;continue}
+    if(y===0){out.push(x)}
+    else if(py!==0&&(py<0)!==(y<0)){
+      let l=px,r=x,fl=py;
+      for(let j=0;j<70;j++){const m=(l+r)/2,fm=f(m)-k;if((fm<0)===(fl<0)){l=m;fl=fm}else r=m}
+      out.push((l+r)/2);
+    }
+    px=x;py=y;
+  }
+  return out.filter((v,i)=>(!i||Math.abs(v-out[i-1])>1e-9)&&Math.abs(f(v)-k)<=1e-6*(1+Math.abs(k)));
+}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  if(!S)return;
+  const {f,a,b,k}=S,pad=(b-a)*0.25;
+  const x0=a-pad,x1=b+pad;
+  let ymin=Math.min(k,0),ymax=Math.max(k,0);
+  for(let i=0;i<=400;i++){const y=f(x0+(x1-x0)*i/400);if(Number.isFinite(y)&&Math.abs(y)<1e6){ymin=Math.min(ymin,y);ymax=Math.max(ymax,y)}}
+  const ys=Math.max(ymax-ymin,1e-6),y0=ymin-ys*.1,y1=ymax+ys*.1;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  const nice=r=>{const p=Math.pow(10,Math.floor(Math.log10(r/6))),n=r/6/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p};
+  const sx=nice(x1-x0),sy=nice(y1-y0);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=Math.ceil(x0/sx)*sx;u<=x1;u+=sx){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  if(y0<=0&&y1>=0){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}
+  if(x0<=0&&x1>=0){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}
+  ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  const ay=Math.min(Math.max(Y(0),0),H-14);
+  for(let u=Math.ceil(x0/sx)*sx;u<=x1;u+=sx){if(Math.abs(u)<sx/2)continue;ctx.fillText(N(u),X(u),ay+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  const ax=Math.min(Math.max(X(0),30),W-4);
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){if(Math.abs(u)<sy/2)continue;ctx.fillText(N(u),ax-5,Y(u))}
+  /* interval band, y = k line */
+  ctx.save();ctx.globalAlpha=.08;ctx.fillStyle='#2f6fed';ctx.fillRect(X(a),0,X(b)-X(a),H);ctx.restore();
+  ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.4;ctx.strokeStyle='#e0483e';
+  ctx.beginPath();ctx.moveTo(0,Y(k));ctx.lineTo(W,Y(k));ctx.stroke();
+  ctx.strokeStyle='#6b7a8a';ctx.beginPath();
+  [a,b].forEach(u=>{ctx.moveTo(X(u),0);ctx.lineTo(X(u),H)});ctx.stroke();ctx.restore();
+  ctx.lineWidth=2.6;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  let pen=false;
+  for(let px=0;px<=W;px++){
+    const y=f(x0+px/W*(x1-x0));
+    if(!Number.isFinite(y)||Math.abs(Y(y))>1e5){pen=false;continue}
+    pen?ctx.lineTo(px,Y(y)):ctx.moveTo(px,Y(y));pen=true;
+  }
+  ctx.stroke();
+  const dot=(x,y,col)=>{if(!Number.isFinite(y))return;ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(x),Y(y),5,0,7);ctx.fill()};
+  dot(a,f(a),'#2f6fed');dot(b,f(b),'#2f6fed');
+  (S.sol||[]).forEach(s=>dot(s,k,'#1f9d6b'));
+}
+function update(){
+  S=readInput();
+  if(!S){$('out').innerHTML='';draw();return}
+  const {f,a,b,k}=S,fa=f(a),fb=f(b);
+  let h='<table><tr><td><i>f</i>(<i>a</i>)</td><td>'+N(fa)+'</td></tr><tr><td><i>f</i>(<i>b</i>)</td><td>'+N(fb)+'</td></tr><tr><td>Target <i>k</i></td><td>'+N(k)+'</td></tr>';
+  if(!Number.isFinite(fa)||!Number.isFinite(fb)){
+    S.sol=[];
+    h+='<tr><td>Result</td><td><b>The function is not defined at an endpoint.</b> The theorem cannot be applied on this interval.</td></tr></table>';
+    $('out').innerHTML=h;draw();return;
+  }
+  const dc=discontinuity(f,a,b);
+  const lo=Math.min(fa,fb),hi=Math.max(fa,fb),between=k>=lo&&k<=hi;
+  const sol=solutions(f,a,b,k);S.sol=sol;
+  h+='<tr><td>Continuous on [<i>a</i>, <i>b</i>]?</td><td>'+(dc?'<b>No.</b> The function looks '+(dc.why==='jumps'?'to jump':dc.why==='blows up'?'to blow up':'undefined')+' near <i>x</i> ≈ '+N(dc.x):'Yes (no breaks found)')+'</td></tr>';
+  h+='<tr><td><i>k</i> between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>)?</td><td>'+(between?'Yes: '+N(lo)+' ≤ '+N(k)+' ≤ '+N(hi):'No: '+N(k)+' is outside '+N(lo)+' to '+N(hi))+'</td></tr>';
+  let res;
+  if(dc)res='<b>The theorem does not apply</b> because <i>f</i> is not continuous on [<i>a</i>, <i>b</i>]. A solution may or may not exist.';
+  else if(between)res='<b>Yes.</b> By the Intermediate Value Theorem there is at least one <i>c</i> in [<i>a</i>, <i>b</i>] with <i>f</i>(<i>c</i>) = '+N(k)+'.';
+  else res='<b>The theorem does not guarantee a solution</b>, because <i>k</i> is not between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>). That does not mean there is none.';
+  h+='<tr><td>Conclusion</td><td>'+res+'</td></tr>';
+  h+='<tr><td>Solutions found</td><td>'+(sol.length?sol.map(s=>'<i>c</i> ≈ '+N(s)).join('<br>'):'none found on this interval')+'</td></tr></table>';
+  $('out').innerHTML=h;draw();
+}
+['fx','a','b','k'].forEach(id=>$(id).addEventListener('input',update));
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/polynomial-from-roots.html">Polynomial from roots</a><a href="/descartes-rule-of-signs.html">Descartes' rule</a><a href="/intermediate-value-theorem.html">Intermediate value theorem</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
