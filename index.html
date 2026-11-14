@@ -132,6 +132,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <li><a href="/algebra-1.html">Algebra 1: interactive graphs, calculators and key formulas</a></li>
     <li><a href="/linear-function.html">Linear function y = ax + b: interactive graph with sliders</a></li>
     <li><a href="/quadratic-function.html">Quadratic function y = ax² + bx + c: vertex, discriminant and roots</a></li>
+    <li><a href="/polynomial-from-roots.html">Polynomial from roots: factored form, expanded form and graph</a></li>
     <li><a href="/regression.html">Linear regression calculator: slope, R² and standard deviation</a></li>
   </ul>
 </section>
@@ -877,8 +878,8 @@ document.querySelectorAll('#ex button[data-ex]').forEach(b=>{
     inp.value=b.dataset.ex;inp.focus();inp.dispatchEvent(new Event('input'));
   };
 });
-const YT_URL='';/* paste your YouTube channel URL between the quotes, e.g. 'https://www.youtube.com/@yourchannel' */
-if(YT_URL){const a=document.getElementById('yt');a.href=YT_URL;a.hidden=false}
+const YT_URL='https://www.youtube.com/@graph-calculator';/* paste your YouTube channel URL between the quotes, e.g. 'https://www.youtube.com/@yourchannel' */
+document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('yt');if(YT_URL&&a){a.href=YT_URL;a.hidden=false}});
 new ResizeObserver(draw).observe(document.getElementById('stage'));
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 build();

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polynomial from Roots Calculator: Factored Form, Expanded Form and Graph</title>
+<meta name="description" content="Enter the roots (zeros) of a polynomial and get its factored form, expanded form, y-intercept, end behavior and graph. Handles repeated roots and a custom leading coefficient.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-1.html">Algebra 1</a></div>
+<h1 class="w">Polynomial from Roots Calculator</h1>
+<div class="w"><p>Enter the roots (zeros) separated by commas. Repeat a root to give it multiplicity, for example <b>2, 2, -1</b> means (<i>x</i> − 2)² (<i>x</i> + 1).</p></div>
+
+<div class="w">
+  <label>Roots<input type="text" id="roots" value="-2, 3" autocomplete="off" spellcheck="false"></label>
+  <label>Leading coefficient <i>a</i><input type="text" id="lead" value="1" autocomplete="off" spellcheck="false"></label>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="facts" id="out"></div>
+
+  <h2>How to write a polynomial from its roots</h2>
+  <ol>
+    <li>For each root <i>r</i>, write the factor (<i>x</i> − <i>r</i>). A root of −2 gives (<i>x</i> + 2), and a root of 3 gives (<i>x</i> − 3).</li>
+    <li>Multiply the factors together. If a root is repeated, its factor is repeated too.</li>
+    <li>Multiply by a leading coefficient <i>a</i> if you need a specific vertical stretch or a given point on the graph.</li>
+    <li>Expand the product if you need the standard form <i>a</i><i>x</i><sup><i>n</i></sup> + … + <i>c</i>.</li>
+  </ol>
+
+  <h2>Example</h2>
+  <p>Roots −2 and 3 give (<i>x</i> + 2)(<i>x</i> − 3) = <i>x</i>² − <i>x</i> − 6. With <i>a</i> = 1 the y-intercept is −6. To make the graph pass through (0, 12) instead, use <i>a</i> = −2, because <i>y</i>(0) = <i>a</i>(0 + 2)(0 − 3) = −6<i>a</i>. Try it in the calculator above.</p>
+
+  <h2>Roots and the shape of the graph</h2>
+  <ul>
+    <li><b>Odd multiplicity</b> (1, 3, 5, …): the graph crosses the x-axis at the root. With multiplicity 1 it passes straight through, and with multiplicity 3 it flattens out as it crosses.</li>
+    <li><b>Even multiplicity</b> (2, 4, …): the graph touches the x-axis and turns around.</li>
+    <li><b>End behavior</b> depends on the degree (the number of roots counted with multiplicity) and the sign of <i>a</i>. An even degree with <i>a</i> &gt; 0 rises on both sides. An odd degree with <i>a</i> &gt; 0 falls on the left and rises on the right.</li>
+    <li>A polynomial of degree <i>n</i> has at most <i>n</i> − 1 turning points.</li>
+  </ul>
+  <p>This tool works with real roots only. Roots may be whole numbers, decimals or fractions such as 1/2. To explore a polynomial you already have, type it into the <a href="/">graphing calculator</a> and open Details of graph.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const N=v=>String(+(+v).toPrecision(6)).replace('-','\u2212');
+function num(t){
+  t=t.trim().replace(/\u2212/g,'-');
+  let m=/^(-?\d*\.?\d+)\/(\d*\.?\d+)$/.exec(t);
+  if(m){const d=+m[2];if(!d)return NaN;return +m[1]/d}
+  return /^-?(\d+\.?\d*|\.\d+)$/.test(t)?+t:NaN;
+}
+let S=null;
+function calc(){
+  const err=$('err');err.textContent='';
+  const parts=$('roots').value.split(/[,;\s]+/).filter(Boolean);
+  const roots=parts.map(num);
+  const a=num($('lead').value);
+  if(!parts.length){err.textContent='Enter at least one root.';return null}
+  if(roots.some(isNaN)){err.textContent='Roots must be numbers or fractions, separated by commas.';return null}
+  if(roots.length>8){err.textContent='Please use at most 8 roots.';return null}
+  if(isNaN(a)||a===0){err.textContent='The leading coefficient must be a nonzero number.';return null}
+  return {roots:roots.sort((p,q)=>p-q),a};
+}
+function coeffs(roots,a){
+  let c=[a];
+  roots.forEach(r=>{const n=new Array(c.length+1).fill(0);c.forEach((v,i)=>{n[i+1]+=v;n[i]+=-r*v});c=n});
+  return c.map(v=>Math.abs(v)<1e-9?0:v);
+}
+function factored(roots,a){
+  const g=new Map();roots.forEach(r=>g.set(r,(g.get(r)||0)+1));
+  let s=a===1?'':a===-1?'\u2212':N(a);
+  g.forEach((m,r)=>{
+    const f=r===0?'<i>x</i>':'(<i>x</i> '+(r<0?'+ ':'\u2212 ')+N(Math.abs(r))+')';
+    s+=f+(m>1?'<sup>'+m+'</sup>':'');
+  });
+  return s;
+}
+function expanded(c){
+  let s='';
+  for(let k=c.length-1;k>=0;k--){
+    const v=c[k];if(v===0)continue;
+    const av=Math.abs(v);
+    let term=(av===1&&k>0)?'':N(av);
+    if(k>0)term+='<i>x</i>'+(k>1?'<sup>'+k+'</sup>':'');
+    s+=(s?(v<0?' \u2212 ':' + '):(v<0?'\u2212':''))+term;
+  }
+  return s||'0';
+}
+function f(x,roots,a){let y=a;roots.forEach(r=>y*=x-r);return y}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  if(!S)return;
+  const {roots,a}=S;
+  const lo=Math.min(...roots,0),hi=Math.max(...roots,0),pad=Math.max(1.5,(hi-lo)*0.2);
+  let x0=lo-pad,x1=hi+pad;
+  let ymin=0,ymax=0;
+  for(let i=0;i<=300;i++){const y=f(x0+(x1-x0)*i/300,roots,a);if(isFinite(y)){ymin=Math.min(ymin,y);ymax=Math.max(ymax,y)}}
+  const ys=Math.max(ymax-ymin,1e-6);let y0=ymin-ys*.1,y1=ymax+ys*.1;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  const nice=r=>{const p=Math.pow(10,Math.floor(Math.log10(r/6))),n=r/6/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p};
+  const sx=nice(x1-x0),sy=nice(y1-y0);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=Math.ceil(x0/sx)*sx;u<=x1;u+=sx){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  if(y0<=0&&y1>=0){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}
+  if(x0<=0&&x1>=0){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}
+  ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  const ay=Math.min(Math.max(Y(0),0),H-14);
+  for(let u=Math.ceil(x0/sx)*sx;u<=x1;u+=sx){if(Math.abs(u)<sx/2)continue;ctx.fillText(N(u),X(u),ay+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  const ax=Math.min(Math.max(X(0),30),W-4);
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){if(Math.abs(u)<sy/2)continue;ctx.fillText(N(u),ax-5,Y(u))}
+  ctx.lineWidth=2.6;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  for(let px=0;px<=W;px++){const y=f(x0+px/W*(x1-x0),roots,a);px?ctx.lineTo(px,Y(y)):ctx.moveTo(px,Y(y))}
+  ctx.stroke();
+  [...new Set(roots)].forEach(r=>{ctx.fillStyle='#1f9d6b';ctx.beginPath();ctx.arc(X(r),Y(0),5,0,7);ctx.fill()});
+  const yi=f(0,roots,a);ctx.fillStyle='#e0483e';ctx.beginPath();ctx.arc(X(0),Y(yi),5,0,7);ctx.fill();
+}
+function update(){
+  S=calc();
+  if(!S){$('out').innerHTML='';draw();return}
+  const {roots,a}=S,n=roots.length,c=coeffs(roots,a);
+  const mult=new Map();roots.forEach(r=>mult.set(r,(mult.get(r)||0)+1));
+  const beh=[];mult.forEach((m,r)=>beh.push('<i>x</i> = '+N(r)+': '+(m%2?'crosses the x-axis':'touches the x-axis and turns')+(m>1?' (multiplicity '+m+')':'')));
+  const up=a>0,even=n%2===0;
+  const left=even?(up?'rises':'falls'):(up?'falls':'rises'),right=up?'rises':'falls';
+  $('out').innerHTML='<table>'+
+    '<tr><td>Factored form</td><td><i>y</i> = '+factored(roots,a)+'</td></tr>'+
+    '<tr><td>Expanded form</td><td><i>y</i> = '+expanded(c)+'</td></tr>'+
+    '<tr><td>Degree</td><td>'+n+'</td></tr>'+
+    '<tr><td>y-intercept</td><td>(0, '+N(c[0])+')</td></tr>'+
+    '<tr><td>Roots</td><td>'+beh.join('<br>')+'</td></tr>'+
+    '<tr><td>End behavior</td><td>Left side '+left+', right side '+right+'</td></tr>'+
+    '<tr><td>Turning points</td><td>At most '+(n-1)+'</td></tr></table>';
+  draw();
+}
+['roots','lead'].forEach(id=>$(id).addEventListener('input',update));
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/polynomial-from-roots.html">Polynomial from roots</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
