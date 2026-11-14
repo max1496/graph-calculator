@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions, One-to-One, Onto and Inverse Functions Explained</title>
+<meta name="description" content="Learn the vertical line test, domain and range, one-to-one and onto functions, how to find an inverse function, and even and odd symmetry, with practice problems.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/precalculus.html">← Precalculus</a> &nbsp;·&nbsp; <a href="/">Graphing Calculator</a></div>
+<h1 class="w">Functions and Inverse Functions</h1>
+<div class="w"><p class="sum"><b>In short:</b> Check if a graph is a function, one-to-one or onto, then swap x and y to find the inverse.</p></div>
+<div class="w">
+
+<h2>Is it a function?</h2>
+<ul class="lines">
+  <li>A <b>function</b> gives <span class="hl">exactly one output</span> for each input.</li>
+  <li><b>Vertical line test:</b> if any vertical line crosses the graph <b>twice or more</b>, it is <span class="hl2">not</span> a function.</li>
+  <li><i>y</i> = <i>x</i>² passes the test. The circle <i>x</i>² + <i>y</i>² = 9 fails it (at <i>x</i> = 0 there are two points, (0, 3) and (0, −3)).</li>
+</ul>
+<p>Try it: type <b>x^2+y^2=9</b> in the calculator. The label under the equation tells you it fails the vertical line test.</p>
+
+<h2>Domain and range</h2>
+<ul class="lines">
+  <li><b>Domain</b> = all allowed inputs (<i>x</i>).</li>
+  <li><b>Range</b> = all outputs (<i>y</i>) the function actually produces.</li>
+  <li>√<i>x</i>: domain <i>x</i> ≥ 0, range <i>y</i> ≥ 0.</li>
+  <li>1/<i>x</i>: domain <i>x</i> ≠ 0, range <i>y</i> ≠ 0.</li>
+</ul>
+
+<h2>One-to-one and onto</h2>
+<ul class="lines">
+  <li><b>One-to-one:</b> different inputs always give <span class="hl">different outputs</span>.<br>
+      <b>Horizontal line test:</b> every horizontal line crosses the graph at most once.</li>
+  <li><b>Onto (the real numbers):</b> every real number is an output, so the range is <span class="hl">all of ℝ</span>.</li>
+  <li><i>y</i> = <i>x</i>³ is both (one-to-one and onto ℝ).</li>
+  <li><i>y</i> = <i>x</i>² is neither: 2 and −2 both give 4, and negative numbers are never outputs.</li>
+  <li><i>y</i> = 2<sup><i>x</i></sup> is one-to-one but not onto (outputs are only positive).</li>
+</ul>
+<div class="key2">Only a <b>one-to-one</b> function has an inverse <i>function</i>.</div>
+<p>In the calculator, open <b>Details of graph</b> under any equation. The <b>Function properties</b> section lists the domain, range, one-to-one, onto, symmetry, increasing and decreasing intervals, and concavity.</p>
+
+<h2>How to find an inverse</h2>
+<ol class="steps">
+  <li>Write <i>y</i> = <i>f</i>(<i>x</i>).</li>
+  <li><span class="hl">Swap</span> <i>x</i> and <i>y</i>.</li>
+  <li>Solve for <i>y</i>.</li>
+  <li>Call the result <i>f</i>⁻¹(<i>x</i>).</li>
+</ol>
+<p><b>Example:</b> <i>f</i>(<i>x</i>) = 2<i>x</i> + 3.</p>
+<ul class="lines">
+  <li><i>y</i> = 2<i>x</i> + 3</li>
+  <li>Swap: <i>x</i> = 2<i>y</i> + 3</li>
+  <li>Solve: <i>y</i> = (<i>x</i> − 3)/2</li>
+  <li>So <i>f</i>⁻¹(<i>x</i>) = (<i>x</i> − 3)/2.</li>
+</ul>
+<h3>What the graph looks like</h3>
+<ul class="lines">
+  <li>The graph of <i>f</i>⁻¹ is the graph of <i>f</i> <b>reflected over the line <i>y</i> = <i>x</i></b>.</li>
+  <li>Every point (<i>a</i>, <i>b</i>) becomes (<i>b</i>, <i>a</i>).</li>
+  <li>Domain and range <b>trade places</b>.</li>
+  <li><i>f</i>(<i>f</i>⁻¹(<i>x</i>)) = <i>x</i> and <i>f</i>⁻¹(<i>f</i>(<i>x</i>)) = <i>x</i>.</li>
+</ul>
+<div class="key2"><b>Not one-to-one?</b> Restrict the domain. <i>y</i> = <i>x</i>² is not one-to-one, but on <i>x</i> ≥ 0 it is, and its inverse there is <i>y</i> = √<i>x</i>.</div>
+<p><b>In the calculator:</b> type an equation, open <b>Move and reshape the selected graph</b> and press <b>Add inverse</b>. A new row <i>x</i> = … is added. If the original is not one-to-one, you get a message and the inverse shown is not a function.</p>
+
+<h2>Symmetry</h2>
+<ul class="lines">
+  <li><b>Even:</b> <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>). Mirror image over the y-axis. Example: <i>x</i>², cos <i>x</i>, |<i>x</i>|.</li>
+  <li><b>Odd:</b> <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>). Unchanged by a 180° turn about the origin. Example: <i>x</i>³, sin <i>x</i>, 1/<i>x</i>.</li>
+  <li>Some graphs are symmetric about another line or point, for example (<i>x</i> − 2)² is symmetric about <i>x</i> = 2.</li>
+</ul>
+
+<h2>Practice</h2>
+<p>Tap “Show answer” to check.</p>
+<ol class="steps">
+  <li>Find the inverse of <i>f</i>(<i>x</i>) = 3<i>x</i> − 6.
+    <details class="sol"><summary>Show answer</summary><p><i>x</i> = 3<i>y</i> − 6, so <i>y</i> = (<i>x</i> + 6)/3. <b>f⁻¹(x) = (x + 6)/3</b>.</p></details></li>
+  <li>Is <i>y</i> = |<i>x</i>| one-to-one? How can you restrict it so it is?
+    <details class="sol"><summary>Show answer</summary><p>No: |2| = |−2|. On <i>x</i> ≥ 0 it is one-to-one (and equals <i>y</i> = <i>x</i>).</p></details></li>
+  <li>Find the inverse of <i>f</i>(<i>x</i>) = <i>x</i>³ + 1.
+    <details class="sol"><summary>Show answer</summary><p><i>x</i> = <i>y</i>³ + 1, so <i>y</i> = ∛(<i>x</i> − 1). Try <b>cbrt(x-1)</b> in the calculator.</p></details></li>
+  <li>Is <i>x</i> = <i>y</i>² a function of <i>x</i>?
+    <details class="sol"><summary>Show answer</summary><p>No. For <i>x</i> = 4, <i>y</i> = 2 or −2, so it fails the vertical line test. It is the inverse of <i>y</i> = <i>x</i>², which is not one-to-one.</p></details></li>
+  <li>Find the domain of the inverse of <i>f</i>(<i>x</i>) = √<i>x</i> + 2.
+    <details class="sol"><summary>Show answer</summary><p>The range of <i>f</i> is <i>y</i> ≥ 2, so the inverse has domain <b><i>x</i> ≥ 2</b>. (<i>f</i>⁻¹(<i>x</i>) = (<i>x</i> − 2)².)</p></details></li>
+</ol>
+
+<h2>Try it</h2>
+<div class="lessons">
+  <a class="lesson" href="/#e=x%5E3-3x%2B1"><h3>x³ − 3x + 1</h3><span>Not one-to-one. See the properties in Details.</span></a>
+  <a class="lesson" href="/#e=cbrt%28x%29"><h3>Cube root</h3><span>One-to-one, onto, odd.</span></a>
+  <a class="lesson" href="/#e=x%5E2%2By%5E2%3D9"><h3>Circle</h3><span>Fails the vertical line test.</span></a>
+</div>
+
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+</body>
+</html>

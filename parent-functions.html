@@ -57,6 +57,9 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
 .card .go:hover{background:#2f6fed;color:#fff}
 .card .more{font-size:14px}
 table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.cmp td{border:1px solid var(--line);padding:6px 10px;text-align:left}table.cmp th{background:var(--panel)}
+.hl{color:#2f6fed;font-weight:700}
+ul.lines{padding-left:22px;line-height:1.75}ul.lines li{margin:4px 0}
+.lead{font-size:18px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -66,7 +69,13 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
 <div class="w"><p class="sum"><b>In short:</b> Every function family has a basic shape. Learn the shape, the domain and the range of each one, and you can sketch most graphs quickly.</p></div>
 
 <div class="w">
-  <p>A <b>parent function</b> is the simplest member of a family of functions. Every other function in the family is the parent moved, stretched or flipped. Below are the eleven parent functions you meet in Algebra 1, Algebra 2 and Precalculus. Click a function to see its graph and details. Press <b>Open in the calculator</b> on any card to see it in the graphing calculator.</p>
+  <p class="lead"><b>Parent function</b> = the simplest member of a family of functions.</p>
+  <p>Every other function in the family is the parent <span class="hl">moved</span>, <span class="hl">stretched</span> or <span class="hl">flipped</span>.</p>
+  <p>Below are the basic graphs from Algebra 1, Algebra 2 and Precalculus.</p>
+  <ul class="lines">
+    <li>Click a function to see its graph and details.</li>
+    <li>Press <b>Open in the calculator</b> to try it yourself.</li>
+  </ul>
 </div>
 
 <div class="grid">
@@ -93,6 +102,14 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
       <ul><li>S-shaped curve through the origin.</li><li>Always increasing, with a flat point at (0, 0).</li><li>Symmetric about the origin (odd function).</li></ul>
       <div class="more">Learn more: <a href="/polynomial-from-roots.html">Polynomial from roots</a></div>
       <a class="go" href="/#e=x%5E3&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
+    </details>
+    <details class="card" id="cbrt">
+      <summary><h3>Cube root</h3><div class="eq"><i>y</i> = ∛<i>x</i></div></summary>
+      <canvas data-k="cbrt" aria-label="Graph of y = cube root of x"></canvas>
+      <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>All real numbers</dd></dl>
+      <ul><li>Passes through the origin and is <b>always increasing</b>.</li><li>Very steep at (0, 0): the tangent line there is <b>vertical</b>, so it is not differentiable at <i>x</i> = 0.</li><li>Odd function: symmetric about the origin.</li><li>It is the inverse of <i>y</i> = <i>x</i>³.</li></ul>
+      <div class="more">Learn more: <a href="/functions-and-inverses.html">Functions and inverses</a></div>
+      <a class="go" href="/#e=cbrt%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
     </details>
     <details class="card" id="abs">
       <summary><h3>Absolute value</h3><div class="eq"><i>y</i> = |<i>x</i>|</div></summary>
@@ -158,6 +175,14 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
       
       <a class="go" href="/#e=tan%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">Open in the calculator</a>
     </details>
+    <details class="card" id="circle">
+      <summary><h3>Circle (not a function)</h3><div class="eq"><i>x</i>² + <i>y</i>² = <i>r</i>²</div></summary>
+      <canvas data-k="circle" aria-label="Graph of x squared plus y squared equals 4"></canvas>
+      <dl><dt>Domain</dt><dd>[−<i>r</i>, <i>r</i>]</dd><dt>Range</dt><dd>[−<i>r</i>, <i>r</i>]</dd></dl>
+      <ul><li><b>Not a function.</b> A vertical line crosses it twice, so it fails the vertical line test.</li><li>It is two functions put together: <i>y</i> = √(<i>r</i>² − <i>x</i>²) (top half) and <i>y</i> = −√(<i>r</i>² − <i>x</i>²) (bottom half).</li><li>Symmetric about both axes and the origin.</li><li>The graph shown has <i>r</i> = 2.</li></ul>
+      <div class="more">Learn more: <a href="/conic-sections.html">Conic sections</a></div>
+      <a class="go" href="/#e=x%5E2%2By%5E2%3D4&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
+    </details>
 </div>
 
 <div class="w">
@@ -174,9 +199,17 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
 <tr><td>Sine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>odd (origin)</td></tr>
 <tr><td>Cosine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>even (y-axis)</td></tr>
 <tr><td>Tangent</td><td>x ≠ π/2 + kπ</td><td>all reals</td><td>odd (origin)</td></tr>
+<tr><td>Cube root</td><td>all reals</td><td>all reals</td><td>odd (origin)</td></tr>
+<tr><td>Circle (not a function)</td><td>[−r, r]</td><td>[−r, r]</td><td>both axes and origin</td></tr>
   </table></div>
   <h2>Even and odd functions</h2>
-  <p>A function is <b>even</b> if <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>). Its graph is a mirror image across the y-axis. A function is <b>odd</b> if <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>). Its graph looks the same after a 180° turn about the origin. To test one, replace <i>x</i> with −<i>x</i> and see what happens. For example, (−<i>x</i>)² = <i>x</i>², so the quadratic is even, while (−<i>x</i>)³ = −<i>x</i>³, so the cubic is odd.</p>
+  <ul class="lines">
+    <li><b>Even:</b> <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>). The graph is a mirror image across the <b>y-axis</b>.</li>
+    <li><b>Odd:</b> <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>). The graph looks the same after a <b>180° turn</b> about the origin.</li>
+    <li>To test one, replace <i>x</i> with −<i>x</i> and see what happens.</li>
+    <li>(−<i>x</i>)² = <i>x</i>², so <i>x</i>² is <b>even</b>.</li>
+    <li>(−<i>x</i>)³ = −<i>x</i>³, so <i>x</i>³ is <b>odd</b>.</li>
+  </ul>
 
   <h2>Try the transformations yourself</h2>
   <p>New to sine and cosine? Start with the <a href="/trigonometry.html">trigonometry</a> page. Use the <a href="/function-transformations.html">function transformations tool</a> to shift, stretch, flip and rotate any of these eleven graphs with sliders.</p>
@@ -202,7 +235,7 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
 </div>
 
 <script>
-const SPEC={"linear":{f:x=>x,x:[-5, 5],y:[-4, 4],va:[],ha:[],vapi:false},"quad":{f:x=>x*x,x:[-3, 3],y:[-1, 6],va:[],ha:[],vapi:false},"cubic":{f:x=>x*x*x,x:[-2.5, 2.5],y:[-6, 6],va:[],ha:[],vapi:false},"abs":{f:Math.abs,x:[-4, 4],y:[-1, 5],va:[],ha:[],vapi:false},"sqrt":{f:Math.sqrt,x:[-1, 9],y:[-1, 4],va:[],ha:[],vapi:false},"recip":{f:x=>1/x,x:[-5, 5],y:[-4, 4],va:[0],ha:[0],vapi:false},"exp":{f:x=>Math.pow(2,x),x:[-4, 4],y:[-1, 8],va:[],ha:[0],vapi:false},"log":{f:Math.log,x:[-1, 9],y:[-4, 4],va:[0],ha:[],vapi:false},"sin":{f:Math.sin,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"cos":{f:Math.cos,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"tan":{f:Math.tan,x:[-6.6, 6.6],y:[-4, 4],va:[],ha:[],vapi:true}};
+const SPEC={"linear":{f:x=>x,x:[-5, 5],y:[-4, 4],va:[],ha:[],vapi:false},"quad":{f:x=>x*x,x:[-3, 3],y:[-1, 6],va:[],ha:[],vapi:false},"cubic":{f:x=>x*x*x,x:[-2.5, 2.5],y:[-6, 6],va:[],ha:[],vapi:false},"cbrt":{f:Math.cbrt,x:[-8,8],y:[-3,3],va:[],ha:[],vapi:false},"circle":{circle:2,f:x=>NaN,x:[-4,4],y:[-3,3],va:[],ha:[],vapi:false},"abs":{f:Math.abs,x:[-4, 4],y:[-1, 5],va:[],ha:[],vapi:false},"sqrt":{f:Math.sqrt,x:[-1, 9],y:[-1, 4],va:[],ha:[],vapi:false},"recip":{f:x=>1/x,x:[-5, 5],y:[-4, 4],va:[0],ha:[0],vapi:false},"exp":{f:x=>Math.pow(2,x),x:[-4, 4],y:[-1, 8],va:[],ha:[0],vapi:false},"log":{f:Math.log,x:[-1, 9],y:[-4, 4],va:[0],ha:[],vapi:false},"sin":{f:Math.sin,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"cos":{f:Math.cos,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"tan":{f:Math.tan,x:[-6.6, 6.6],y:[-4, 4],va:[],ha:[],vapi:true}};
 function drawAll(){
   const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
   document.querySelectorAll('canvas[data-k]').forEach(cv=>{
@@ -226,6 +259,7 @@ function drawAll(){
     if(s.vapi)for(let k=-3;k<=3;k++){const a=Math.PI/2+k*Math.PI;if(a>x0&&a<x1){g.moveTo(X(a),0);g.lineTo(X(a),H)}}
     g.stroke();g.restore();
     g.strokeStyle='#2f6fed';g.lineWidth=2.4;g.lineJoin='round';g.beginPath();
+    if(s.circle){g.arc(X(0),Y(0),s.circle*W/(x1-x0),0,7);g.stroke();return}
     let pen=false,py=0;
     for(let px=0;px<=W;px++){
       const y=s.f(x0+px/W*(x1-x0));

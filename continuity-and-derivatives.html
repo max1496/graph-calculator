@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity and Derivatives Explained with a Calculator</title>
+<meta name="description" content="Understand continuity, types of discontinuity, the derivative as a tangent slope, and when a function is not differentiable. Check any function with the graphing calculator.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/precalculus.html">← Precalculus</a> &nbsp;·&nbsp; <a href="/">Graphing Calculator</a></div>
+<h1 class="w">Continuity and Derivatives</h1>
+<div class="w"><p class="sum"><b>In short:</b> A continuous graph has no breaks. The derivative is the tangent slope, and corners, cusps and breaks stop it from existing.</p></div>
+<div class="w">
+
+<h2>Continuity</h2>
+<ul class="lines">
+  <li>A function is <b>continuous</b> if you can draw it <span class="hl">without lifting your pencil</span>.</li>
+  <li>Precisely, <i>f</i> is continuous at <i>x</i> = <i>a</i> when all three are true:
+    <ol class="steps"><li><i>f</i>(<i>a</i>) exists.</li><li>The limit of <i>f</i>(<i>x</i>) as <i>x</i> → <i>a</i> exists.</li><li>The limit equals <i>f</i>(<i>a</i>).</li></ol></li>
+  <li>Polynomials, sin, cos and eˣ are continuous everywhere. 1/<i>x</i> is continuous everywhere <b>it is defined</b>.</li>
+</ul>
+<h3>Kinds of discontinuity</h3>
+<table class="t"><tr><th>Type</th><th>What happens</th><th>Example</th></tr>
+<tr><td><b>Hole</b> (removable)</td><td>The limit exists, but <i>f</i>(<i>a</i>) is missing or different.</td><td>(<i>x</i>² − 1)/(<i>x</i> − 1) at <i>x</i> = 1</td></tr>
+<tr><td><b>Jump</b></td><td>Left and right limits are different.</td><td>floor(<i>x</i>) at every integer</td></tr>
+<tr><td><b>Infinite</b> (asymptote)</td><td>The function goes to ±∞.</td><td>1/<i>x</i> at <i>x</i> = 0</td></tr></table>
+<p>The Intermediate Value Theorem needs a <b>continuous</b> function. See the <a href="/intermediate-value-theorem.html">IVT page</a>.</p>
+
+<h2>The derivative</h2>
+<ul class="lines">
+  <li>The <b>derivative</b> <i>f</i>′(<i>a</i>) is the <span class="hl">slope of the tangent line</span> at <i>x</i> = <i>a</i>.</li>
+  <li>It is the instantaneous rate of change, like the speedometer reading at one moment.</li>
+  <li>Definition: <i>f</i>′(<i>a</i>) = lim<sub><i>h</i>→0</sub> (<i>f</i>(<i>a</i>+<i>h</i>) − <i>f</i>(<i>a</i>)) / <i>h</i></li>
+  <li><i>f</i>′ &gt; 0: the graph is going up. <i>f</i>′ &lt; 0: going down. <i>f</i>′ = 0: flat (a possible max or min).</li>
+  <li>Power rule: (<i>x</i><sup><i>n</i></sup>)′ = <i>n</i><i>x</i><sup><i>n</i>−1</sup>. So (<i>x</i>²)′ = 2<i>x</i>.</li>
+</ul>
+<p>In the calculator, tap <b>Tangent</b> and tap a curve to draw the tangent line and see its slope.</p>
+
+<h2>When is a function NOT differentiable?</h2>
+<ul class="lines">
+  <li><b>Corner:</b> the slope jumps. |<i>x</i>| at 0.</li>
+  <li><b>Cusp:</b> slopes go to opposite infinities. <i>x</i><sup>2/3</sup> at 0.</li>
+  <li><b>Vertical tangent:</b> the slope is infinite. ∛<i>x</i> at 0.</li>
+  <li><b>Discontinuity:</b> a hole, jump or asymptote.</li>
+</ul>
+<div class="key2"><b>Differentiable ⇒ continuous.</b> <span class="hl2">But not the other way around:</span> |<i>x</i>| is continuous at 0 but has a corner there, so it is not differentiable.</div>
+
+<h2>Check it in the calculator</h2>
+<ol class="steps">
+  <li>Type an equation such as <b>abs(x)</b>.</li>
+  <li>Press <b>Details of graph</b>.</li>
+  <li>Under <b>Function properties</b>, read <b>Continuous?</b> and <b>Differentiable?</b>. Problem points are listed with the reason.</li>
+</ol>
+<p>The check is numeric, so treat it as a strong hint and confirm with the definitions above.</p>
+<div class="lessons">
+  <a class="lesson" href="/#e=abs%28x%29"><h3>|x|</h3><span>Continuous, but a corner at 0.</span></a>
+  <a class="lesson" href="/#e=x%5E%282%2F3%29"><h3>x^(2/3)</h3><span>A cusp at 0.</span></a>
+  <a class="lesson" href="/#e=cbrt%28x%29"><h3>Cube root</h3><span>Vertical tangent at 0.</span></a>
+  <a class="lesson" href="/#e=floor%28x%29"><h3>floor(x)</h3><span>Jumps at every integer.</span></a>
+  <a class="lesson" href="/#e=%28x%5E2-1%29%2F%28x-1%29"><h3>(x²−1)/(x−1)</h3><span>A hole at x = 1.</span></a>
+</div>
+
+<h2>Practice</h2>
+<ol class="steps">
+  <li>Is <i>f</i>(<i>x</i>) = 1/(<i>x</i> − 2) continuous at <i>x</i> = 2?
+    <details class="sol"><summary>Show answer</summary><p>No. <i>f</i>(2) does not exist, and there is a vertical asymptote (infinite discontinuity).</p></details></li>
+  <li>Is <i>f</i>(<i>x</i>) = |<i>x</i> − 3| differentiable at 3?
+    <details class="sol"><summary>Show answer</summary><p>No. It is continuous, but has a corner at <i>x</i> = 3.</p></details></li>
+  <li>Find the slope of <i>y</i> = <i>x</i>² at <i>x</i> = 3.
+    <details class="sol"><summary>Show answer</summary><p><i>y</i>′ = 2<i>x</i>, so the slope is <b>6</b>.</p></details></li>
+</ol>
+
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+</body>
+</html>

@@ -43,6 +43,7 @@ details.ex[open] summary{margin-bottom:6px}
 .tip{position:absolute;z-index:3;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:13px;line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.18);white-space:nowrap}
 .tip small{display:block;color:var(--sub);font-size:12px}
 .tip[hidden]{display:none}
+details.wp{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}details.wp summary{cursor:pointer;font-weight:700}details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed;font-weight:400}.hl{color:#2f6fed;font-weight:700}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -107,6 +108,11 @@ details.ex[open] summary{margin-bottom:6px}
     <li><b>Want to plot your own equation?</b> Type it into the <a href="/">graphing calculator</a>, then open Details of graph to see its extrema, intercepts and derivatives.</li>
   </ul>
   </details>
+  <h2>Word problems</h2>
+  <p class="hint">Tap a problem to open it. Try it first, then tap “Show answer”.</p>
+  <details class="wp"><summary>Thrown ball</summary><p>A ball is thrown up from 5 ft. Its height is <i>h</i>(<i>t</i>) = −16<i>t</i>² + 64<i>t</i> + 5. Find the maximum height and when it lands.</p><details class="sol"><summary>Show answer</summary><ul><li>Vertex at <i>t</i> = −<i>b</i>/(2<i>a</i>) = −64/(−32) = <b>2 seconds</b>.</li><li>Maximum height: <i>h</i>(2) = −64 + 128 + 5 = <b>69 ft</b>.</li><li>Lands when <i>h</i> = 0: <i>t</i> = (64 + √(64² + 4·16·5)) / 32 ≈ <b>4.08 s</b> (the negative root is ignored).</li></ul></details></details>
+  <details class="wp"><summary>Fence</summary><p>A rectangle has a perimeter of 40 m of fence. What size gives the largest area?</p><details class="sol"><summary>Show answer</summary><ul><li>Width <i>x</i>, length 20 − <i>x</i>. Area <i>A</i> = <i>x</i>(20 − <i>x</i>) = −<i>x</i>² + 20<i>x</i>.</li><li>Vertex at <i>x</i> = 10, so it is a <b>10 m by 10 m square</b>.</li><li>Maximum area = <b>100 m²</b>.</li></ul></details></details>
+  <details class="wp"><summary>Revenue</summary><p>A shop sells (200 − 5<i>p</i>) items at price <i>p</i> dollars. Which price gives the most revenue?</p><details class="sol"><summary>Show answer</summary><ul><li>Revenue <i>R</i> = <i>p</i>(200 − 5<i>p</i>) = −5<i>p</i>² + 200<i>p</i>.</li><li>Vertex at <i>p</i> = 200/10 = <b>$20</b>.</li><li>Maximum revenue: 20 · 100 = <b>$2000</b>.</li></ul></details></details>
 </div>
 
 <div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>

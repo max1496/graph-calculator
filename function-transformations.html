@@ -48,6 +48,11 @@ details.sol .a{margin-top:8px;font-size:15px}
 table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}table.t th{background:var(--panel)}
 .key{background:var(--panel);border-left:4px solid #e0483e;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:10px 0}
 .pr{margin:14px 0 4px;font-size:16px}
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}
+ul.lines li,ol.steps li{margin:4px 0}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+h3{font-size:16px;margin:16px 0 4px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -80,9 +85,24 @@ table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td
 
   <h2>The big idea: points move one way, the equation says the other</h2>
   <div class="key"><b>Horizontal shift:</b> to move the graph <b>right</b> by <i>h</i>, every point moves to <b>x + h</b>, but you write <b>x − h</b> in the equation: <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>).</div>
-  <p>Why? Suppose (<i>p</i>, <i>q</i>) is a point on the original graph <i>y</i> = <i>f</i>(<i>x</i>). We want the new graph to contain (<i>p</i> + <i>h</i>, <i>q</i>). In the new equation <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>), put <i>x</i> = <i>p</i> + <i>h</i>. The input to <i>f</i> becomes (<i>p</i> + <i>h</i>) − <i>h</i> = <i>p</i>, so the output is <i>f</i>(<i>p</i>) = <i>q</i>. The new graph needs a bigger <i>x</i> to get the same output, so it is shifted right.</p>
-  <p><b>Example.</b> Take <i>f</i>(<i>x</i>) = <i>x</i>² and <i>g</i>(<i>x</i>) = (<i>x</i> − 2)². The point (−1, 1) on <i>f</i> becomes (1, 1) on <i>g</i>, because (1 − 2)² = 1. The vertex (0, 0) becomes (2, 0). Everything moved 2 to the right, even though the equation says “− 2”. A plus sign, as in (<i>x</i> + 3)², means <i>x</i> − (−3), so the graph moves 3 to the <b>left</b>.</p>
-  <p>The same sentence works for every change that happens <b>inside</b> the parentheses: the equation and the points do the opposite thing.</p>
+  <h3>Why does it work like that?</h3>
+  <ol class="steps">
+    <li>Start with a point <span class="hl">(<i>p</i>, <i>q</i>)</span> on the original graph <i>y</i> = <i>f</i>(<i>x</i>).</li>
+    <li>We want the new graph to contain <span class="hl2">(<i>p</i> + <i>h</i>, <i>q</i>)</span>, the same point moved right by <i>h</i>.</li>
+    <li>In the new equation <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>), put <i>x</i> = <i>p</i> + <i>h</i>.</li>
+    <li>The input to <i>f</i> becomes (<i>p</i> + <i>h</i>) − <i>h</i> = <b><i>p</i></b>, so the output is <i>f</i>(<i>p</i>) = <b><i>q</i></b>. It works.</li>
+  </ol>
+  <p><b>In words:</b> the new graph needs a <b>bigger <i>x</i></b> to get the same output, so it is shifted to the <b>right</b>.</p>
+
+  <h3>Example</h3>
+  <ul class="lines">
+    <li>Take <i>f</i>(<i>x</i>) = <i>x</i>² and <i>g</i>(<i>x</i>) = (<i>x</i> − 2)².</li>
+    <li>The point (−1, 1) on <i>f</i> becomes <b>(1, 1)</b> on <i>g</i>, because (1 − 2)² = 1.</li>
+    <li>The vertex (0, 0) becomes <b>(2, 0)</b>.</li>
+    <li>Everything moved <b>2 to the right</b>, even though the equation says “− 2”.</li>
+    <li>A plus sign, as in (<i>x</i> + 3)², means <i>x</i> − (−3), so the graph moves <b>3 to the left</b>.</li>
+  </ul>
+  <div class="key2">The same rule works for every change <b>inside</b> the parentheses: <span class="hl">the equation and the points do the opposite thing</span>.</div>
 
   <h2>Inside changes and outside changes</h2>
   <ul>
@@ -91,7 +111,7 @@ table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td
   </ul>
 
   <h2>All the changes in one table</h2>
-  <p>Here (<i>x</i>, <i>y</i>) is a point on the original graph and the last column says where it lands on the new graph.</p>
+  <p>Here (<i>x</i>, <i>y</i>) is a point on the original graph.<br>The third column says <b>where it lands</b> on the new graph.</p>
   <div style="overflow-x:auto"><table class="t">
     <tr><th>Change</th><th>New equation</th><th>Point (<i>x</i>, <i>y</i>) goes to</th><th>What you see</th></tr>
     <tr><td>Shift up <i>k</i></td><td><i>f</i>(<i>x</i>) + <i>k</i></td><td>(<i>x</i>, <i>y</i> + <i>k</i>)</td><td>Up for <i>k</i> &gt; 0, down for <i>k</i> &lt; 0</td></tr>
@@ -102,27 +122,71 @@ table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td
     <tr><td>Reflect over the y-axis</td><td><i>f</i>(−<i>x</i>)</td><td>(−<i>x</i>, <i>y</i>)</td><td>Flipped left to right</td></tr>
   </table></div>
 
-  <h2>Vertical shift</h2>
-  <p><i>y</i> = <i>f</i>(<i>x</i>) + <i>k</i>. Add <i>k</i> to every output. The graph moves up <i>k</i> units, or down if <i>k</i> is negative. Horizontal asymptotes move too: if <i>f</i> has the asymptote <i>y</i> = 0, then <i>f</i>(<i>x</i>) + <i>k</i> has <i>y</i> = <i>k</i>. The range shifts by <i>k</i> but the domain does not change.</p>
+  <h2>Vertical shift: <i>f</i>(<i>x</i>) + <i>k</i></h2>
+  <ul class="lines">
+    <li>Add <i>k</i> to <b>every output</b>.</li>
+    <li>The graph moves <b>up</b> <i>k</i> units, or <b>down</b> if <i>k</i> is negative.</li>
+    <li>Horizontal asymptotes move too. If <i>f</i> has <i>y</i> = 0, then <i>f</i>(<i>x</i>) + <i>k</i> has <i>y</i> = <i>k</i>.</li>
+    <li>The <b>range</b> shifts by <i>k</i>. The domain does not change.</li>
+  </ul>
 
-  <h2>Horizontal shift</h2>
-  <p><i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>). See the big idea above. The domain shifts by <i>h</i>, and vertical asymptotes move with the graph. For example <i>y</i> = 1/(<i>x</i> − 3) has its vertical asymptote at <i>x</i> = 3, not −3. The range does not change.</p>
+  <h2>Horizontal shift: <i>f</i>(<i>x</i> − <i>h</i>)</h2>
+  <ul class="lines">
+    <li>Points move <b>right</b> by <i>h</i>, but the equation has <b>x − h</b>.</li>
+    <li>The <b>domain</b> shifts by <i>h</i>. The range does not change.</li>
+    <li>Vertical asymptotes move with the graph. Example: <i>y</i> = 1/(<i>x</i> − 3) has its vertical asymptote at <i>x</i> = <b>3</b>, not −3.</li>
+  </ul>
 
-  <h2>Vertical stretch and compression</h2>
-  <p><i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>). Multiply every height by <i>a</i>. If |<i>a</i>| &gt; 1 the graph is <b>stretched</b> away from the x-axis. If 0 &lt; |<i>a</i>| &lt; 1 it is <b>compressed</b> toward the x-axis. The x-intercepts stay where they are, because 0 times anything is still 0. A negative <i>a</i> also flips the graph over the x-axis.</p>
+  <h2>Vertical stretch and compression: <i>a</i> · <i>f</i>(<i>x</i>)</h2>
+  <ul class="lines">
+    <li>Multiply <b>every height</b> by <i>a</i>.</li>
+    <li>If |<i>a</i>| &gt; 1 the graph is <b>stretched</b> away from the x-axis.</li>
+    <li>If 0 &lt; |<i>a</i>| &lt; 1 the graph is <b>compressed</b> toward the x-axis.</li>
+    <li>The x-intercepts stay where they are, because 0 times anything is 0.</li>
+    <li>A negative <i>a</i> also flips the graph over the x-axis.</li>
+  </ul>
 
-  <h2>Horizontal stretch and compression</h2>
-  <p><i>y</i> = <i>f</i>(<i>bx</i>). The new graph reaches a given height when <i>bx</i> equals the old input, so <i>x</i> = (old input) / <i>b</i>. Every x-coordinate is divided by <i>b</i>. If |<i>b</i>| &gt; 1 the graph is <b>compressed</b> toward the y-axis, and if 0 &lt; |<i>b</i>| &lt; 1 it is <b>stretched</b> away from it. The y-intercept stays where it is. In the tool above, the slider <i>b</i> is this number.</p>
-  <p>Careful with the wording. <i>f</i>(2<i>x</i>) is a horizontal compression by a factor of ½ (the graph gets half as wide), and <i>f</i>(<i>x</i>/2) is a horizontal stretch by a factor of 2. If you factor the inside, <i>f</i>(<i>b</i>(<i>x</i> − <i>h</i>)) shifts by <i>h</i>, but <i>f</i>(<i>bx</i> − <i>c</i>) shifts by <i>c</i>/<i>b</i>. Always factor out <i>b</i> first.</p>
+  <h2>Horizontal stretch and compression: <i>f</i>(<i>bx</i>)</h2>
+  <ul class="lines">
+    <li>Every x-coordinate is <b>divided by <i>b</i></b>. This is another “inside” change, so it works backwards.</li>
+    <li>If |<i>b</i>| &gt; 1 the graph is <b>compressed</b> toward the y-axis. If 0 &lt; |<i>b</i>| &lt; 1 it is <b>stretched</b> away from it.</li>
+    <li>The y-intercept stays where it is.</li>
+    <li><i>f</i>(2<i>x</i>) is a compression by a factor of ½ (half as wide). <i>f</i>(<i>x</i>/2) is a stretch by a factor of 2.</li>
+    <li>In the tool above, the slider <i>b</i> is this number.</li>
+  </ul>
+  <div class="key2"><b>Careful:</b> <i>f</i>(<i>b</i>(<i>x</i> − <i>h</i>)) shifts by <i>h</i>, but <i>f</i>(<i>bx</i> − <i>c</i>) shifts by <i>c</i>/<i>b</i>. <span class="hl">Always factor out <i>b</i> first.</span></div>
 
   <h2>Reflections</h2>
-  <p>−<i>f</i>(<i>x</i>) changes the sign of every output, so each point (<i>x</i>, <i>y</i>) goes to (<i>x</i>, −<i>y</i>): the graph is flipped over the x-axis. <i>f</i>(−<i>x</i>) changes the sign of every input, so each point goes to (−<i>x</i>, <i>y</i>): the graph is flipped over the y-axis. If <i>f</i> is an even function, <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>) and the second reflection changes nothing.</p>
+  <ul class="lines">
+    <li><b>−<i>f</i>(<i>x</i>)</b> changes the sign of every output: (<i>x</i>, <i>y</i>) goes to (<i>x</i>, −<i>y</i>). The graph flips over the <b>x-axis</b>.</li>
+    <li><b><i>f</i>(−<i>x</i>)</b> changes the sign of every input: (<i>x</i>, <i>y</i>) goes to (−<i>x</i>, <i>y</i>). The graph flips over the <b>y-axis</b>.</li>
+    <li>If <i>f</i> is an even function, <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>) and the second reflection changes nothing.</li>
+  </ul>
 
   <h2>Rotation</h2>
-  <p>Turning the graph about the origin by θ sends (<i>x</i>, <i>y</i>) to (<i>x</i> cos θ − <i>y</i> sin θ, <i>x</i> sin θ + <i>y</i> cos θ). A rotated graph is often no longer a function, so it cannot be written as <i>y</i> = <i>f</i>(<i>x</i>). A 180° rotation equals both reflections together.</p>
+  <ul class="lines">
+    <li>Turning the graph about the origin by θ sends (<i>x</i>, <i>y</i>) to (<i>x</i> cos θ − <i>y</i> sin θ, <i>x</i> sin θ + <i>y</i> cos θ).</li>
+    <li>A rotated graph is often <b>not a function</b> any more, so it cannot be written as <i>y</i> = <i>f</i>(<i>x</i>).</li>
+    <li>A 180° rotation equals both reflections together.</li>
+  </ul>
 
   <h2>Order of the changes</h2>
-  <p>The tool applies the changes in this order: <i>b</i> and the y-axis reflection inside the function, then the shift <i>h</i>, then <i>a</i> and the x-axis reflection, then the shift <i>k</i>, and finally the rotation. When you read an equation such as <i>y</i> = −2<i>f</i>(3(<i>x</i> − 1)) + 4, work from the inside out: compress by 3, shift right 1, stretch by 2 and flip over the x-axis, then shift up 4. Doing the steps in a different order can give a different graph.</p>
+  <p>The tool applies the changes in this order:</p>
+  <ol class="steps">
+    <li><i>b</i> and the y-axis reflection (inside the function)</li>
+    <li>the shift <i>h</i></li>
+    <li><i>a</i> and the x-axis reflection</li>
+    <li>the shift <i>k</i></li>
+    <li>the rotation</li>
+  </ol>
+  <p><b>Example:</b> <i>y</i> = −2<i>f</i>(3(<i>x</i> − 1)) + 4. Work from the <b>inside out</b>:</p>
+  <ul class="lines">
+    <li>compress by 3 horizontally</li>
+    <li>shift right 1</li>
+    <li>stretch by 2 and flip over the x-axis</li>
+    <li>shift up 4</li>
+  </ul>
+  <p>A different order can give a different graph.</p>
 
   <h2>Guided practice</h2>
   <p>Try each problem on paper first, then press the line to see the solution. You can check any answer with the sliders above.</p>

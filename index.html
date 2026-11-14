@@ -31,6 +31,7 @@ canvas{width:100%;height:100%;display:block;cursor:grab}
 .mt button.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
 .mt input{width:84px;font-size:14px;padding:4px 8px;display:inline-block}
 .mt .sp{flex:1}
+.mt .grp{display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
 .ml{width:min(100%,760px);display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
 .ml span.c{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:3px 6px 3px 10px}
 .ml i.d{width:9px;height:9px;border-radius:50%;display:inline-block}
@@ -96,6 +97,8 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .det .m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:16px}
 .det .m sup{font-size:.62em;line-height:0}
 .det .note{color:var(--sub);font-size:12px;margin-top:8px}
+.det tr.sec td{background:var(--bg);font-weight:700;color:var(--ink);padding-top:10px;border-bottom:1px solid var(--line)}
+.det .yes{color:#1f9d55;font-weight:700}.det .no{color:#e0483e;font-weight:700}
 .det .rg{width:84px;font-size:13px;padding:3px 6px;display:inline-block}
 .det .rgb{margin:0;padding:3px 10px;font-size:12px}
 .det .rgm{color:#e0483e}
@@ -128,8 +131,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
   <button type="button" data-m="t" aria-pressed="false">Tangent line</button>
   <span class="sp"></span>
   <span>Show:</span><select id="mdec" aria-label="Number format"><option value="a">Auto</option><option value="0">Whole numbers</option><option value="1">1 decimal</option><option value="2">2 decimals</option></select>
-  <span>or at x =</span><input type="text" id="mx" inputmode="decimal" placeholder="1.5" autocomplete="off" aria-label="x value">
-  <button type="button" id="mAp">Point</button><button type="button" id="mAt">Tangent</button>
+  <span class="grp"><span>or at x =</span><input type="text" id="mx" inputmode="decimal" placeholder="1.5" autocomplete="off" aria-label="x value"><button type="button" id="mAp">Point</button><button type="button" id="mAt">Tangent</button></span>
 </div>
 <div class="ml" id="ml"></div>
 <details class="xf" id="xf"><summary>Move and reshape the selected graph</summary>
@@ -139,6 +141,8 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <button type="button" data-x="left">← Left</button><button type="button" data-x="right">→ Right</button>
     <button type="button" data-x="stretch">↕ Stretch ×</button><button type="button" data-x="squeeze">↔ Squeeze ÷</button>
     <button type="button" data-x="fx">Flip over x-axis</button><button type="button" data-x="fy">Flip over y-axis</button>
+    <button type="button" data-x="tangent" title="Move the selected graph up or down until it just touches another graph. Press again for the next touching position.">Make tangent</button>
+    <button type="button" data-x="inverse" title="Add the inverse relation (reflection over y = x)">Add inverse</button>
     <button type="button" id="xu">Undo</button>
   </div>
   <p id="xm">Changes the equation of the row you last clicked. Works on plain equations such as y = x^2. See <a href="/function-transformations.html">function transformations</a> for how each change works.</p>
@@ -155,6 +159,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <button type="button" data-v="cos(">cos</button>
     <button type="button" data-v="tan(">tan</button>
     <button type="button" data-v="√(">√</button>
+    <button type="button" data-v="cbrt(" title="cube root">∛</button>
     <button type="button" data-v="abs(">abs</button>
     <button type="button" data-v="π">π</button>
     <button type="button" data-v="asin(" title="inverse sine">sin⁻¹</button>
@@ -199,7 +204,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
   <details>
     <summary>More tips and supported features</summary>
     <ul>
-      <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e. The buttons sin⁻¹, cos⁻¹ and tan⁻¹ insert asin, acos and atan, the inverse trigonometric functions. ln is the natural logarithm and log is base 10.</li>
+      <li>Supported: + − * / ^ ( ), sqrt, cbrt (cube root), abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e. The buttons sin⁻¹, cos⁻¹ and tan⁻¹ insert asin, acos and atan, the inverse trigonometric functions. ln is the natural logarithm and log is base 10.</li>
       <li>Equations with both x and y also work, such as x^2+y^2=1 or y^2=x.</li>
       <li>Under any y = f(x) equation, click Details of graph to see intercepts, maximum and minimum points, inflection points, asymptotes, end behavior and derivatives.</li>
       <li>Piecewise functions: add a condition in braces, for example <b>x {x&lt;2}, x+1 {x&gt;=2}</b>. Open circles mark points that are not included, filled circles mark points that are, and the interval such as [2, ∞) is shown under the equation. Use one equation per piece or separate pieces with a comma.</li>
@@ -212,7 +217,11 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
   <div class="chips">
     <a href="/algebra-1.html">Algebra 1</a>
     <a href="/algebra-2.html">Algebra 2</a>
+    <a href="/precalculus.html">Precalculus</a>
     <a href="/parent-functions.html">Parent functions</a>
+    <a href="/functions-and-inverses.html">Inverse functions</a>
+    <a href="/continuity-and-derivatives.html">Continuity and derivatives</a>
+    <a href="/polynomial-degrees.html">Polynomial degrees</a>
     <a href="/trigonometry.html">Trigonometry</a>
     <a href="/conic-sections.html">Ellipses and hyperbolas</a>
     <a href="/function-transformations.html">Function transformations</a>
@@ -221,9 +230,9 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 </section>
 
 <script>
-const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,log:Math.log10,exp:Math.exp,floor:Math.floor,ceil:Math.ceil};
+const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,log:Math.log10,exp:Math.exp,floor:Math.floor,ceil:Math.ceil,cbrt:Math.cbrt};
 const CONST={pi:Math.PI,e:Math.E};
-const NAMES=['asin','acos','atan','sqrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
+const NAMES=['asin','acos','atan','sqrt','cbrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
 
 function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/^y=/,'')}
 
@@ -240,6 +249,12 @@ function tokenize(s){
   return t;
 }
 
+function rpow(a,b){
+  if(a<0&&!Number.isInteger(b)){
+    for(let q=3;q<=99;q+=2){const k=b*q;if(Math.abs(k-Math.round(k))<1e-9){const r=Math.pow(-a,b);return Math.round(k)%2===0?r:-r}}
+  }
+  return Math.pow(a,b);
+}
 function parse(s){
   const T=tokenize(s);
   let p=0;
@@ -274,7 +289,7 @@ function parse(s){
   }
   function power(){
     const a=atom();
-    if(isO('^')){p++;const b=unary();return (x,y)=>Math.pow(a(x,y),b(x,y))}
+    if(isO('^')){p++;const b=unary();return (x,y)=>rpow(a(x,y),b(x,y))}
     return a;
   }
   function atom(){
@@ -800,6 +815,147 @@ function endBeh(f,sg){
   return {k:'none'};
 }
 
+function propsOf(f,xs,ys,o,N,step,up,down,mx,mn){
+  const P={};
+  const brk=new Uint8Array(N+1);
+  for(let i=0;i<N;i++){
+    const a=ys[i],b=ys[i+1];
+    if(!fin(a)||!fin(b)){brk[i]=1;continue}
+    const d=Math.abs(b-a);
+    const pd=(i>0&&fin(ys[i-1]))?Math.abs(a-ys[i-1]):d;
+    const nd=(i+2<=N&&fin(ys[i+2]))?Math.abs(ys[i+2]-b):d;
+    if((d>0.5&&d>2.5*Math.max(pd,nd)+1e-9)||(a*b<0&&Math.abs(a)>50&&Math.abs(b)>50))brk[i]=2;
+  }
+  /* continuous pieces */
+  const seg=[];let st=-1;
+  for(let i=0;i<=N;i++){
+    const ok=fin(ys[i]);
+    if(ok&&st<0)st=i;
+    if(st>=0&&(!ok||i===N||brk[i])){const e=ok?i:i-1;if(e>st)seg.push({s:st,e});st=-1}
+  }
+  seg.forEach(g=>{
+    let u=true,d=true,lo=Infinity,hi=-Infinity;
+    for(let i=g.s;i<=g.e;i++){const y=ys[i];if(y<lo)lo=y;if(y>hi)hi=y;if(i>g.s){if(!(y>ys[i-1]))u=false;if(!(y<ys[i-1]))d=false}}
+    g.dir=u?1:d?-1:0;g.lo=lo;g.hi=hi;
+  });
+  /* domain */
+  const raw=[];
+  for(let i=0;i<=N;){
+    if(!fin(ys[i])){i++;continue}
+    const s0=i;while(i<=N&&fin(ys[i]))i++;raw.push([s0,i-1]);
+  }
+  const runs=[],holes=[];
+  raw.forEach(r=>{
+    const p=runs[runs.length-1];
+    if(p&&r[0]-p[1]-1<=3){holes.push(r6((xs[p[1]]+xs[r[0]])/2));p[1]=r[1]}else runs.push(r.slice());
+  });
+  const bnd=(good,bad)=>{let g=good,b=bad;for(let k=0;k<60;k++){const m=(g+b)/2;if(fin(f(m)))g=m;else b=m}return g};
+  let infUp=false,infDown=false;
+  P.runs=runs.map(r=>{
+    const out={l:-Infinity,r:Infinity,lc:false,rc:false};
+    const edge=(g,inw)=>{
+      const x=r6(g),closed=fin(f(x));
+      if(!closed){
+        const v1=f(x+inw*1e-9),v2=f(x+inw*1e-12);
+        if(fin(v1)&&fin(v2)&&Math.abs(v2)>Math.abs(v1)*1.15&&Math.abs(v2)>5){if(v2>0)infUp=true;else infDown=true}
+      }
+      return [x,closed];
+    };
+    if(r[0]>0){const [x,c]=edge(bnd(xs[r[0]],xs[r[0]-1]),1);out.l=x;out.lc=c}
+    if(r[1]<N){const [x,c]=edge(bnd(xs[r[1]],xs[r[1]+1]),-1);out.r=x;out.rc=c}
+    return out;
+  });
+  P.holes=holes;
+  /* one-to-one, onto */
+  let one=seg.length>0&&seg.every(g=>g.dir!==0);
+  const srt=seg.slice().sort((p,q)=>p.lo-q.lo);
+  if(one){let ch=srt[0].hi;for(let k=1;k<srt.length;k++){if(srt[k].lo<ch-1e-9*(1+Math.abs(ch))){one=false;break}ch=Math.max(ch,srt[k].hi)}}
+  P.one=one;
+  let gap=false;
+  if(srt.length){let ch=srt[0].hi;for(let k=1;k<srt.length;k++){if(srt[k].lo>ch+1e-6*(1+Math.abs(ch))&&ch<1e4&&srt[k].lo>-1e4){gap=true;break}ch=Math.max(ch,srt[k].hi)}}
+  P.unA=up||infUp||mx>1e4;P.unB=down||infDown||mn<-1e4;P.gap=gap;
+  P.onto=P.unA&&P.unB&&!gap;
+  P.lo=mn;P.hi=mx;
+  /* discontinuities */
+  const disc=[],near=x=>o.va&&o.va.some(v=>Math.abs(v.x-x)<0.05);
+  for(let i=0;i<N;i++)if(brk[i]===2){const x=(xs[i]+xs[i+1])/2;disc.push({x:r6(x),k:near(x)?'vertical asymptote':'jump'})}
+  holes.forEach(x=>disc.push({x,k:near(x)?'vertical asymptote':'undefined point (hole)'}));
+  (o.va||[]).forEach(v=>disc.push({x:v.x,k:'vertical asymptote'}));
+  disc.sort((a,b)=>a.x-b.x);
+  const edgesX=P.runs.flatMap(r=>[r.l,r.r]).filter(isFinite);
+  P.disc=disc.filter((d,i)=>(i===0||Math.abs(d.x-disc[i-1].x)>0.05)&&!edgesX.some(e=>Math.abs(e-d.x)<0.05));
+  /* corners and vertical tangents */
+  const farOk=(i,w)=>{for(let j=i-w;j<=i+w;j++){if(j<0||j>N)continue;if(!fin(ys[j]))return false;if(j<N&&brk[j])return false}return true};
+  const cor=[];
+  for(let i=1;i<N;i++){
+    if(i<8||i>N-8||!farOk(i,5))continue;
+    const sl=(ys[i]-ys[i-1])/step,sr=(ys[i+1]-ys[i])/step;
+    if(Math.abs(sr-sl)>0.1*(1+Math.abs(sl)+Math.abs(sr))){
+      const a=xs[i-1],M=40,sub=[];
+      for(let j=0;j<=M;j++){const x=a+2*step*j/M;sub.push(f(x))}
+      const h=2*step/M;let best=-1,bj=0;
+      for(let j=1;j<M;j++){
+        const s1=(sub[j]-sub[j-1])/h,s2=(sub[j+1]-sub[j])/h;
+        if(!fin(s1)||!fin(s2))continue;
+        const d=Math.abs(s2-s1)/(1+Math.abs(s1)+Math.abs(s2));
+        if(d>best){best=d;bj=j}
+      }
+      if(best>0.1){
+        let ms=0,jm=0;
+        for(let j=0;j<M;j++){const q=Math.abs(sub[j+1]-sub[j])/h;if(fin(q)&&q>ms){ms=q;jm=j}}
+        if(ms>1.5*(Math.max(Math.abs(sl),Math.abs(sr))+1)){
+          let lo=a+h*(jm-1),hi=a+h*(jm+2);
+          const G=x=>Math.abs(f(x+1e-7)-f(x-1e-7));
+          for(let k=0;k<80;k++){const m1=lo+(hi-lo)/3,m2=hi-(hi-lo)/3;if(G(m1)<G(m2))lo=m1;else hi=m2}
+          cor.push({x:r6((lo+hi)/2),k:'vertical tangent or cusp'});
+        }else cor.push({x:r6(a+h*bj),k:'corner'});
+      }
+    }
+  }
+  cor.sort((a,b)=>a.x-b.x);
+  P.cor=cor.filter((d,i)=>i===0||Math.abs(d.x-cor[i-1].x)>0.05);
+  P.cont=P.disc.length===0;
+  P.diff=P.cont&&P.cor.length===0;
+  /* symmetry */
+  const T=[0.37,1.3,2.9,5.1,11.7],close=(a,b)=>fin(a)&&fin(b)&&Math.abs(a-b)<=1e-9*(1+Math.abs(a)+Math.abs(b));
+  P.sym=[];
+  if(T.every(t=>close(f(t),f(-t))&&fin(f(t))))P.sym.push('even: symmetric about the y-axis, <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>)');
+  if(T.every(t=>fin(f(t))&&close(f(t),-f(-t))))P.sym.push('odd: symmetric about the origin, <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>)');
+  if(!P.sym.length){
+    (o.ex||[]).slice(0,4).forEach(e=>{
+      if(P.sym.length)return;
+      if(T.every(t=>close(f(e.x+t),f(e.x-t))&&fin(f(e.x+t))))P.sym.push('symmetric about the line <i>x</i> = '+nf(e.x));
+    });
+    (o.infl||[]).slice(0,4).forEach(e=>{
+      if(P.sym.length)return;
+      if(T.every(t=>fin(f(e.x+t))&&close(f(e.x+t)-e.y,-(f(e.x-t)-e.y))))P.sym.push('symmetric about the point '+pt(e.x,e.y));
+    });
+  }
+  /* increasing / decreasing and concavity */
+  const brks=new Set();
+  (o.ex||[]).forEach(e=>brks.add(e.x));(o.va||[]).forEach(e=>brks.add(e.x));P.disc.forEach(e=>brks.add(e.x));P.cor.forEach(e=>brks.add(e.x));
+  P.runs.forEach(r=>{if(isFinite(r.l))brks.add(r.l);if(isFinite(r.r))brks.add(r.r)});
+  const cb=new Set((o.infl||[]).map(e=>e.x));
+  (o.va||[]).forEach(e=>cb.add(e.x));P.disc.forEach(e=>cb.add(e.x));P.cor.forEach(e=>cb.add(e.x));P.runs.forEach(r=>{if(isFinite(r.l))cb.add(r.l);if(isFinite(r.r))cb.add(r.r)});
+  const ivs=(set,test)=>{
+    const b=[...set].sort((p,q)=>p-q),pts=[-Infinity,...b,Infinity],out={'1':[],'-1':[],'0':[]};
+    for(let i=0;i<pts.length-1;i++){
+      const p=pts[i],q=pts[i+1];
+      const F=[1,2.5,6,15];
+      const ms=p===-Infinity&&q===Infinity?[-7,-2.5,-1,1,2.5,7]:p===-Infinity?F.map(k=>q-k):q===Infinity?F.map(k=>p+k):[.2,.4,.6,.8].map(k=>p+(q-p)*k);
+      let pos=0,neg=0,zer=0,seen=0;
+      ms.forEach(m=>{if(!fin(f(m)))return;const sg=test(m);if(sg===null)return;seen++;if(sg>0)pos++;else if(sg<0)neg++;else zer++});
+      if(!seen)continue;
+      out[pos>neg?1:neg>pos?-1:(pos===0?0:1)].push([p,q]);
+    }
+    return out;
+  };
+  const sgn=(v,t)=>v>t?1:v<-t?-1:0;
+  P.mono=ivs(brks,m=>{const h=1e-6*Math.max(1,Math.abs(m)),d=(f(m+h)-f(m-h))/(2*h);return fin(d)?sgn(d,1e-6*(1+Math.abs(f(m)))):null});
+  P.conc=ivs(cb,m=>{const h=1e-3,d=(f(m+h)-2*f(m)+f(m-h))/(h*h);return fin(d)?sgn(d,1e-4*(1+Math.abs(f(m)))):null});
+  return P;
+}
+
 function analyze(f){
   const N=AN.n,step=(AN.hi-AN.lo)/N;
   const xs=new Float64Array(N+1),ys=new Float64Array(N+1);
@@ -809,6 +965,7 @@ function analyze(f){
   let mn=Infinity,mx=-Infinity,all=true;
   for(let i=0;i<=N;i++){const y=ys[i];if(!fin(y)){all=false;continue}if(y<mn)mn=y;if(y>mx)mx=y}
   if(all&&mx-mn<=1e-12*(1+Math.abs(mx))){o.constant=true;o.cval=ys[0];return o}
+  o.xs=xs;
 
   const D=x=>{const h=1e-6*Math.max(1,Math.abs(x));return (f(x+h)-f(x-h))/(2*h)};
   const S=x=>{const h=1e-3;return (f(x+h)-2*f(x)+f(x-h))/(h*h)};
@@ -902,6 +1059,8 @@ function analyze(f){
   o.absMax=null;o.absMin=null;
   if(!up&&maxs.length){const b=maxs.reduce((p,q)=>q.y>p.y?q:p);if(b.y>=mx-tol)o.absMax=b}
   if(!down&&mins.length){const b=mins.reduce((p,q)=>q.y<p.y?q:p);if(b.y<=mn+tol)o.absMin=b}
+  delete o.xs;
+  try{o.p=propsOf(f,xs,ys,o,N,step,up,down,mx,mn)}catch(e){o.p=null}
   return o;
 }
 
@@ -938,6 +1097,52 @@ function detailHtml(a){
     const eb=e=>e.k==='lim'?nf(e.L):e.k==='inf'?(e.s>0?'+∞':'−∞'):e.k==='obl'?(e.y>0?'+∞':'−∞'):e.k==='undef'?'not defined there':'no limit';
     add('End behavior','<i>x</i> → −∞: <i>y</i> → '+eb(a.el)+'<br><i>x</i> → +∞: <i>y</i> → '+eb(a.er));
   }
+  const sec=t=>rows.push('<tr class="sec"><td colspan="2">'+t+'</td></tr>');
+  const ivTxt=arr=>arr.length?arr.slice(0,4).map(([p,q])=>'('+nf(p)+', '+nf(q)+')').join(' ∪ ')+(arr.length>4?' … ('+arr.length+' intervals, the pattern repeats)':''):'None';
+  const yn=(b,y,n)=>'<span class="'+(b?'yes':'no')+'">'+(b?'Yes':'No')+'</span> · '+(b?y:n);
+  sec('Function properties');
+  if(a.constant){
+    add('Is it a function?',yn(true,'it passes the vertical line test','')) ;
+    add('One-to-one?',yn(false,'','every input gives the same output, so it fails the horizontal line test'));
+    add('Onto the real numbers?',yn(false,'','the only output is '+nf(a.cval)));
+    add('Symmetry','even: symmetric about the y-axis');
+    add('Continuous?',yn(true,'no breaks or jumps',''));
+    add('Differentiable?',yn(true,'smooth everywhere, the slope is 0',''));
+  }else if(a.p){
+    const P=a.p;
+    const dom=(()=>{
+      if(!P.runs.length)return 'None found';
+      const all=P.runs.length===1&&P.runs[0].l===-Infinity&&P.runs[0].r===Infinity;
+      const edges=P.runs.flatMap(r=>[r.l,r.r]);
+      const ex=[...P.holes,...(a.va||[]).map(v=>v.x)].filter((x,i,A)=>A.findIndex(y=>Math.abs(y-x)<1e-4)===i&&!edges.some(e=>Math.abs(e-x)<1e-3));
+      const exT=ex.length?' except <i>x</i> = '+ex.slice(0,4).map(nf).join(', ')+(ex.length>4?', … ('+ex.length+' values)':''):'';
+      if(all)return 'All real numbers'+exT;
+      return P.runs.map(r=>(r.l===-Infinity?'(−∞':(r.lc?'[':'(')+nf(r.l))+', '+(r.r===Infinity?'∞)':nf(r.r)+(r.rc?']':')'))).join(' ∪ ')+exT;
+    })();
+    add('Domain (approx.)',dom);
+    const rg=P.gap?'Not one single interval (it has gaps)':(()=>{
+      const lo=P.unB?'(−∞':'['+nf(P.lo),hi=P.unA?'∞)':nf(P.hi)+']';
+      let l=lo,h=hi;
+      const L=[a.el,a.er].filter(e=>e.k==='lim').map(e=>e.L);
+      if(!P.unB&&L.some(v=>Math.abs(v-P.lo)<1e-6*(1+Math.abs(v)))){l='('+nf(L.find(v=>Math.abs(v-P.lo)<1e-6*(1+Math.abs(v))))}
+      if(!P.unA&&L.some(v=>Math.abs(v-P.hi)<1e-6*(1+Math.abs(v)))){h=nf(L.find(v=>Math.abs(v-P.hi)<1e-6*(1+Math.abs(v))))+')'}
+      return l+', '+h;
+    })();
+    add('Range (approx.)',rg);
+    add('Is it a function?',yn(true,'each <i>x</i> gives one <i>y</i>, so it passes the vertical line test',''));
+    add('One-to-one?',yn(P.one,'each <i>y</i> comes from only one <i>x</i> (passes the horizontal line test), so it has an inverse function','some <i>y</i>-value is reached twice (fails the horizontal line test), so it has no inverse function unless you limit the domain'));
+    add('Onto the real numbers?',yn(P.onto,'every real number is an output','not every real number is an output'));
+    add('Symmetry',P.sym.length?P.sym.join('<br>'):'None found');
+    add('Increasing on',ivTxt(P.mono['1']));
+    add('Decreasing on',ivTxt(P.mono['-1']));
+    if(P.mono['0'].length)add('Constant on',ivTxt(P.mono['0']));
+    add('Concave up on',ivTxt(P.conc['1']));
+    add('Concave down on',ivTxt(P.conc['-1']));
+    const dl=arr=>arr.slice(0,6).map(d=>'<i>x</i> ≈ '+nf(d.x)+' ('+d.k+')').join('<br>')+(arr.length>6?'<br>… ('+arr.length+' in total)':'');
+    add('Continuous?',P.cont?yn(true,'no breaks, holes or jumps found',''):yn(false,'','not continuous at:<br>'+dl(P.disc)));
+    add('Differentiable?',P.diff?yn(true,'smooth, so every point has a tangent line',''):yn(false,'',(P.disc.length?'fails at the break points above':'')+(P.cor.length?(P.disc.length?'<br>':'')+'not differentiable at:<br>'+dl(P.cor):'')));
+  }
+  sec('Derivatives');
   add('First derivative','<span data-d="1">Loading…</span>');
   add('Second derivative','<span data-d="2">Loading…</span>');
   return '<table>'+rows.join('')+'</table><div class="note">Values are numerical approximations found by searching <i>x</i> from <input type="number" class="rg" data-r="lo" value="'+AN.lo+'" aria-label="Search from x"> to <input type="number" class="rg" data-r="hi" value="'+AN.hi+'" aria-label="Search to x"> <button type="button" class="rgb">Apply</button> <span class="rgm"></span></div>';
@@ -1067,12 +1272,23 @@ function classify(r,t){
   if(/^[-+]?[0-9.]*\/\(?[-+]?[0-9.]*x\)?([+-][0-9.]+)?$/.test(c))return {n:'Reciprocal function',u:'/parent-functions.html#recip'};
   return null;
 }
+function vlt(r){
+  const W=cv.clientWidth||600,H=cv.clientHeight||450,x0=v.cx-W/2/v.s,x1=v.cx+W/2/v.s,y0=v.cy-H/2/v.s,y1=v.cy+H/2/v.s;
+  for(let i=0;i<=40;i++){
+    const x=x0+(x1-x0)*(i+.37)/41;let pv=r.f(x,y0),cnt=0;
+    for(let j=1;j<=400;j++){const y=y0+(y1-y0)*j/400,val=r.f(x,y);if(isFinite(pv)&&isFinite(val)&&pv*val<0)cnt++;pv=val}
+    if(cnt>=2)return false;
+  }
+  return true;
+}
 function setType(r,d){
   const pv=d.querySelector('.pv');let ty=d.querySelector('.ty');
   if(!ty){ty=document.createElement('div');ty.className='ty';pv.after(ty)}
   let k=null;try{k=r.f||r.imp?classify(r,r.t.trim()):null}catch(e){}
-  if(!k){ty.hidden=true;ty.textContent='';return}
-  ty.hidden=false;ty.innerHTML=k.n+(k.u?'<a href="'+k.u+'">Learn more</a>':'');
+  let extra='';
+  if(r.f&&r.imp&&!r.ineq){try{extra=vlt(r)?'Passes the vertical line test, so <i>y</i> is a function of <i>x</i>':'Fails the vertical line test, so it is <b>not a function</b> of <i>x</i>'}catch(e){}}
+  if(!k&&!extra){ty.hidden=true;ty.textContent='';return}
+  ty.hidden=false;ty.innerHTML=(k?k.n+(k.u?'<a href="'+k.u+'">Learn more</a>':''):'')+(k&&extra?' · ':'')+extra;
 }
 function upd(r,d){
   const pv=d.querySelector('.pv'),t=r.t.trim();
@@ -1214,9 +1430,59 @@ function addConst(t,k){
   return t+(k<0?' - ':' + ')+Math.abs(k);
 }
 const subX=(t,rep)=>t.replace(/(?<![a-z])x(?![a-z])/gi,rep);
+let tg=null;
+function tangentCands(S){
+  const W=cv.clientWidth,x0=v.cx-W/2/v.s-2,x1=v.cx+W/2/v.s+2,N=2000,step=(x1-x0)/N,f=S.f,out=[];
+  rows.forEach(O=>{
+    if(O===S||!O.f||O.imp||O.ineq)return;
+    const g=O.f,d=x=>g(x)-f(x),dd=x=>{const h=1e-6*Math.max(1,Math.abs(x));return (d(x+h)-d(x-h))/(2*h)};
+    let px=x0,pv=dd(px);
+    for(let i=1;i<=N;i++){
+      const x=x0+i*step,cu=dd(x);
+      if(isFinite(pv)&&isFinite(cu)&&pv*cu<0){
+        let a=px,b=x,fa=pv;
+        for(let k=0;k<50;k++){const m=(a+b)/2,dm=dd(m);if(!isFinite(dm))break;if(fa*dm<=0)b=m;else{a=m;fa=dm}}
+        const xm=(a+b)/2,k=d(xm);
+        if(isFinite(k)&&Math.abs(dd(xm))<1e-3*(1+Math.abs(k))&&Math.abs(k)<1e6)out.push({O,x:xm,k});
+      }
+      px=x;pv=cu;
+    }
+  });
+  out.sort((a,b)=>Math.abs(a.k)-Math.abs(b.k));
+  return out.filter((c,i)=>!out.slice(0,i).some(p=>p.O===c.O&&Math.abs(p.x-c.x)<1e-4)).slice(0,12);
+}
 function xfApply(op){
   const msg=document.getElementById('xm'),keep=msg.dataset.o||msg.innerHTML;msg.dataset.o=keep;
   const say=t=>{msg.textContent=t};
+  if(op==='inverse'||op==='tangent'){
+    const S=rows[focusIdx]||rows[0];
+    const t0=(S.t||'').trim().replace(/^y\s*=\s*/i,'');
+    if(!t0||!S.f||S.imp||/[{}<>=≤≥]/.test(t0)){say('Select a plain equation such as x^2 first (click its box).');return}
+    if(op==='inverse'){
+      if(rows.length>=COLORS.length){say('Remove an equation first. Up to '+COLORS.length+' equations are allowed.');return}
+      let a=S.an;if(!a){try{a=analyze(S.f)}catch(e){}}
+      const one=a&&a.p?a.p.one:null;
+      const inv='x='+t0.replace(/(?<![a-z])x(?![a-z])/gi,'y');
+      rows.push({t:inv,c:COLORS.find(c=>!rows.some(r=>r.c===c))});build();
+      say('Added the inverse '+inv+' (the reflection over y = x). '+(one===false?'The original is not one-to-one, so this inverse is not a function.':one===true?'The original is one-to-one, so the inverse is also a function.':''));
+      return;
+    }
+    if(!rows.some(O=>O!==S&&O.f&&!O.imp&&!O.ineq)){say('Add a second graph first, then press Make tangent.');return}
+    if(!tg||tg.S!==S||S.t!==tg.applied){
+      const cands=tangentCands(S);
+      if(!cands.length){say('No tangent position found in the visible area. Zoom out and try again.');return}
+      tg={S,base:t0,cands,i:-1,applied:null};
+      xundo.push({r:S,t:S.t});if(xundo.length>30)xundo.shift();
+    }
+    tg.i=(tg.i+1)%tg.cands.length;
+    const c=tg.cands[tg.i],out=addConst(tg.base,+c.k.toPrecision(8));
+    const inp=list.querySelectorAll('input[type=text]')[rows.indexOf(S)];
+    S.t=out;tg.applied=out;if(inp){inp.value=out;inp.dispatchEvent(new Event('input'))}
+    for(let i=marks.length-1;i>=0;i--)if(marks[i].auto)marks.splice(i,1);
+    addMark('p',c.O,c.x);marks[marks.length-1].auto=true;renderMarks();draw();
+    msg.innerHTML='Touching <span style="color:'+c.O.c+'">●</span> y = '+c.O.t.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;')+' at x = '+mf(c.x)+' ('+(tg.i+1)+' of '+tg.cands.length+'). Press <b>Make tangent</b> again for the next one.';
+    return;
+  }
   const r=rows[focusIdx]||rows[0];
   let t=(r.t||'').trim().replace(/^y\s*=\s*/i,'');
   if(!t||!r.f||r.imp||/[{}<>=≤≥]/.test(t)){say('Select a plain equation such as x^2 or sin(x) first (click its box).');return}
@@ -1240,6 +1506,7 @@ function xfApply(op){
 }
 document.querySelectorAll('#xf button[data-x]').forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.onclick=()=>xfApply(b.dataset.x)});
 document.getElementById('xu').onclick=()=>{
+  tg=null;
   const u=xundo.pop();if(!u||!rows.includes(u.r))return;
   const inp=list.querySelectorAll('input[type=text]')[rows.indexOf(u.r)];
   u.r.t=u.t;if(inp){inp.value=u.t;inp.dispatchEvent(new Event('input'))}
