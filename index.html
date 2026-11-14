@@ -58,6 +58,8 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .help h2{font-size:15px;color:var(--ink);margin:12px 0 4px}
 .help ul{margin:0;padding-left:18px}
 .help a{color:#2f6fed}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chips a{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:6px 14px;text-decoration:none;color:var(--ink);font-size:15px}
 .dt{margin:2px 0 0;border:0;background:none;color:#2f6fed;font:inherit;font-size:14px;cursor:pointer;padding:4px 0}
 .det{margin:4px 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:14px;overflow-x:auto}
 .det[hidden],.dt[hidden]{display:none}
@@ -147,20 +149,14 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
       <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
     </ul>
   </details>
-  <h2>Learn</h2>
-  <ul>
-    <li><a href="/parent-functions.html">Parent functions and their graphs: types of functions explained</a></li>
-    <li><a href="/algebra-1.html">Algebra 1: interactive graphs, calculators and key formulas</a></li>
-    <li><a href="/linear-function.html">Linear function y = ax + b: interactive graph with sliders</a></li>
-    <li><a href="/quadratic-function.html">Quadratic function y = ax² + bx + c: vertex, discriminant and roots</a></li>
-    <li><a href="/algebra-2.html">Algebra 2: polynomials, roots and theorems with interactive tools</a></li>
-    <li><a href="/rational-functions.html">Rational function calculator: asymptotes, holes and intercepts</a></li>
-    <li><a href="/rational-root-theorem.html">Rational Root Theorem calculator: possible and actual rational roots</a></li>
-    <li><a href="/polynomial-from-roots.html">Polynomial from roots: factored form, expanded form and graph</a></li>
-    <li><a href="/descartes-rule-of-signs.html">Descartes' Rule of Signs calculator: possible positive and negative roots</a></li>
-    <li><a href="/intermediate-value-theorem.html">Intermediate Value Theorem calculator: guaranteed solutions on [a, b]</a></li>
-    <li><a href="/regression.html">Linear regression calculator: slope, R² and standard deviation</a></li>
-  </ul>
+  <h2>Study pages</h2>
+  <div class="chips">
+    <a href="/algebra-1.html">Algebra 1</a>
+    <a href="/algebra-2.html">Algebra 2</a>
+    <a href="/parent-functions.html">Parent functions</a>
+    <a href="/function-transformations.html">Function transformations</a>
+    <a href="/geometry-transformations.html">Geometry transformations</a>
+  </div>
 </section>
 
 <script>

@@ -49,6 +49,7 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
 .card .go{margin-top:auto;display:inline-block;border:1px solid #2f6fed;color:#2f6fed;border-radius:6px;padding:6px 12px;font-size:14px;text-decoration:none;align-self:flex-start}
 .card .go:hover{background:#2f6fed;color:#fff}
 .card .more{font-size:14px}
+table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.cmp td{border:1px solid var(--line);padding:6px 10px;text-align:left}table.cmp th{background:var(--panel)}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -164,6 +165,26 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
 </div>
 
 <div class="w">
+  <h2>Compare them at a glance</h2>
+  <div style="overflow-x:auto"><table class="cmp"><tr><th>Function</th><th>Domain</th><th>Range</th><th>Symmetry</th></tr>
+<tr><td>Linear</td><td>all reals</td><td>all reals</td><td>odd (origin)</td></tr>
+<tr><td>Quadratic</td><td>all reals</td><td>y ≥ 0</td><td>even (y-axis)</td></tr>
+<tr><td>Cubic</td><td>all reals</td><td>all reals</td><td>odd (origin)</td></tr>
+<tr><td>Absolute value</td><td>all reals</td><td>y ≥ 0</td><td>even (y-axis)</td></tr>
+<tr><td>Square root</td><td>x ≥ 0</td><td>y ≥ 0</td><td>neither</td></tr>
+<tr><td>Reciprocal</td><td>x ≠ 0</td><td>y ≠ 0</td><td>odd (origin)</td></tr>
+<tr><td>Exponential (2<sup>x</sup>)</td><td>all reals</td><td>y &gt; 0</td><td>neither</td></tr>
+<tr><td>Logarithm (ln x)</td><td>x &gt; 0</td><td>all reals</td><td>neither</td></tr>
+<tr><td>Sine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>odd (origin)</td></tr>
+<tr><td>Cosine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>even (y-axis)</td></tr>
+<tr><td>Tangent</td><td>x ≠ π/2 + kπ</td><td>all reals</td><td>odd (origin)</td></tr>
+  </table></div>
+  <h2>Even and odd functions</h2>
+  <p>A function is <b>even</b> if <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>). Its graph is a mirror image across the y-axis. A function is <b>odd</b> if <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>). Its graph looks the same after a 180° turn about the origin. To test one, replace <i>x</i> with −<i>x</i> and see what happens. For example, (−<i>x</i>)² = <i>x</i>², so the quadratic is even, while (−<i>x</i>)³ = −<i>x</i>³, so the cubic is odd.</p>
+
+  <h2>Try the transformations yourself</h2>
+  <p>Use the <a href="/function-transformations.html">function transformations tool</a> to shift, stretch, flip and rotate any of these eleven graphs with sliders.</p>
+
   <h2>How to move and reshape a parent function</h2>
   <p>Any parent function <i>f</i>(<i>x</i>) can be changed into <i>y</i> = <i>a</i> · <i>f</i>(<i>x</i> − <i>h</i>) + <i>k</i>. Each letter does one job:</p>
   <ul>

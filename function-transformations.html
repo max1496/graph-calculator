@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Function Transformations: Shift, Stretch, Reflect and Rotate a Graph</title>
+<meta name="description" content="Move the sliders to shift, stretch, reflect and rotate the graph of a parent function. See the new equation y = a·f(b(x − h)) + k and the original graph side by side.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+select{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btns button{margin-right:8px}
+.steps{margin:6px 0 0;padding-left:18px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/parent-functions.html">Parent functions</a></div>
+<h1 class="w">Function Transformations</h1>
+<div class="w"><p class="sum"><b>In short:</b> Pick a function, then shift, stretch, flip or rotate it. The dashed gray graph is the original and the blue graph is the new one.</p></div>
+
+<div class="w">
+  <label>Parent function
+    <select id="pf"></select>
+  </label>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="two">
+    <label>Shift right <i>h</i><output id="oh"></output><input type="range" id="sh" min="-6" max="6" step="0.5" value="0"></label>
+    <label>Shift up <i>k</i><output id="ok"></output><input type="range" id="sk" min="-6" max="6" step="0.5" value="0"></label>
+    <label>Vertical stretch <i>a</i><output id="oa"></output><input type="range" id="sa" min="0.25" max="4" step="0.25" value="1"></label>
+    <label>Horizontal squeeze <i>b</i><output id="ob"></output><input type="range" id="sb" min="0.25" max="4" step="0.25" value="1"></label>
+  </div>
+  <label class="chk"><input type="checkbox" id="fx"> Reflect over the x-axis</label>
+  <label class="chk"><input type="checkbox" id="fy"> Reflect over the y-axis</label>
+  <label>Rotate about the origin (degrees, counterclockwise)<output id="or"></output><input type="range" id="sr" min="-180" max="180" step="15" value="0"></label>
+  <div class="btns" style="margin-top:6px"><button type="button" id="reset">Reset</button></div>
+
+  <div class="facts" id="out"></div>
+
+  <h2>How each change works</h2>
+  <ul>
+    <li><b>Shift up or down (<i>k</i>):</b> <i>y</i> = <i>f</i>(<i>x</i>) + <i>k</i> moves every point up by <i>k</i>. A negative <i>k</i> moves it down.</li>
+    <li><b>Shift right or left (<i>h</i>):</b> <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>) moves every point right by <i>h</i>. This one feels backward: subtracting moves the graph to the right.</li>
+    <li><b>Vertical stretch (<i>a</i>):</b> <i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>) multiplies every height by <i>a</i>. If <i>a</i> is between 0 and 1 the graph is squashed.</li>
+    <li><b>Horizontal squeeze (<i>b</i>):</b> <i>y</i> = <i>f</i>(<i>bx</i>) squeezes the graph toward the y-axis when <i>b</i> is greater than 1 and stretches it when <i>b</i> is between 0 and 1.</li>
+    <li><b>Reflection:</b> <i>y</i> = −<i>f</i>(<i>x</i>) flips the graph over the x-axis. <i>y</i> = <i>f</i>(−<i>x</i>) flips it over the y-axis.</li>
+    <li><b>Rotation:</b> turning the graph around the origin by an angle moves each point (<i>x</i>, <i>y</i>) to (<i>x</i> cos θ − <i>y</i> sin θ, <i>x</i> sin θ + <i>y</i> cos θ). A rotated graph is often no longer a function, so it has no formula of the form <i>y</i> = <i>f</i>(<i>x</i>).</li>
+  </ul>
+  <h2>Order of the changes</h2>
+  <p>The tool applies the changes in this order: squeeze and reflect over the y-axis inside the function, then the shift <i>h</i>, then the stretch <i>a</i> and reflection over the x-axis, then the shift <i>k</i>, and finally the rotation. Changing the order can give a different graph, which is why teachers ask you to do them in a fixed order.</p>
+  <p>See the eleven basic shapes on the <a href="/parent-functions.html">parent functions</a> page, and plot your own result in the <a href="/">graphing calculator</a>.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const num=v=>String(+(+v).toFixed(2)).replace('-','\u2212');
+const wr=i=>/^(x|\([^()]*\))$/.test(i)?i:'('+i+')';
+const sp=i=>/^\([^()]*\)$/.test(i)?i.slice(1,-1):i;
+const P={
+  linear:{n:'Linear',f:x=>x,t:i=>i,c:i=>'('+i+')'},
+  quad:{n:'Quadratic',f:x=>x*x,t:i=>wr(i)+'\u00B2',c:i=>'('+i+')^2'},
+  cubic:{n:'Cubic',f:x=>x*x*x,t:i=>wr(i)+'\u00B3',c:i=>'('+i+')^3'},
+  abs:{n:'Absolute value',f:Math.abs,t:i=>'|'+sp(i)+'|',c:i=>'abs('+i+')'},
+  sqrt:{n:'Square root',f:Math.sqrt,t:i=>'\u221A'+wr(i),c:i=>'sqrt('+i+')'},
+  recip:{n:'Reciprocal',f:x=>1/x,t:i=>'1/'+wr(i),c:i=>'1/('+i+')'},
+  exp:{n:'Exponential (base 2)',f:x=>Math.pow(2,x),t:i=>'2^'+wr(i),c:i=>'2^('+i+')'},
+  ln:{n:'Logarithm (ln)',f:Math.log,t:i=>'ln('+sp(i)+')',c:i=>'ln('+i+')'},
+  sin:{n:'Sine',f:Math.sin,t:i=>'sin('+sp(i)+')',c:i=>'sin('+i+')'},
+  cos:{n:'Cosine',f:Math.cos,t:i=>'cos('+sp(i)+')',c:i=>'cos('+i+')'},
+  tan:{n:'Tangent',f:Math.tan,t:i=>'tan('+sp(i)+')',c:i=>'tan('+i+')'}
+};
+Object.keys(P).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=P[k].n;$('pf').appendChild(o)});
+$('pf').value='quad';
+function vals(){
+  return {p:P[$('pf').value],h:+$('sh').value,k:+$('sk').value,a:+$('sa').value,b:+$('sb').value,fx:$('fx').checked,fy:$('fy').checked,r:+$('sr').value};
+}
+function innerText(B,h){
+  const Bs=Math.abs(B)===1?'':num(Math.abs(B));
+  const core=h===0?'x':'(x '+(h>0?'\u2212 ':'+ ')+num(Math.abs(h))+')';
+  return (B<0?'\u2212':'')+Bs+core;
+}
+function innerCalc(B,h){return num(B).replace('\u2212','-')+'*'+(h===0?'x':'(x-('+num(h).replace('\u2212','-')+'))')}
+function g(s,x){const B=s.b*(s.fy?-1:1),A=s.a*(s.fx?-1:1);return A*s.p.f(B*(x-s.h))+s.k}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  const s=vals(),x0=-8,x1=8,y0=-6,y1=6;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=x0;u<=x1;u++){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=y0;u<=y1;u++){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let u=-6;u<=6;u+=2){if(u)ctx.fillText(u,X(u),Y(0)+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let u=-4;u<=4;u+=2){if(u)ctx.fillText(u,X(0)-5,Y(u))}
+  const trace=(fn,rot,style)=>{
+    const R=rot?18:8.5,N=rot?7000:Math.round(W*2),th=rot*Math.PI/180,co=Math.cos(th),si=Math.sin(th);
+    ctx.beginPath();let pen=false,py=null;
+    for(let i=0;i<=N;i++){
+      const x=-R+2*R*i/N,y=fn(x);
+      if(!Number.isFinite(y)||Math.abs(y)>300){pen=false;py=null;continue}
+      if(py!==null&&Math.abs(y-py)>40){pen=false}
+      py=y;
+      const px=x*co-y*si,qy=x*si+y*co;
+      if(!pen){ctx.moveTo(X(px),Y(qy));pen=true}else ctx.lineTo(X(px),Y(qy));
+    }
+    style();ctx.stroke();
+  };
+  ctx.save();ctx.setLineDash([6,5]);
+  trace(s.p.f,0,()=>{ctx.strokeStyle=c('--sub');ctx.lineWidth=1.8;ctx.globalAlpha=.8});
+  ctx.restore();
+  trace(x=>g(s,x),s.r,()=>{ctx.strokeStyle='#2f6fed';ctx.lineWidth=2.8;ctx.lineJoin='round'});
+}
+function update(){
+  const s=vals();
+  $('oh').textContent=num(s.h);$('ok').textContent=num(s.k);$('oa').textContent=num(s.a);$('ob').textContent=num(s.b);$('or').textContent=s.r+'\u00B0';
+  const B=s.b*(s.fy?-1:1),A=s.a*(s.fx?-1:1);
+  const inner=innerText(B,s.h);
+  let eq=(Math.abs(A)===1?(A<0?'\u2212':''):num(A)+'\u00B7')+s.p.t(inner);
+  if(s.k!==0)eq+=(s.k>0?' + ':' \u2212 ')+num(Math.abs(s.k));
+  const st=[];
+  if(s.h)st.push('shifted '+(s.h>0?'right ':'left ')+num(Math.abs(s.h)));
+  if(s.k)st.push('shifted '+(s.k>0?'up ':'down ')+num(Math.abs(s.k)));
+  if(s.a!==1)st.push((s.a>1?'stretched':'squashed')+' vertically by a factor of '+num(s.a));
+  if(s.b!==1)st.push((s.b>1?'squeezed':'stretched')+' horizontally by a factor of '+num(s.b>1?s.b:1/s.b));
+  if(s.fx)st.push('reflected over the x-axis');
+  if(s.fy)st.push('reflected over the y-axis');
+  if(s.r)st.push('rotated '+Math.abs(s.r)+'\u00B0 '+(s.r>0?'counterclockwise':'clockwise')+' about the origin');
+  let h='<table><tr><td>Original</td><td><i>y</i> = '+s.p.t('x')+'</td></tr>';
+  if(s.r){
+    h+='<tr><td>Transformed (before rotating)</td><td><i>y</i> = '+eq+'</td></tr>';
+  }else h+='<tr><td>Transformed</td><td><i>y</i> = '+eq+'</td></tr>';
+  h+='<tr><td>Changes</td><td>'+(st.length?'<ul class="steps"><li>'+st.join('</li><li>')+'</li></ul>':'None yet. Move a slider.')+'</td></tr>';
+  if(s.r){
+    h+='<tr><td>Note</td><td>A rotated graph is usually not a function, so it cannot be written as <i>y</i> = <i>f</i>(<i>x</i>).</td></tr>';
+  }else{
+    let calc=(Math.abs(A)===1?(A<0?'-':''):num(A).replace('\u2212','-')+'*')+s.p.c(innerCalc(B,s.h));
+    if(s.k!==0)calc+=(s.k>0?'+':'-')+num(Math.abs(s.k));
+    h+='<tr><td>Calculator</td><td><a href="/#e='+encodeURIComponent(calc)+'&c=2f6fed&v=0%2C0%2C48">Open this graph in the graphing calculator</a></td></tr>';
+  }
+  h+='</table>';
+  $('out').innerHTML=h;
+  draw();
+}
+['pf','sh','sk','sa','sb','fx','fy','sr'].forEach(id=>$(id).addEventListener('input',update));
+$('reset').onclick=()=>{$('sh').value=0;$('sk').value=0;$('sa').value=1;$('sb').value=1;$('fx').checked=false;$('fy').checked=false;$('sr').value=0;update()};
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>

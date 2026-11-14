@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geometry Transformations: Translate, Reflect, Rotate and Dilate a Shape</title>
+<meta name="description" content="Enter the vertices of a shape and apply a translation, reflection, rotation or dilation. See the new coordinates, the rule, and both shapes on the coordinate plane.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+select{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btns button{margin-right:8px}
+.steps{margin:6px 0 0;padding-left:18px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/function-transformations.html">Function transformations</a></div>
+<h1 class="w">Geometry Transformations</h1>
+<div class="w"><p class="sum"><b>In short:</b> Enter the corners of a shape, choose a transformation, and see where every corner goes. The blue shape is the original and the red shape is the image.</p></div>
+
+<div class="w">
+  <label>Vertices (one point for each corner)<input type="text" id="vt" value="(1, 1), (4, 1), (2, 4)" autocomplete="off" spellcheck="false"></label>
+  <label>Transformation
+    <select id="tp">
+      <option value="tr">Translation (slide)</option>
+      <option value="rf">Reflection (flip)</option>
+      <option value="ro">Rotation (turn)</option>
+      <option value="di">Dilation (resize)</option>
+    </select>
+  </label>
+  <div id="p-tr" class="two"><label>Move right <i>dx</i><input type="text" id="dx" value="3"></label><label>Move up <i>dy</i><input type="text" id="dy" value="-2"></label></div>
+  <div id="p-rf" hidden>
+    <label>Reflect over
+      <select id="rl">
+        <option value="x">the x-axis</option>
+        <option value="y">the y-axis</option>
+        <option value="yx">the line y = x</option>
+        <option value="ymx">the line y = −x</option>
+        <option value="xa">the vertical line x = a</option>
+        <option value="yb">the horizontal line y = b</option>
+      </select>
+    </label>
+    <label id="rv" hidden>Value of <span id="rvn">a</span><input type="text" id="rvv" value="2"></label>
+  </div>
+  <div id="p-ro" hidden>
+    <div class="two"><label>Angle in degrees (counterclockwise)<input type="text" id="ang" value="90"></label><span></span>
+    <label>Center <i>x</i><input type="text" id="rcx" value="0"></label><label>Center <i>y</i><input type="text" id="rcy" value="0"></label></div>
+  </div>
+  <div id="p-di" hidden>
+    <div class="two"><label>Scale factor <i>k</i><input type="text" id="kf" value="2"></label><span></span>
+    <label>Center <i>x</i><input type="text" id="dcx" value="0"></label><label>Center <i>y</i><input type="text" id="dcy" value="0"></label></div>
+  </div>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="facts" id="out"></div>
+
+  <h2>The four transformations</h2>
+  <ul>
+    <li><b>Translation:</b> every point slides the same distance in the same direction. (<i>x</i>, <i>y</i>) becomes (<i>x</i> + <i>dx</i>, <i>y</i> + <i>dy</i>).</li>
+    <li><b>Reflection:</b> every point flips over a line, the mirror line. Reflecting over the x-axis gives (<i>x</i>, −<i>y</i>). Over the y-axis it gives (−<i>x</i>, <i>y</i>). Over the line <i>y</i> = <i>x</i> it swaps the coordinates to (<i>y</i>, <i>x</i>).</li>
+    <li><b>Rotation:</b> every point turns around a center by the same angle. About the origin, 90° counterclockwise gives (−<i>y</i>, <i>x</i>), 180° gives (−<i>x</i>, −<i>y</i>) and 270° gives (<i>y</i>, −<i>x</i>).</li>
+    <li><b>Dilation:</b> every point moves away from or toward a center. About the origin, (<i>x</i>, <i>y</i>) becomes (<i>kx</i>, <i>ky</i>). If |<i>k</i>| &gt; 1 the shape gets bigger, and if 0 &lt; |<i>k</i>| &lt; 1 it gets smaller.</li>
+  </ul>
+  <h2>Congruent or similar?</h2>
+  <p>Translations, reflections and rotations are <b>rigid motions</b>. They keep side lengths and angles the same, so the image is congruent to the original. A dilation keeps the angles but multiplies every length by |<i>k</i>|, so the image is similar to the original, not congruent unless |<i>k</i>| = 1.</p>
+  <p>For graphs of functions instead of shapes, see <a href="/function-transformations.html">function transformations</a>.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const N=v=>{if(Math.abs(v)<1e-9)return '0';return String(+(+v).toPrecision(5)).replace('-','\u2212')};
+const L='ABCDEFGH';
+function readPts(){
+  const m=[...$('vt').value.replace(/\u2212/g,'-').matchAll(/\(?\s*(-?\d*\.?\d+)\s*[,;]\s*(-?\d*\.?\d+)\s*\)?/g)];
+  return m.map(x=>[+x[1],+x[2]]);
+}
+const val=id=>{const v=parseFloat($(id).value.replace(/\u2212/g,'-'));return Number.isFinite(v)?v:NaN};
+let S=null;
+function rule(t,p){
+  switch(t){
+    case 'tr':return '(<i>x</i>, <i>y</i>) \u2192 (<i>x</i> '+(p.dx<0?'\u2212 ':'+ ')+N(Math.abs(p.dx))+', <i>y</i> '+(p.dy<0?'\u2212 ':'+ ')+N(Math.abs(p.dy))+')';
+    case 'rf':return {x:'(<i>x</i>, <i>y</i>) \u2192 (<i>x</i>, \u2212<i>y</i>)',y:'(<i>x</i>, <i>y</i>) \u2192 (\u2212<i>x</i>, <i>y</i>)',yx:'(<i>x</i>, <i>y</i>) \u2192 (<i>y</i>, <i>x</i>)',ymx:'(<i>x</i>, <i>y</i>) \u2192 (\u2212<i>y</i>, \u2212<i>x</i>)',xa:'(<i>x</i>, <i>y</i>) \u2192 (2\u00B7'+N(p.v)+' \u2212 <i>x</i>, <i>y</i>)',yb:'(<i>x</i>, <i>y</i>) \u2192 (<i>x</i>, 2\u00B7'+N(p.v)+' \u2212 <i>y</i>)'}[p.l];
+    case 'ro':{
+      if(p.cx===0&&p.cy===0){
+        const a=((p.a%360)+360)%360;
+        if(a===90)return '(<i>x</i>, <i>y</i>) \u2192 (\u2212<i>y</i>, <i>x</i>)';
+        if(a===180)return '(<i>x</i>, <i>y</i>) \u2192 (\u2212<i>x</i>, \u2212<i>y</i>)';
+        if(a===270)return '(<i>x</i>, <i>y</i>) \u2192 (<i>y</i>, \u2212<i>x</i>)';
+        if(a===0)return '(<i>x</i>, <i>y</i>) \u2192 (<i>x</i>, <i>y</i>)';
+        return '(<i>x</i>, <i>y</i>) \u2192 (<i>x</i> cos '+N(p.a)+'\u00B0 \u2212 <i>y</i> sin '+N(p.a)+'\u00B0, <i>x</i> sin '+N(p.a)+'\u00B0 + <i>y</i> cos '+N(p.a)+'\u00B0)';
+      }
+      return 'Rotate '+N(Math.abs(p.a))+'\u00B0 '+(p.a<0?'clockwise':'counterclockwise')+' about ('+N(p.cx)+', '+N(p.cy)+')';
+    }
+    case 'di':return (p.cx===0&&p.cy===0)?'(<i>x</i>, <i>y</i>) \u2192 ('+N(p.k)+'<i>x</i>, '+N(p.k)+'<i>y</i>)':'Dilate by '+N(p.k)+' about ('+N(p.cx)+', '+N(p.cy)+')';
+  }
+}
+function apply(t,p,[x,y]){
+  switch(t){
+    case 'tr':return [x+p.dx,y+p.dy];
+    case 'rf':switch(p.l){case 'x':return [x,-y];case 'y':return [-x,y];case 'yx':return [y,x];case 'ymx':return [-y,-x];case 'xa':return [2*p.v-x,y];case 'yb':return [x,2*p.v-y]}
+    case 'ro':{const r=p.a*Math.PI/180,co=Math.cos(r),si=Math.sin(r),dx=x-p.cx,dy=y-p.cy;
+      const sn=v=>Math.abs(v)<1e-12?0:v;return [sn(p.cx+dx*co-dy*si),sn(p.cy+dx*si+dy*co)]}
+    case 'di':return [p.cx+p.k*(x-p.cx),p.cy+p.k*(y-p.cy)];
+  }
+}
+function params(t){
+  if(t==='tr')return {dx:val('dx'),dy:val('dy')};
+  if(t==='rf')return {l:$('rl').value,v:val('rvv')};
+  if(t==='ro')return {a:val('ang'),cx:val('rcx'),cy:val('rcy')};
+  return {k:val('kf'),cx:val('dcx'),cy:val('dcy')};
+}
+function sideLens(P){const o=[];for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];if(P.length==2&&i==1)break;o.push(Math.hypot(a[0]-b[0],a[1]-b[1]))}return o}
+function update(){
+  const t=$('tp').value;
+  ['tr','rf','ro','di'].forEach(k=>$('p-'+k).hidden=(k!==t));
+  const l=$('rl').value;$('rv').hidden=!(t==='rf'&&(l==='xa'||l==='yb'));$('rvn').textContent=l==='xa'?'a':'b';
+  $('err').textContent='';S=null;
+  const pts=readPts();
+  if(pts.length<1){$('err').textContent='Enter at least one point, for example (1, 1), (4, 1), (2, 4).';$('out').innerHTML='';draw();return}
+  if(pts.length>8){$('err').textContent='Please use at most 8 points.';$('out').innerHTML='';draw();return}
+  const p=params(t);
+  if(Object.values(p).some(v=>typeof v==='number'&&!Number.isFinite(v))){$('err').textContent='Enter numbers in the boxes for this transformation.';$('out').innerHTML='';draw();return}
+  const img=pts.map(q=>apply(t,p,q));
+  S={t,p,pts,img};
+  let h='<table><tr><td>Rule</td><td>'+rule(t,p)+'</td></tr>';
+  h+='<tr><td>Vertices</td><td><table style="width:auto">'+pts.map((q,i)=>'<tr><td>'+L[i]+' ('+N(q[0])+', '+N(q[1])+')</td><td>\u2192</td><td>'+L[i]+'\u2032 ('+N(img[i][0])+', '+N(img[i][1])+')</td></tr>').join('')+'</table></td></tr>';
+  if(pts.length>=2){
+    if(t==='di'){h+='<tr><td>Result</td><td>Every length is multiplied by '+N(Math.abs(p.k))+'. The shapes are similar'+(Math.abs(p.k)===1?' and congruent':', not congruent')+'.</td></tr>'}
+    else h+='<tr><td>Result</td><td>Side lengths and angles stay the same. The shapes are congruent (rigid motion).</td></tr>';
+  }
+  h+='</table>';
+  $('out').innerHTML=h;draw();
+}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  let ext=8;
+  if(S)S.pts.concat(S.img).forEach(q=>{ext=Math.max(ext,Math.abs(q[0])+1.5,Math.abs(q[1])*4/3+1.5)});
+  ext=Math.ceil(ext/2)*2;
+  const x0=-ext,x1=ext,y0=-ext*H/W,y1=ext*H/W;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  const st=ext>20?5:ext>10?2:1;
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=Math.ceil(x0/st)*st;u<=x1;u+=st){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=Math.ceil(y0/st)*st;u<=y1;u+=st){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  const lab=Math.max(st,Math.ceil(ext/6));
+  for(let u=Math.ceil(x0/lab)*lab;u<=x1;u+=lab){if(u)ctx.fillText(u,X(u),Y(0)+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let u=Math.ceil(y0/lab)*lab;u<=y1;u+=lab){if(u)ctx.fillText(u,X(0)-5,Y(u))}
+  if(!S)return;
+  const {t,p,pts,img}=S;
+  /* helper marks */
+  ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.6;ctx.strokeStyle='#d98a00';
+  if(t==='rf'){
+    ctx.beginPath();
+    if(p.l==='x'){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}
+    if(p.l==='y'){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}
+    if(p.l==='yx'){ctx.moveTo(X(x0),Y(x0));ctx.lineTo(X(x1),Y(x1))}
+    if(p.l==='ymx'){ctx.moveTo(X(x0),Y(-x0));ctx.lineTo(X(x1),Y(-x1))}
+    if(p.l==='xa'){ctx.moveTo(X(p.v),0);ctx.lineTo(X(p.v),H)}
+    if(p.l==='yb'){ctx.moveTo(0,Y(p.v));ctx.lineTo(W,Y(p.v))}
+    ctx.stroke();
+  }
+  ctx.restore();
+  if(t==='ro'||t==='di'){ctx.fillStyle='#d98a00';ctx.beginPath();ctx.arc(X(p.cx),Y(p.cy),5,0,7);ctx.fill()}
+  const shape=(P,col,fill,names)=>{
+    ctx.lineWidth=2.4;ctx.strokeStyle=col;ctx.lineJoin='round';
+    ctx.beginPath();P.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));
+    if(P.length>2)ctx.closePath();
+    if(P.length>2){ctx.save();ctx.globalAlpha=.14;ctx.fillStyle=col;ctx.fill();ctx.restore()}
+    ctx.stroke();
+    ctx.font='bold 13px sans-serif';
+    P.forEach((q,i)=>{
+      ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(q[0]),Y(q[1]),4,0,7);ctx.fill();
+      ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText(names[i],X(q[0])+6,Y(q[1])-4);
+    });
+  };
+  shape(pts,'#2f6fed',true,pts.map((_,i)=>L[i]));
+  shape(img,'#e0483e',true,img.map((_,i)=>L[i]+'\u2032'));
+}
+['vt','tp','dx','dy','rl','rvv','ang','rcx','rcy','kf','dcx','dcy'].forEach(id=>$(id).addEventListener('input',update));
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>

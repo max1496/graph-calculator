@@ -2,51 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://graph-calculator-chi.vercel.app/</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/linear-function.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/regression.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/quadratic-function.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/about.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/privacy.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/algebra-1.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/polynomial-from-roots.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/descartes-rule-of-signs.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/intermediate-value-theorem.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/algebra-2.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/rational-root-theorem.html</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-15</lastmod>
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/rational-functions.html</loc>
@@ -54,6 +54,14 @@
   </url>
   <url>
     <loc>https://graph-calculator-chi.vercel.app/parent-functions.html</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://graph-calculator-chi.vercel.app/function-transformations.html</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://graph-calculator-chi.vercel.app/geometry-transformations.html</loc>
     <lastmod>2026-11-15</lastmod>
   </url>
 </urlset>
