@@ -19,6 +19,11 @@ canvas{width:100%;height:100%;display:block;cursor:grab}
 .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
 .zoom button{width:36px;height:36px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;font-size:18px;cursor:pointer}
 .zoom button.home{width:auto;padding:0 10px;font-size:13px}
+.zoom button.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.35;padding:5px 9px;border-radius:6px;white-space:nowrap;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.tip small{opacity:.75;font-size:11px;display:block}
+.tip[hidden],.mk[hidden]{display:none}
+.mk{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;z-index:2}
 .panel{width:min(100%,760px);display:flex;flex-direction:column;gap:10px}
 .row{display:flex;gap:10px;align-items:flex-start}
 .dot{width:12px;height:12px;border-radius:50%;margin-top:15px;flex:none}
@@ -56,9 +61,11 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 
 <div class="stage" id="stage">
   <canvas id="cv"></canvas>
+  <div class="mk" id="mk" hidden></div><div class="tip" id="tip" hidden></div>
   <div class="zoom">
     <button type="button" id="zin" aria-label="Zoom in">+</button>
     <button type="button" id="zout" aria-label="Zoom out">−</button>
+    <button type="button" id="pi" class="home" aria-pressed="false" title="Show the x-axis in multiples of π">π</button>
     <button type="button" id="home" class="home">Reset</button>
   </div>
 </div>
@@ -241,6 +248,23 @@ function fit(){
   return [W,H];
 }
 const fmt=n=>String(parseFloat(n.toPrecision(6)));
+let piMode=false;
+const PIS=[1/12,1/6,1/4,1/3,1/2,1,2,5,10,20,50,100];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+function piFrac(x){
+  const p=x/Math.PI;
+  for(const q of [1,2,3,4,6,12]){
+    const n=Math.round(p*q);
+    if(Math.abs(n)<=2000&&Math.abs(p*q-n)<=1e-7*Math.max(1,Math.abs(n))){const g=gcd(n,q)||1;return [n/g,q/g]}
+  }
+  return null;
+}
+function piText(n,q){
+  if(n===0)return '0';
+  const a=Math.abs(n);
+  return (n<0?'−':'')+(a===1?'':a)+'π'+(q>1?'/'+q:'');
+}
+function xText(x){const f=piFrac(x);return f?piText(f[0],f[1]):fmt(x).replace('-','−')}
 
 function draw(){
   const [W,H]=fit();
@@ -252,7 +276,10 @@ function draw(){
   const step=(n<1.5?1:n<3.5?2:n<7.5?5:10)*pow;
   const x0=v.cx-W/2/v.s,x1=v.cx+W/2/v.s,y0=v.cy-H/2/v.s,y1=v.cy+H/2/v.s;
   ctx.lineWidth=1;ctx.strokeStyle=col('--grid');ctx.beginPath();
-  for(let u=Math.ceil(x0/step)*step;u<=x1;u+=step){const px=Math.round(X(u))+.5;ctx.moveTo(px,0);ctx.lineTo(px,H)}
+  let xs=step;
+  if(piMode){const k=PIS.find(k=>k*Math.PI*v.s>=70)||200;xs=k*Math.PI}
+  const i0=Math.ceil(x0/xs-1e-9),i1=Math.floor(x1/xs+1e-9);
+  for(let i=i0;i<=i1;i++){const px=Math.round(X(i*xs))+.5;ctx.moveTo(px,0);ctx.lineTo(px,H)}
   for(let u=Math.ceil(y0/step)*step;u<=y1;u+=step){const py=Math.round(Y(u))+.5;ctx.moveTo(0,py);ctx.lineTo(W,py)}
   ctx.stroke();
   const ax=Math.min(Math.max(X(0),0),W),ay=Math.min(Math.max(Y(0),0),H);
@@ -261,7 +288,7 @@ function draw(){
   ctx.fillStyle=col('--sub');ctx.font='11px sans-serif';
   ctx.textAlign='center';ctx.textBaseline='top';
   const ly=Math.min(Math.max(ay+4,2),H-14);
-  for(let u=Math.ceil(x0/step)*step;u<=x1;u+=step){if(Math.abs(u)<step/2)continue;ctx.fillText(fmt(u),X(u),ly)}
+  for(let i=i0;i<=i1;i++){if(i===0)continue;const u=i*xs;ctx.fillText(piMode?xText(u):fmt(u),X(u),ly)}
   ctx.textAlign='right';ctx.textBaseline='middle';
   const lx=Math.min(Math.max(ax-5,28),W-4);
   for(let u=Math.ceil(y0/step)*step;u<=y1;u+=step){if(Math.abs(u)<step/2)continue;ctx.fillText(fmt(u),lx,Y(u))}
@@ -283,6 +310,30 @@ function draw(){
     }
     ctx.stroke();
   });
+  rows.forEach(r=>{
+    if(!r.f||r.imp)return;
+    const as=asyms(r);if(!as.length)return;
+    ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.4;ctx.strokeStyle=r.c;ctx.globalAlpha=.6;ctx.beginPath();
+    as.forEach(o=>{
+      if(o.t==='v'){const px=Math.round(X(o.x))+.5;if(px<-2||px>W+2)return;ctx.moveTo(px,0);ctx.lineTo(px,H)}
+      else if(o.t==='h'){const py=Math.round(Y(o.y))+.5;if(py<-2||py>H+2)return;ctx.moveTo(0,py);ctx.lineTo(W,py)}
+      else{ctx.moveTo(0,Y(o.m*x0+o.c));ctx.lineTo(W,Y(o.m*x1+o.c))}
+    });
+    ctx.stroke();ctx.restore();
+  });
+}
+
+/* asymptotes of a row (from cached analysis) */
+function asyms(r){
+  const a=r.an;if(!a)return [];
+  const o=[];
+  (a.va||[]).forEach(q=>o.push({t:'v',x:q.x}));
+  [a.el,a.er].forEach(e=>{
+    if(!e)return;
+    if(e.k==='lim'&&!o.some(z=>z.t==='h'&&Math.abs(z.y-e.L)<1e-9))o.push({t:'h',y:e.L});
+    if(e.k==='obl'&&!o.some(z=>z.t==='o'&&z.m===e.m&&z.c===e.c))o.push({t:'o',m:e.m,c:e.c});
+  });
+  return o;
 }
 
 function drawImplicit(f,W,H,x0,y1){
@@ -319,9 +370,10 @@ function zoomAt(f,mx,my){
 }
 const ptr=new Map();let pd=0;
 const dist=()=>{if(ptr.size<2)return 0;const [a,b]=[...ptr.values()];return Math.hypot(a[0]-b[0],a[1]-b[1])};
-cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);pd=dist()});
+cv.addEventListener('pointerdown',e=>{hideTip();down={x:e.clientX,y:e.clientY,t:Date.now()};cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);pd=dist()});
 cv.addEventListener('pointermove',e=>{
-  if(!ptr.has(e.pointerId))return;
+  if(!ptr.has(e.pointerId)){if(e.pointerType!=='touch')hover(e.clientX,e.clientY);return}
+  hideTip();
   const o=ptr.get(e.pointerId),n=[e.clientX,e.clientY];
   if(ptr.size===1){v.cx-=(n[0]-o[0])/v.s;v.cy+=(n[1]-o[1])/v.s}
   ptr.set(e.pointerId,n);
@@ -332,12 +384,79 @@ cv.addEventListener('pointermove',e=>{
   }
   draw();
 });
-const end=e=>{ptr.delete(e.pointerId);pd=0};
+const end=e=>{ptr.delete(e.pointerId);pd=0;if(e.type==='pointerup')tapCheck(e);else hideTip()};
 cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
-cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(Math.exp(-e.deltaY*0.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+cv.addEventListener('pointerleave',e=>{if(!ptr.size)hideTip()});
+cv.addEventListener('wheel',e=>{hideTip();e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(Math.exp(-e.deltaY*0.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
 document.getElementById('zin').onclick=()=>zoomAt(1.4,cv.clientWidth/2,cv.clientHeight/2);
 document.getElementById('zout').onclick=()=>zoomAt(1/1.4,cv.clientWidth/2,cv.clientHeight/2);
+document.getElementById('pi').onclick=function(){piMode=!piMode;this.classList.toggle('on',piMode);this.setAttribute('aria-pressed',piMode);
+  if(piMode&&v.s<20){v.s=48}
+  if(piMode){const W=cv.clientWidth;if(v.s*Math.PI*2>W/1.6)v.s=Math.max(3,W/(Math.PI*6))} /* show roughly ±3π */
+  draw()};
 document.getElementById('home').onclick=()=>{v.cx=0;v.cy=0;v.s=48;draw()};
+
+/* ---- hover / tap tooltip ---- */
+const tip=document.getElementById('tip'),mk=document.getElementById('mk'),stageEl=document.getElementById('stage');
+let down=null;
+function hideTip(){tip.hidden=true;mk.hidden=true}
+function tapCheck(e){
+  if(!down)return;
+  const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y),dt=Date.now()-down.t;
+  down=null;
+  if(moved<8&&dt<500&&e.pointerType==='touch')hover(e.clientX,e.clientY);
+}
+function hover(cx,cy){
+  const rc=cv.getBoundingClientRect(),W=rc.width,H=rc.height,mx=cx-rc.left,my=cy-rc.top;
+  const X=u=>W/2+(u-v.cx)*v.s,Y=u=>H/2-(u-v.cy)*v.s;
+  const wx=v.cx+(mx-W/2)/v.s;
+  let best=null;
+  const cand=(d,o)=>{if(!best||d<best.d)best=Object.assign({d},o)};
+  rows.forEach(r=>{
+    if(!r.f||r.imp)return;
+    const a=r.an;
+    /* key points */
+    if(a){
+      const kp=[];
+      (a.ex||[]).forEach(q=>kp.push([q.x,q.y,q.t==='max'?'Local max':q.t==='min'?'Local min':'Flat point']));
+      (a.roots||[]).forEach(q=>kp.push([typeof q==='number'?q:q.x,0,'x-intercept']));
+      if(a.yint!=null&&isFinite(a.yint))kp.push([0,a.yint,'y-intercept']);
+      (a.infl||[]).forEach(q=>kp.push([q.x,q.y,'Inflection point']));
+      kp.forEach(k=>{const d=Math.hypot(X(k[0])-mx,Y(k[1])-my);if(d<14)cand(d-6,{c:r.c,x:k[0],y:k[1],px:X(k[0]),py:Y(k[1]),name:k[2]})});
+      asyms(r).forEach(o=>{
+        if(o.t==='v'){const d=Math.abs(X(o.x)-mx);if(d<7)cand(d*.8,{c:r.c,x:o.x,px:X(o.x),py:my,as:'v'})}
+        else if(o.t==='h'){const d=Math.abs(Y(o.y)-my);if(d<7)cand(d*.8,{c:r.c,y:o.y,px:mx,py:Y(o.y),as:'h'})}
+        else{const d=Math.abs(Y(o.m*wx+o.c)-my)/Math.sqrt(1+o.m*o.m*0+0);if(d<7)cand(d*.8,{c:r.c,m:o.m,cc:o.c,px:mx,py:Y(o.m*wx+o.c),as:'o'})}
+      });
+    }
+    /* curve */
+    const y=r.f(wx);
+    if(isFinite(y)){
+      const d=Math.abs(Y(y)-my);
+      if(d<14&&Math.abs(Y(y))<1e5)cand(d+4,{c:r.c,x:wx,y,px:mx,py:Y(y),curve:true});
+    }
+  });
+  if(!best){hideTip();return}
+  const b=best;let html;
+  const yT=n=>fmt(n).replace('-','−');
+  if(b.as==='v')html='Vertical asymptote<small>x = '+xText(b.x)+(piFrac(b.x)&&b.x!==0?' (≈ '+fmt(b.x)+')':'')+'</small>';
+  else if(b.as==='h')html='Horizontal asymptote<small>y = '+yT(b.y)+'</small>';
+  else if(b.as==='o')html='Slant asymptote<small>y = '+yT(b.m)+'x '+(b.cc<0?'− ':'+ ')+yT(Math.abs(b.cc))+'</small>';
+  else{
+    const xs=(piMode||piFrac(b.x))&&b.x!==0&&piFrac(b.x)?xText(b.x):yT(b.x);
+    const ys=yT(b.y);
+    html=(b.name?b.name+'<small>':'<span>')+'('+(b.name?xText(b.x):xs)+', '+ys+')'+(b.name?'</small>':'</span>');
+    if(piFrac(b.x)&&b.x!==0&&(b.name||piMode))html+='<small>x ≈ '+fmt(b.x)+'</small>';
+  }
+  tip.innerHTML=html;tip.hidden=false;
+  if(b.as){mk.hidden=true}else{mk.hidden=false;mk.style.left=b.px+'px';mk.style.top=b.py+'px';mk.style.background=b.c}
+  const tw=tip.offsetWidth,th=tip.offsetHeight;
+  let tx=b.px+14,ty=b.py-th-12;
+  if(tx+tw>W-4)tx=b.px-tw-14;
+  if(tx<4)tx=4;
+  if(ty<4)ty=b.py+16;
+  tip.style.left=tx+'px';tip.style.top=ty+'px';
+}
 
 /* ---- 식 입력 ---- */
 /* ---- details of graph ---- */
@@ -556,8 +675,8 @@ function fillDeriv(box,text){
 
 function showDetails(r,box){
   box.hidden=false;box.dataset.t=r.t;
-  let a;
-  try{a=analyze(r.f)}catch(e){box.innerHTML='<div class="note">Could not analyze this equation.</div>';return}
+  let a=r.an&&r.anT===r.t?r.an:null;
+  try{if(!a)a=analyze(r.f)}catch(e){box.innerHTML='<div class="note">Could not analyze this equation.</div>';return}
   box.innerHTML=detailHtml(a);
   fillDeriv(box,r.t);
 }
@@ -576,13 +695,14 @@ const list=document.getElementById('list'),addBtn=document.getElementById('add')
 
 function upd(r,d){
   const pv=d.querySelector('.pv'),t=r.t.trim();
-  r.f=null;
+  r.f=null;r.an=null;clearTimeout(r.at);
   if(!t){pv.className='pv hint';pv.textContent='Enter an equation'}
   else{
     try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;pv.className='pv';pv.innerHTML=(c.imp?'':'<i>y</i> = ')+pretty(t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
   detailsSync(r,d);
+  if(r.f&&!r.imp){const tt=r.t,ff=r.f;r.at=setTimeout(()=>{if(r.f!==ff)return;try{r.an=analyze(ff);r.anT=tt}catch(e){r.an=null}draw()},200)}
   draw();
 }
 
