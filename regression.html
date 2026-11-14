@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linear Regression Calculator: Slope, R², Standard Deviation</title>
+<meta name="description" content="Free linear regression calculator. Enter your points to get the best-fit line, slope, intercept, correlation r, R squared, standard deviation, standard error, and a scatter plot.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+textarea{width:100%;font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;padding:10px 12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;resize:vertical}
+label{font-size:15px}
+.opt{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0}
+.stage{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:10px}
+canvas{width:100%;height:100%;display:block}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:28px;text-align:center;margin:12px 0 2px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:8px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+td.v{text-align:right;font-variant-numeric:tabular-nums}
+th{color:var(--sub);font-weight:600}
+.msg{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.note{color:var(--sub);font-size:14px}
+ul{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+textarea:focus-visible,input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a></div>
+<h1 class="w">Linear Regression Calculator</h1>
+
+<div class="w">
+  <label for="data">Enter your points as <i>x</i>, <i>y</i>, one pair per line</label>
+  <textarea id="data" rows="7" spellcheck="false" placeholder="1, 2&#10;2, 4.1&#10;3, 5.8">1, 2
+2, 4.1
+3, 5.8
+4, 8.3
+5, 9.9</textarea>
+  <div class="opt">
+    <span>Standard deviation:</span>
+    <label><input type="radio" name="sd" value="sample" checked> Sample (n − 1)</label>
+    <label><input type="radio" name="sd" value="pop"> Population (n)</label>
+  </div>
+
+  <div id="out"></div>
+  <div class="stage"><canvas id="cv"></canvas></div>
+
+  <h2>What is linear regression?</h2>
+  <p>Linear regression finds the straight line <i>y</i> = <i>a</i><i>x</i> + <i>b</i> that best fits a set of points. Best means the line that makes the sum of the squared vertical distances from the points to the line as small as possible, which is called the least squares method.</p>
+
+  <h2>Formulas</h2>
+  <ul>
+    <li>Slope: <i>a</i> = Σ(<i>x</i> − <i>x̄</i>)(<i>y</i> − <i>ȳ</i>) / Σ(<i>x</i> − <i>x̄</i>)<sup>2</sup></li>
+    <li>Intercept: <i>b</i> = <i>ȳ</i> − <i>a</i><i>x̄</i></li>
+    <li>Correlation: <i>r</i> = Σ(<i>x</i> − <i>x̄</i>)(<i>y</i> − <i>ȳ</i>) / √[Σ(<i>x</i> − <i>x̄</i>)<sup>2</sup> · Σ(<i>y</i> − <i>ȳ</i>)<sup>2</sup>]</li>
+    <li>Standard error of the estimate: √[Σ(<i>y</i> − <i>ŷ</i>)<sup>2</sup> / (<i>n</i> − 2)]</li>
+  </ul>
+
+  <h2>How to read the results</h2>
+  <ul>
+    <li><b>r</b> is between −1 and 1. Its sign shows whether <i>y</i> rises or falls with <i>x</i>, and values near ±1 mean the points sit close to a line.</li>
+    <li><b>R²</b> is <i>r</i> squared. It is the share of the variation in <i>y</i> that the line explains, so 0.9 means about 90%.</li>
+    <li><b>Standard error of the estimate</b> is the typical distance between the points and the line, in the units of <i>y</i>. It needs at least 3 points.</li>
+    <li>A high R² does not prove that <i>x</i> causes <i>y</i>, and a handful of points can be misleading. Always check the scatter plot for outliers.</li>
+  </ul>
+
+  <h2>Sample or population standard deviation?</h2>
+  <p>Use the sample version (divide by <i>n</i> − 1) when your points are a sample from a larger group, which is the usual case. Use the population version (divide by <i>n</i>) only when your points are every value that exists.</p>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>You need at least 2 points. With exactly 2 points the line passes through both, R² is 1, and the standard error is undefined.</li>
+    <li>If every <i>x</i> value is the same, the points form a vertical line and there is no slope.</li>
+    <li>Want to see how a line changes with its slope and intercept? Try the <a href="/linear-function.html">linear function page</a>, or plot any equation in the <a href="/">graphing calculator</a>.</li>
+  </ul>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const fmt=v=>Number.isFinite(v)?String(parseFloat(v.toPrecision(6))).replace('-','−'):'—';
+const fmt5=v=>String(parseFloat(v.toPrecision(5))).replace('-','−');
+let cur=null;
+
+function parse(text){
+  const pts=[];let bad=0;
+  text.split(/\n/).forEach(line=>{
+    if(!line.trim())return;
+    const p=line.trim().split(/[\s,;]+/).filter(Boolean).map(Number);
+    if(p.length>=2&&Number.isFinite(p[0])&&Number.isFinite(p[1]))pts.push({x:p[0],y:p[1]});else bad++;
+  });
+  return {pts,bad};
+}
+
+function calc(pts,sample){
+  const n=pts.length;
+  const mx=pts.reduce((s,p)=>s+p.x,0)/n,my=pts.reduce((s,p)=>s+p.y,0)/n;
+  let Sxx=0,Syy=0,Sxy=0;
+  pts.forEach(p=>{Sxx+=(p.x-mx)**2;Syy+=(p.y-my)**2;Sxy+=(p.x-mx)*(p.y-my)});
+  const a=Sxy/Sxx,b=my-a*mx;
+  let SSE=0;
+  const res=pts.map(p=>{const yh=a*p.x+b,e=p.y-yh;SSE+=e*e;return {x:p.x,y:p.y,yh,e}});
+  const d=sample?n-1:n;
+  return {n,mx,my,a,b,res,
+    sdx:Math.sqrt(Sxx/d),sdy:Math.sqrt(Syy/d),
+    r:Syy>0?Sxy/Math.sqrt(Sxx*Syy):NaN,
+    r2:Syy>0?Math.max(0,1-SSE/Syy):NaN,
+    se:n>2?Math.sqrt(SSE/(n-2)):NaN};
+}
+
+function eqHtml(a,b){
+  const A=+a.toPrecision(5),B=+b.toPrecision(5);
+  if(A===0)return '<i>y</i> = '+fmt5(B);
+  let t=(A===1?'':A===-1?'−':fmt5(A))+'<i>x</i>';
+  if(B>0)t+=' + '+fmt5(B);else if(B<0)t+=' − '+fmt5(-B);
+  return '<i>y</i> = '+t;
+}
+
+function run(){
+  const {pts,bad}=parse($('data').value);
+  const sample=document.querySelector('input[name=sd]:checked').value==='sample';
+  const out=$('out');cur=null;
+  let note=bad?'<div class="note">Ignored '+bad+' line'+(bad>1?'s':'')+' that could not be read as two numbers.</div>':'';
+  if(pts.length<2){out.innerHTML='<div class="msg">Enter at least 2 points.</div>'+note;draw();return}
+  if(pts.every(p=>p.x===pts[0].x)){out.innerHTML='<div class="msg">All <i>x</i> values are the same, so the points form a vertical line and there is no slope.</div>'+note;cur={pts};draw();return}
+  const c=calc(pts,sample);cur={pts,a:c.a,b:c.b};
+  const sdl=sample?'(sample)':'(population)';
+  const rows=[
+    ['Number of points (n)',c.n],['Mean of x',fmt(c.mx)],['Mean of y',fmt(c.my)],
+    ['Standard deviation of x '+sdl,fmt(c.sdx)],['Standard deviation of y '+sdl,fmt(c.sdy)],
+    ['Slope (a)',fmt(c.a)],['Intercept (b)',fmt(c.b)],
+    ['Correlation (r)',fmt(c.r)],['R²',fmt(c.r2)],['Standard error of the estimate',fmt(c.se)]
+  ];
+  let h='<div class="eq">'+eqHtml(c.a,c.b)+'</div><table>'+rows.map(r=>'<tr><td>'+r[0]+'</td><td class="v"><b>'+r[1]+'</b></td></tr>').join('')+'</table>';
+  if(!Number.isFinite(c.r))h+='<div class="note">r and R² are undefined because all y values are equal.</div>';
+  if(c.n===2)h+='<div class="note">With 2 points the line passes through both, so the standard error is undefined.</div>';
+  const shown=c.res.slice(0,50);
+  h+='<h2>Residuals</h2><table><tr><th>x</th><th>y</th><th>Predicted y</th><th>Residual</th></tr>'+
+    shown.map(r=>'<tr><td>'+fmt(r.x)+'</td><td>'+fmt(r.y)+'</td><td>'+fmt(r.yh)+'</td><td>'+fmt(r.e)+'</td></tr>').join('')+'</table>';
+  if(c.res.length>50)h+='<div class="note">Showing the first 50 of '+c.res.length+' residuals.</div>';
+  out.innerHTML=h+note;
+  draw();
+}
+
+function ticks(lo,hi){
+  const raw=(hi-lo)/5,pow=Math.pow(10,Math.floor(Math.log10(raw))),nn=raw/pow;
+  const step=(nn<1.5?1:nn<3.5?2:nn<7.5?5:10)*pow,t=[];
+  for(let u=Math.ceil(lo/step)*step;u<=hi+step*1e-9;u+=step)t.push(+u.toPrecision(12));
+  return t;
+}
+
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  if(!cur||!cur.pts.length)return;
+  const xs=cur.pts.map(p=>p.x),ys=cur.pts.map(p=>p.y);
+  let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const grow=(lo,hi)=>{const d=(hi-lo)||Math.max(Math.abs(hi),1);return [lo-d*.1,hi+d*.1]};
+  [x0,x1]=grow(x0,x1);[y0,y1]=grow(y0,y1);
+  const L=46,Rr=14,T=12,B=26;
+  const X=u=>L+(u-x0)/(x1-x0)*(W-L-Rr),Y=u=>H-B-(u-y0)/(y1-y0)*(H-B-T);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';
+  ctx.beginPath();
+  const tx=ticks(x0,x1),ty=ticks(y0,y1);
+  tx.forEach(u=>{ctx.moveTo(Math.round(X(u))+.5,T);ctx.lineTo(Math.round(X(u))+.5,H-B)});
+  ty.forEach(u=>{ctx.moveTo(L,Math.round(Y(u))+.5);ctx.lineTo(W-Rr,Math.round(Y(u))+.5)});
+  ctx.stroke();
+  ctx.textAlign='center';ctx.textBaseline='top';
+  tx.forEach(u=>ctx.fillText(String(+u.toPrecision(6)),X(u),H-B+6));
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  ty.forEach(u=>ctx.fillText(String(+u.toPrecision(6)),L-6,Y(u)));
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;
+  ctx.strokeRect(L+.5,T+.5,W-L-Rr,H-B-T);
+  if(cur.a!==undefined){
+    ctx.save();ctx.beginPath();ctx.rect(L,T,W-L-Rr,H-B-T);ctx.clip();
+    ctx.strokeStyle='#e0483e';ctx.lineWidth=2.5;ctx.beginPath();
+    ctx.moveTo(X(x0),Y(cur.a*x0+cur.b));ctx.lineTo(X(x1),Y(cur.a*x1+cur.b));ctx.stroke();ctx.restore();
+  }
+  ctx.fillStyle='#2f6fed';
+  cur.pts.forEach(p=>{ctx.beginPath();ctx.arc(X(p.x),Y(p.y),4.5,0,7);ctx.fill()});
+}
+
+$('data').addEventListener('input',run);
+document.querySelectorAll('input[name=sd]').forEach(r=>r.addEventListener('change',run));
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+run();
+</script>
+</body>
+</html>
