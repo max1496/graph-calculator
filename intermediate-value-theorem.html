@@ -36,12 +36,14 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 .err{color:#e0483e;font-size:14px;margin-top:6px}
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/descartes-rule-of-signs.html">Descartes' rule</a></div>
 <h1 class="w">Intermediate Value Theorem Calculator</h1>
+<div class="w"><p class="sum"><b>In short:</b> Type a function and an interval to check whether the function must reach a chosen value somewhere in that interval.</p></div>
 <div class="w"><p>Enter a function <i>f</i>(<i>x</i>), an interval [<i>a</i>, <i>b</i>] and a target value <i>k</i>. The tool checks whether the Intermediate Value Theorem guarantees a number <i>c</i> in [<i>a</i>, <i>b</i>] with <i>f</i>(<i>c</i>) = <i>k</i>. Use <i>k</i> = 0 to show that an equation has a root.</p></div>
 
 <div class="w">
@@ -295,6 +297,6 @@ new ResizeObserver(draw).observe(cv);
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 update();
 </script>
-<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
 </body>
 </html>

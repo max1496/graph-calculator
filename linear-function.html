@@ -32,12 +32,14 @@ p{margin:6px 0}
 input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
 .ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-1.html">Algebra 1</a></div>
 <h1 class="w">Linear Function: <i>y</i> = <i>a</i><i>x</i> + <i>b</i></h1>
+<div class="w"><p class="sum"><b>In short:</b> A linear function makes a straight line. Move the two sliders to change the slope and the y-intercept, and watch the line move.</p></div>
 <div class="eq" id="eq"></div>
 <div class="stage"><canvas id="cv"></canvas></div>
 
@@ -144,6 +146,6 @@ new ResizeObserver(draw).observe(cv);
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 update();two();
 </script>
-<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
 </body>
 </html>
