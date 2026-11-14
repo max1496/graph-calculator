@@ -70,6 +70,9 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .det .m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:16px}
 .det .m sup{font-size:.62em;line-height:0}
 .det .note{color:var(--sub);font-size:12px;margin-top:8px}
+.det .rg{width:84px;font-size:13px;padding:3px 6px;display:inline-block}
+.det .rgb{margin:0;padding:3px 10px;font-size:12px}
+.det .rgm{color:#e0483e}
 .ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
 </style>
@@ -778,7 +781,7 @@ function detailHtml(a){
   }
   add('First derivative','<span data-d="1">Loading…</span>');
   add('Second derivative','<span data-d="2">Loading…</span>');
-  return '<table>'+rows.join('')+'</table><div class="note">Values are numerical approximations found by searching <i>x</i> from −100 to 100.</div>';
+  return '<table>'+rows.join('')+'</table><div class="note">Values are numerical approximations found by searching <i>x</i> from <input type="number" class="rg" data-r="lo" value="'+AN.lo+'" aria-label="Search from x"> to <input type="number" class="rg" data-r="hi" value="'+AN.hi+'" aria-label="Search to x"> <button type="button" class="rgb">Apply</button> <span class="rgm"></span></div>';
 }
 
 function toMath(text){
@@ -822,6 +825,13 @@ function showDetails(r,box){
   let a=r.an&&r.anT===r.t?r.an:null;
   try{if(!a)a=analyze(r.f)}catch(e){box.innerHTML='<div class="note">Could not analyze this equation.</div>';return}
   box.innerHTML=detailHtml(a);
+  const rb=box.querySelector('.rgb');
+  if(rb)rb.onclick=()=>{
+    const lo=parseFloat(box.querySelector('[data-r=lo]').value),hi=parseFloat(box.querySelector('[data-r=hi]').value);
+    if(!fin(lo)||!fin(hi)||hi-lo<1||lo<-10000||hi>10000){box.querySelector('.rgm').textContent='Enter two numbers between −10000 and 10000 (at least 1 apart).';return}
+    AN.lo=lo;AN.hi=hi;AN.n=Math.min(200000,Math.max(20000,Math.round((hi-lo)*100)));
+    build();
+  };
   fillDeriv(box,r.t);
 }
 
