@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algebra 2: Polynomials, Roots and Theorems with Interactive Tools</title>
+<meta name="description" content="Algebra 2 study hub with calculators for building polynomials from roots, the Rational Root Theorem, Descartes' Rule of Signs and the Intermediate Value Theorem, plus a quick list of key formulas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.7}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:24px;margin:4px 0 0}
+h2{font-size:18px;margin:26px 0 6px}
+h3{font-size:16px;margin:0}
+p{margin:6px 0}
+ul{padding-left:20px;margin:6px 0}
+.lessons{display:grid;gap:10px;margin-top:10px}
+.lesson{display:block;border:1px solid var(--line);border-radius:8px;padding:12px 14px;text-decoration:none;color:var(--ink);background:var(--panel)}
+.lesson span{display:block;color:var(--sub);font-size:14px;margin-top:2px}
+.lesson:focus-visible{outline:2px solid #2f6fed;outline-offset:2px}
+.soon{color:var(--sub)}
+dl{margin:8px 0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+dt{color:var(--sub)}
+dd{margin:0;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:17px}
+dd sup{font-size:.62em;line-height:0}
+.note{color:var(--sub);font-size:14px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-1.html">Algebra 1</a></div>
+<h1 class="w">Algebra 2</h1>
+<div class="w">
+  <p>Algebra 2 builds on Algebra 1 with polynomials of higher degree, their roots, and theorems that tell you what a graph must do. This page collects the interactive tools on this site that go with Algebra 2, in a sensible order to study them.</p>
+
+  <h2>Polynomials and their roots</h2>
+  <div class="lessons">
+    <a class="lesson" href="/polynomial-from-roots.html"><h3>Polynomial from roots</h3><span>Enter roots and multiplicities to get the factored form, expanded form, end behavior and graph.</span></a>
+    <a class="lesson" href="/rational-root-theorem.html"><h3>Rational Root Theorem</h3><span>List every possible rational root p/q, test them exactly, and see the factored form.</span></a>
+    <a class="lesson" href="/descartes-rule-of-signs.html"><h3>Descartes' Rule of Signs</h3><span>Count sign changes to find how many positive and negative real roots are possible.</span></a>
+    <a class="lesson" href="/intermediate-value-theorem.html"><h3>Intermediate Value Theorem</h3><span>Check whether a continuous function must reach a value k on an interval [a, b].</span></a>
+    <a class="lesson" href="/"><h3>Graphing calculator</h3><span>Plot any function, including piecewise functions, inequalities and trigonometric graphs with the x-axis in units of π.</span></a>
+  </div>
+
+  <h2>Coming next</h2>
+  <p class="soon">Rational functions and asymptotes, exponential and logarithmic functions, trigonometric graphs, sequences and series.</p>
+
+  <h2>How to study this unit</h2>
+  <ul>
+    <li>Start with polynomial from roots. Seeing how roots and multiplicity shape a graph makes the rest of the unit easier.</li>
+    <li>Use Descartes' Rule of Signs and the Rational Root Theorem together. Descartes tells you how many positive and negative roots to expect, and the Rational Root Theorem gives the list to test.</li>
+    <li>Use the Intermediate Value Theorem to show that a root exists even when you cannot solve the equation exactly.</li>
+    <li>Always check your answers on a graph. A root you found should appear where the curve meets the x-axis.</li>
+  </ul>
+
+  <h2>Key formulas and theorems</h2>
+  <dl>
+    <dt>Factor form</dt><dd><i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>r</i><sub>1</sub>)(<i>x</i> − <i>r</i><sub>2</sub>)…(<i>x</i> − <i>r</i><sub><i>n</i></sub>)</dd>
+    <dt>Remainder theorem</dt><dd><i>f</i>(<i>c</i>) is the remainder when <i>f</i>(<i>x</i>) is divided by (<i>x</i> − <i>c</i>)</dd>
+    <dt>Factor theorem</dt><dd>(<i>x</i> − <i>c</i>) is a factor of <i>f</i>(<i>x</i>) exactly when <i>f</i>(<i>c</i>) = 0</dd>
+    <dt>Rational Root Theorem</dt><dd>possible roots = ±(factor of <i>a</i><sub>0</sub>) / (factor of <i>a</i><sub><i>n</i></sub>)</dd>
+    <dt>Descartes' Rule of Signs</dt><dd>positive roots = sign changes in <i>f</i>(<i>x</i>), or fewer by an even number</dd>
+    <dt>Intermediate Value Theorem</dt><dd><i>f</i> continuous, <i>k</i> between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>) ⇒ <i>f</i>(<i>c</i>) = <i>k</i> for some <i>c</i> in [<i>a</i>, <i>b</i>]</dd>
+    <dt>Fundamental Theorem of Algebra</dt><dd>a polynomial of degree <i>n</i> has exactly <i>n</i> complex roots, counted with multiplicity</dd>
+  </dl>
+  <p class="note">For a polynomial, a root where the factor appears an odd number of times is crossed by the graph, and a root with an even multiplicity is only touched.</p>
+</div>
+
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>

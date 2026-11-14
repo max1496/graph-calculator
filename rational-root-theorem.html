@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rational Root Theorem Calculator: Possible and Actual Rational Roots</title>
+<meta name="description" content="Enter the coefficients of a polynomial to list every possible rational root p/q, test them exactly, and see the factored form with a graph. Includes a worked example of the Rational Root Theorem.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-2.html">Algebra 2</a></div>
+<h1 class="w">Rational Root Theorem Calculator</h1>
+<div class="w"><p>Enter the coefficients from the highest power down to the constant term, separated by commas. Write 0 for a missing term. For 2<i>x</i>³ − 3<i>x</i>² − 8<i>x</i> + 12 enter <b>2, -3, -8, 12</b>. Fractions and decimals are allowed and are cleared automatically.</p></div>
+
+<div class="w">
+  <label>Coefficients<input type="text" id="co" value="2, -3, -8, 12" autocomplete="off" spellcheck="false"></label>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="facts" id="out"></div>
+
+  <h2>What is the Rational Root Theorem?</h2>
+  <p>Suppose a polynomial has integer coefficients, leading coefficient <i>a</i><sub><i>n</i></sub> and constant term <i>a</i><sub>0</sub>. If a fraction <i>p</i>/<i>q</i> in lowest terms is a root, then <i>p</i> is a factor of the constant term <i>a</i><sub>0</sub> and <i>q</i> is a factor of the leading coefficient <i>a</i><sub><i>n</i></sub>.</p>
+  <p>This gives a finite list of candidates. You then test them, usually with synthetic division or by substituting into the polynomial. The theorem tells you where to look, but it does not say that any candidate is actually a root.</p>
+
+  <h2>How to use it</h2>
+  <ol>
+    <li>Make sure all coefficients are integers. If they are fractions, multiply the whole polynomial by a common denominator.</li>
+    <li>List all factors <i>p</i> of the constant term and all factors <i>q</i> of the leading coefficient.</li>
+    <li>Write every possible root ±<i>p</i>/<i>q</i> in lowest terms.</li>
+    <li>Test the candidates. Each one that gives 0 is a root. Divide it out and repeat on what is left.</li>
+    <li>When a quadratic is left, finish with factoring or the quadratic formula.</li>
+  </ol>
+
+  <h2>Worked example</h2>
+  <p>Find the rational roots of 2<i>x</i>³ − 3<i>x</i>² − 8<i>x</i> + 12. The constant term is 12, with factors 1, 2, 3, 4, 6, 12. The leading coefficient is 2, with factors 1, 2. The possible rational roots are ±1, ±2, ±3, ±4, ±6, ±12, ±1/2 and ±3/2.</p>
+  <p>Testing shows <i>f</i>(2) = 0, <i>f</i>(−2) = 0 and <i>f</i>(3/2) = 0. So the polynomial factors as (2<i>x</i> − 3)(<i>x</i> − 2)(<i>x</i> + 2). The calculator above does exactly this and also shows the factored form.</p>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>If the constant term is 0, factor out <i>x</i> first. Then 0 is a root, and the theorem is used on what remains.</li>
+    <li>If no candidate works, the polynomial has no rational roots. It can still have irrational or complex roots. These appear as orange dots on the graph when they are real.</li>
+    <li>Descartes' Rule of Signs narrows the list further by telling you how many positive and negative roots to expect. See the <a href="/descartes-rule-of-signs.html">Descartes' rule calculator</a>.</li>
+    <li>To go the other way, from roots to a polynomial, use <a href="/polynomial-from-roots.html">polynomial from roots</a>.</li>
+  </ul>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const N=v=>!Number.isFinite(+v)?'undefined':Math.abs(v)<1e-12?'0':String(+(+v).toPrecision(6)).replace('-','\u2212');
+const gcd=(a,b)=>{a=a<0n?-a:a;b=b<0n?-b:b;while(b){[a,b]=[b,a%b]}return a};
+const sgnS=b=>b<0n?'\u2212':'';
+function ratParse(t){
+  t=t.trim().replace(/\u2212/g,'-');
+  let m=/^(-?)(\d*)\.?(\d*)$/.exec(t);
+  if(m&&(m[2]||m[3])){
+    const k=m[3].length,n=BigInt((m[2]||'0')+m[3]);
+    return {n:m[1]?-n:n,d:10n**BigInt(k)};
+  }
+  m=/^(-?\d+)\/(\d+)$/.exec(t);
+  if(m&&BigInt(m[2])!==0n)return {n:BigInt(m[1]),d:BigInt(m[2])};
+  return null;
+}
+function readCoeffs(){
+  const err=$('err');err.textContent='';
+  const parts=$('co').value.split(/[,;\s]+/).filter(Boolean);
+  if(parts.length<2){err.textContent='Enter at least two coefficients, for example 2, -3, -8, 12.';return null}
+  if(parts.length>11){err.textContent='Please use at most 11 coefficients (degree 10).';return null}
+  const r=parts.map(ratParse);
+  if(r.some(x=>x===null)){err.textContent='Coefficients must be integers, decimals or fractions, separated by commas.';return null}
+  let L=1n;r.forEach(x=>{L=L/gcd(L,x.d)*x.d});
+  let c=r.map(x=>x.n*(L/x.d));
+  let g=0n;c.forEach(v=>g=gcd(g,v));
+  if(g===0n){err.textContent='The first coefficient (highest power) cannot be 0.';return null}
+  c=c.map(v=>v/g);
+  if(c[0]===0n){err.textContent='The first coefficient (highest power) cannot be 0.';return null}
+  return {c,scale:L};
+}
+function polyHtml(c){
+  const n=c.length-1;let s='';
+  c.forEach((v,i)=>{
+    const k=n-i;if(v===0n)return;
+    const av=v<0n?-v:v;
+    let t=(av===1n&&k>0)?'':String(av);
+    if(k>0)t+='<i>x</i>'+(k>1?'<sup>'+k+'</sup>':'');
+    s+=(s?(v<0n?' \u2212 ':' + '):(v<0n?'\u2212':''))+t;
+  });
+  return s||'0';
+}
+function divisors(n){const a=[],b=[];for(let i=1;i*i<=n;i++){if(n%i===0){a.push(i);if(i*i!==n)b.push(n/i)}}return a.concat(b.reverse())}
+function evalAt(c,p,q){const n=c.length-1;let s=0n;for(let i=0;i<=n;i++)s+=c[i]*p**BigInt(n-i)*q**BigInt(i);return s}
+/* divide c by (q x - p), exact; returns quotient or null */
+function divide(c,p,q){
+  const n=c.length-1,rem=c.slice(),qt=[];
+  for(let i=0;i<n;i++){
+    if(rem[i]%q!==0n)return null;
+    const t=rem[i]/q;qt.push(t);rem[i]-=t*q;rem[i+1]+=t*p;
+  }
+  return rem[n]===0n?qt:null;
+}
+const frac=(p,q)=>sgnS(p)+(p<0n?-p:p)+(q===1n?'':'/'+q);
+function linFactor(p,q){
+  const a=q===1n?'':String(q);
+  return '('+a+'<i>x</i> '+(p<0n?'+ ':'\u2212 ')+(p<0n?-p:p)+')';
+}
+let S=null;
+function evalP(c,x){let y=0;c.forEach(a=>y=y*x+a);return y}
+function realRoots(c){
+  let tr=c.slice(),hasZero=false;while(tr.length>1&&tr[tr.length-1]===0){tr.pop();hasZero=true}
+  const lead=Math.abs(tr[0]),B=1+Math.max(...tr.slice(1).map(a=>Math.abs(a)/lead),0);
+  const out=hasZero?[0]:[];let px=-B,py=evalP(tr,px);
+  const M=4000;
+  for(let i=1;i<=M;i++){
+    const x=-B+2*B*i/M,y=evalP(tr,x);
+    if(y===0&&py!==0){out.push(x)}
+    else if(py!==0&&y!==0&&(py<0)!==(y<0)){
+      let a=px,b=x,fa=py;
+      for(let k=0;k<60;k++){const m=(a+b)/2,fm=evalP(tr,m);if((fm<0)===(fa<0)){a=m;fa=fm}else b=m}
+      out.push((a+b)/2);
+    }
+    px=x;py=y;
+  }
+  return out.map(r=>Math.abs(r)<1e-9?0:r);
+}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  if(!S)return;
+  const co=S.c,rr=S.roots;
+  let lo=Math.min(-3,...rr)-1,hi=Math.max(3,...rr)+1;
+  let ymin=0,ymax=0;
+  for(let i=0;i<=300;i++){const y=evalP(co,lo+(hi-lo)*i/300);if(isFinite(y)){ymin=Math.min(ymin,y);ymax=Math.max(ymax,y)}}
+  const ys=Math.max(ymax-ymin,1e-6);let y0=ymin-ys*.1,y1=ymax+ys*.1;
+  const X=u=>(u-lo)/(hi-lo)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  const nice=r=>{const p=Math.pow(10,Math.floor(Math.log10(r/6))),n=r/6/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p};
+  const sx=nice(hi-lo),sy=nice(y1-y0);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=Math.ceil(lo/sx)*sx;u<=hi;u+=sx){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  if(y0<=0&&y1>=0){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}
+  if(lo<=0&&hi>=0){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}
+  ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  const ay=Math.min(Math.max(Y(0),0),H-14);
+  for(let u=Math.ceil(lo/sx)*sx;u<=hi;u+=sx){if(Math.abs(u)<sx/2)continue;ctx.fillText(N(u),X(u),ay+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  const ax=Math.min(Math.max(X(0),30),W-4);
+  for(let u=Math.ceil(y0/sy)*sy;u<=y1;u+=sy){if(Math.abs(u)<sy/2)continue;ctx.fillText(N(u),ax-5,Y(u))}
+  ctx.lineWidth=2.6;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  for(let px=0;px<=W;px++){const y=evalP(co,lo+px/W*(hi-lo));px?ctx.lineTo(px,Y(y)):ctx.moveTo(px,Y(y))}
+  ctx.stroke();
+  rr.forEach(r=>{const rat=(S.rat||[]).some(q=>Math.abs(q-r)<1e-6);ctx.fillStyle=rat?'#1f9d6b':'#d98a00';ctx.beginPath();ctx.arc(X(r),Y(0),5,0,7);ctx.fill()});
+}
+
+function update(){
+  const rd=readCoeffs();
+  if(!rd){S=null;$('out').innerHTML='';draw();return}
+  let c=rd.c;
+  let z=0;while(c.length>1&&c[c.length-1]===0n){c.pop();z++}
+  const full=rd.c.concat(new Array(z).fill(0n));
+  const lead=c[0]<0n?-c[0]:c[0],cons=c[c.length-1]<0n?-c[c.length-1]:c[c.length-1];
+  const nums=c.map(Number);
+  if(c.length<2){
+    S={c:nums.concat(new Array(z).fill(0)),roots:[0],rat:[0]};
+    $('out').innerHTML='<table><tr><td>Result</td><td>Every term has a factor of <i>x</i>, so the only root is <i>x</i> = 0 with multiplicity '+z+'.</td></tr></table>';draw();return;
+  }
+  if(lead>1000000000n||cons>1000000000n){$('err').textContent='The leading and constant coefficients must be at most 1,000,000,000 in size.';S=null;$('out').innerHTML='';draw();return}
+  const P=divisors(Number(cons)),Q=divisors(Number(lead));
+  if(P.length*Q.length>20000){$('err').textContent='Too many candidates. Try smaller coefficients.';S=null;$('out').innerHTML='';draw();return}
+  const cand=[];
+  P.forEach(p=>Q.forEach(q=>{if(gcd(BigInt(p),BigInt(q))===1n)cand.push([p,q])}));
+  cand.sort((u,v)=>u[0]/u[1]-v[0]/v[1]);
+  /* find roots and divide them out */
+  let cur=c.slice(),found=[];
+  const tests=[];
+  cand.forEach(([p,q])=>[BigInt(p),-BigInt(p)].forEach(sp=>{
+    const bq=BigInt(q);
+    let m=0;
+    while(cur.length>1){
+      if(evalAt(cur,sp,bq)!==0n)break;
+      const nx=divide(cur,sp,bq);if(!nx)break;
+      cur=nx;m++;
+    }
+    if(m)found.push({p:sp,q:bq,m});
+  }));
+  found.sort((u,v)=>Number(u.p)/Number(u.q)-Number(v.p)/Number(v.q));
+  const rootsRat=found.map(f=>Number(f.p)/Number(f.q));
+  if(z>0)rootsRat.push(0);
+  /* factored form */
+  let fac='';
+  if(z>0)fac+='<i>x</i>'+(z>1?'<sup>'+z+'</sup>':'');
+  found.forEach(f=>{fac+=linFactor(f.p,f.q)+(f.m>1?'<sup>'+f.m+'</sup>':'')});
+  const restDeg=cur.length-1;
+  const restIsOne=restDeg===0&&cur[0]===1n;
+  if(!restIsOne)fac+=restDeg===0?'('+(cur[0]<0n?'\u2212'+(-cur[0]):cur[0])+')':'('+polyHtml(cur)+')';
+  const sorted=[...new Set(cand.map(([p,q])=>frac(BigInt(p),BigInt(q))))];
+  const nrm=Number;
+  const rr2=realRoots(nums.concat(new Array(z).fill(0)));
+  S={c:nums.concat(new Array(z).fill(0)),roots:rr2,rat:rootsRat};
+  let h='<table>'+
+   '<tr><td>Polynomial</td><td><i>f</i>(<i>x</i>) = '+polyHtml(full)+(rd.scale>1n?'<br><span class="sub" style="color:var(--sub);font-size:13px">(scaled by '+rd.scale+' to clear fractions and decimals; the roots are the same)</span>':'')+'</td></tr>'+
+   '<tr><td>Constant term <i>a</i><sub>0</sub></td><td>'+(z>0?'0, so factor out <i>x</i><sup>'+z+'</sup>. Using '+cons:cons)+'; factors <i>p</i>: '+P.join(', ')+'</td></tr>'+
+   '<tr><td>Leading coeff. <i>a</i><sub><i>n</i></sub></td><td>'+lead+'; factors <i>q</i>: '+Q.join(', ')+'</td></tr>'+
+   '<tr><td>Possible rational roots</td><td>±'+sorted.join(', ±')+' <span style="color:var(--sub)">('+sorted.length*2+' candidates)</span></td></tr>'+
+   '<tr><td>Rational roots found</td><td>'+((found.length||z)?[z?'<i>x</i> = 0'+(z>1?' (multiplicity '+z+')':''):null].concat(found.map(f=>'<i>x</i> = '+frac(f.p,f.q)+(f.m>1?' (multiplicity '+f.m+')':''))).filter(Boolean).join('<br>'):'None. The polynomial has no rational roots.')+'</td></tr>'+
+   '<tr><td>Factored form</td><td>'+(fac||'—')+'</td></tr>';
+  if(restDeg===2){
+    const A=nrm(cur[0]),B=nrm(cur[1]),C=nrm(cur[2]),D=B*B-4*A*C;
+    let t;
+    if(D>0)t='<i>x</i> = '+N((-B-Math.sqrt(D))/(2*A))+' and '+N((-B+Math.sqrt(D))/(2*A))+' (real, irrational)';
+    else if(D===0)t='<i>x</i> = '+N(-B/(2*A));
+    else t='<i>x</i> = '+N(-B/(2*A))+' ± '+N(Math.sqrt(-D)/(2*Math.abs(A)))+'<i>i</i> (not real)';
+    h+='<tr><td>Remaining quadratic</td><td>'+polyHtml(cur)+'<br>'+t+'</td></tr>';
+  }else if(restDeg>=3){
+    h+='<tr><td>Remaining factor</td><td>'+polyHtml(cur)+'<br>It has no rational roots. Use the graph or a numerical method for its real roots.</td></tr>';
+  }
+  h+='</table><p style="margin:10px 0 0;font-size:14px;color:var(--sub)">On the graph, green dots are rational roots and orange dots are real roots that are not rational.</p>';
+  $('out').innerHTML=h;
+  draw();
+}
+$('co').addEventListener('input',update);
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
