@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linear Function y = ax + b: Interactive Graph with Sliders</title>
+<meta name="description" content="Learn the linear function y = ax + b. Move the slope and y-intercept sliders to see the line change, and find the equation of a line from two points.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,520px);aspect-ratio:1/1;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a></div>
+<h1 class="w">Linear Function: <i>y</i> = <i>a</i><i>x</i> + <i>b</i></h1>
+<div class="eq" id="eq"></div>
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <label>Slope <i>a</i><output id="oa"></output><input type="range" id="sa" min="-5" max="5" step="0.1" value="2"></label>
+  <label>y-intercept <i>b</i><output id="ob"></output><input type="range" id="sb" min="-8" max="8" step="0.1" value="1"></label>
+  <div class="facts" id="facts"></div>
+
+  <h2>Find the line through two points</h2>
+  <div class="pts">
+    <label>x<sub>1</sub><input type="number" id="x1" value="1" step="any"></label>
+    <label>y<sub>1</sub><input type="number" id="y1" value="3" step="any"></label>
+    <label>x<sub>2</sub><input type="number" id="x2" value="3" step="any"></label>
+    <label>y<sub>2</sub><input type="number" id="y2" value="7" step="any"></label>
+  </div>
+  <div class="res" id="res"></div>
+  <button type="button" id="use">Show on graph</button>
+
+  <h2>What is a linear function?</h2>
+  <p>A linear function is a function whose graph is a straight line. It is written <i>y</i> = <i>a</i><i>x</i> + <i>b</i>, where <i>a</i> and <i>b</i> are fixed numbers. Every time <i>x</i> goes up by 1, <i>y</i> changes by the same amount, and that amount is <i>a</i>.</p>
+
+  <h2>What <i>a</i> and <i>b</i> mean</h2>
+  <ul>
+    <li><b>Slope (<i>a</i>)</b> tells you how steep the line is. A positive slope rises from left to right, a negative slope falls, and a slope of 0 gives a flat horizontal line.</li>
+    <li><b>y-intercept (<i>b</i>)</b> is where the line crosses the y-axis, the point (0, <i>b</i>).</li>
+    <li><b>x-intercept</b> is where the line crosses the x-axis. Set <i>y</i> = 0 and solve: <i>x</i> = −<i>b</i> / <i>a</i>. A flat line has none unless it lies on the axis itself.</li>
+  </ul>
+
+  <h2>How to graph a linear function</h2>
+  <ol>
+    <li>Plot the y-intercept (0, <i>b</i>).</li>
+    <li>From that point, move 1 unit right and <i>a</i> units up (down if <i>a</i> is negative).</li>
+    <li>Draw a straight line through the two points and extend it in both directions.</li>
+  </ol>
+
+  <h2>Find the equation from two points</h2>
+  <p>Given two points (<i>x</i><sub>1</sub>, <i>y</i><sub>1</sub>) and (<i>x</i><sub>2</sub>, <i>y</i><sub>2</sub>), the slope is <i>a</i> = (<i>y</i><sub>2</sub> − <i>y</i><sub>1</sub>) / (<i>x</i><sub>2</sub> − <i>x</i><sub>1</sub>), and then <i>b</i> = <i>y</i><sub>1</sub> − <i>a</i><i>x</i><sub>1</sub>.</p>
+  <p>Example: for (1, 3) and (3, 7), <i>a</i> = (7 − 3) / (3 − 1) = 2 and <i>b</i> = 3 − 2 × 1 = 1, so the line is <i>y</i> = 2<i>x</i> + 1. Try these numbers in the tool above.</p>
+
+  <h2>Common questions</h2>
+  <ul>
+    <li><b>Parallel lines</b> have the same slope. <b>Perpendicular lines</b> have slopes whose product is −1.</li>
+    <li><b>A vertical line</b> such as <i>x</i> = 3 is not a function, because one <i>x</i> value gives many <i>y</i> values. It cannot be written as <i>y</i> = <i>a</i><i>x</i> + <i>b</i>.</li>
+    <li><b>Want to plot other equations?</b> Use the <a href="/">graphing calculator</a>.</li>
+  </ul>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const n=v=>String(+(+v).toFixed(2)).replace('-','−');
+function eqHtml(A,B){
+  if(A===0)return '<i>y</i> = '+n(B);
+  let t=(A===1?'':A===-1?'−':n(A))+'<i>x</i>';
+  if(B>0)t+=' + '+n(B);else if(B<0)t+=' − '+n(-B);
+  return '<i>y</i> = '+t;
+}
+function vals(){return [+(+$('sa').value).toFixed(2),+(+$('sb').value).toFixed(2)]}
+function draw(){
+  const [A,B]=vals();
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  const R=10,s=W/(2*R),X=u=>W/2+u*s,Y=u=>H/2-u*s;
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=-R;u<=R;u++){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H);ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.lineWidth=1.5;ctx.strokeStyle=c('--axis');ctx.beginPath();
+  ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='top';
+  [-5,5].forEach(u=>ctx.fillText(u,X(u),Y(0)+4));
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  [-5,5].forEach(u=>ctx.fillText(u,X(0)-5,Y(u)));
+  ctx.lineWidth=3;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  ctx.moveTo(X(-R),Y(-A*R+B));ctx.lineTo(X(R),Y(A*R+B));ctx.stroke();
+  const dot=(u,w,col)=>{ctx.fillStyle=col;ctx.beginPath();ctx.arc(X(u),Y(w),5,0,7);ctx.fill()};
+  if(Math.abs(B)<=R)dot(0,B,'#e0483e');
+  if(A!==0&&Math.abs(B/A)<=R)dot(-B/A,0,'#1f9d6b');
+}
+function update(){
+  const [A,B]=vals();
+  $('oa').textContent=n(A);$('ob').textContent=n(B);
+  $('eq').innerHTML=eqHtml(A,B);
+  const xi=A!==0?'('+n(-B/A)+', 0)':(B===0?'every point on the x-axis':'none');
+  $('facts').innerHTML='Slope: <b>'+n(A)+'</b><br>y-intercept: <b>(0, '+n(B)+')</b><br>x-intercept: <b>'+xi+'</b>';
+  draw();
+}
+function two(){
+  const x1=parseFloat($('x1').value),y1=parseFloat($('y1').value),x2=parseFloat($('x2').value),y2=parseFloat($('y2').value);
+  const r=$('res');
+  if([x1,y1,x2,y2].some(isNaN)){r.textContent='Enter all four numbers.';return null}
+  if(x1===x2){r.innerHTML='These points form a vertical line, <i>x</i> = '+n(x1)+'. It is not a linear function of the form <i>y</i> = <i>a</i><i>x</i> + <i>b</i>.';return null}
+  const a=(y2-y1)/(x2-x1),b=y1-a*x1;
+  r.innerHTML='Slope <i>a</i> = <b>'+n(a)+'</b>, intercept <i>b</i> = <b>'+n(b)+'</b><br>Equation: '+eqHtml(+a.toFixed(2),+b.toFixed(2));
+  return [a,b];
+}
+['sa','sb'].forEach(id=>$(id).addEventListener('input',update));
+['x1','y1','x2','y2'].forEach(id=>$(id).addEventListener('input',two));
+$('use').onclick=()=>{const r=two();if(!r)return;$('sa').value=r[0];$('sb').value=r[1];update();cv.scrollIntoView({behavior:'smooth',block:'center'})};
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();two();
+</script>
+</body>
+</html>
