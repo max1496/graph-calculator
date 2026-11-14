@@ -42,6 +42,12 @@ select{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid 
 label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
 .btns button{margin-right:8px}
 .steps{margin:6px 0 0;padding-left:18px}
+details.sol{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 12px;margin:8px 0}
+details.sol summary{cursor:pointer;font-weight:600}
+details.sol .a{margin-top:8px;font-size:15px}
+table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}table.t th{background:var(--panel)}
+.key{background:var(--panel);border-left:4px solid #e0483e;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:10px 0}
+.pr{margin:14px 0 4px;font-size:16px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -72,17 +78,79 @@ label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
 
   <div class="facts" id="out"></div>
 
-  <h2>How each change works</h2>
+  <h2>The big idea: points move one way, the equation says the other</h2>
+  <div class="key"><b>Horizontal shift:</b> to move the graph <b>right</b> by <i>h</i>, every point moves to <b>x + h</b>, but you write <b>x − h</b> in the equation: <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>).</div>
+  <p>Why? Suppose (<i>p</i>, <i>q</i>) is a point on the original graph <i>y</i> = <i>f</i>(<i>x</i>). We want the new graph to contain (<i>p</i> + <i>h</i>, <i>q</i>). In the new equation <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>), put <i>x</i> = <i>p</i> + <i>h</i>. The input to <i>f</i> becomes (<i>p</i> + <i>h</i>) − <i>h</i> = <i>p</i>, so the output is <i>f</i>(<i>p</i>) = <i>q</i>. The new graph needs a bigger <i>x</i> to get the same output, so it is shifted right.</p>
+  <p><b>Example.</b> Take <i>f</i>(<i>x</i>) = <i>x</i>² and <i>g</i>(<i>x</i>) = (<i>x</i> − 2)². The point (−1, 1) on <i>f</i> becomes (1, 1) on <i>g</i>, because (1 − 2)² = 1. The vertex (0, 0) becomes (2, 0). Everything moved 2 to the right, even though the equation says “− 2”. A plus sign, as in (<i>x</i> + 3)², means <i>x</i> − (−3), so the graph moves 3 to the <b>left</b>.</p>
+  <p>The same sentence works for every change that happens <b>inside</b> the parentheses: the equation and the points do the opposite thing.</p>
+
+  <h2>Inside changes and outside changes</h2>
   <ul>
-    <li><b>Shift up or down (<i>k</i>):</b> <i>y</i> = <i>f</i>(<i>x</i>) + <i>k</i> moves every point up by <i>k</i>. A negative <i>k</i> moves it down.</li>
-    <li><b>Shift right or left (<i>h</i>):</b> <i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>) moves every point right by <i>h</i>. This one feels backward: subtracting moves the graph to the right.</li>
-    <li><b>Vertical stretch (<i>a</i>):</b> <i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>) multiplies every height by <i>a</i>. If <i>a</i> is between 0 and 1 the graph is squashed.</li>
-    <li><b>Horizontal squeeze (<i>b</i>):</b> <i>y</i> = <i>f</i>(<i>bx</i>) squeezes the graph toward the y-axis when <i>b</i> is greater than 1 and stretches it when <i>b</i> is between 0 and 1.</li>
-    <li><b>Reflection:</b> <i>y</i> = −<i>f</i>(<i>x</i>) flips the graph over the x-axis. <i>y</i> = <i>f</i>(−<i>x</i>) flips it over the y-axis.</li>
-    <li><b>Rotation:</b> turning the graph around the origin by an angle moves each point (<i>x</i>, <i>y</i>) to (<i>x</i> cos θ − <i>y</i> sin θ, <i>x</i> sin θ + <i>y</i> cos θ). A rotated graph is often no longer a function, so it has no formula of the form <i>y</i> = <i>f</i>(<i>x</i>).</li>
+    <li><b>Outside <i>f</i></b> (after the function is computed): <i>a</i>·<i>f</i>(<i>x</i>) and <i>f</i>(<i>x</i>) + <i>k</i>. These change the <b>y</b>-values and behave the way they look. “+ <i>k</i>” moves up, and “· <i>a</i>” multiplies the heights.</li>
+    <li><b>Inside <i>f</i></b> (before the function is computed): <i>f</i>(<i>x</i> − <i>h</i>) and <i>f</i>(<i>bx</i>). These change the <b>x</b>-values and work backwards. “− <i>h</i>” moves right, and “· <i>b</i>” divides the widths by <i>b</i>.</li>
   </ul>
+
+  <h2>All the changes in one table</h2>
+  <p>Here (<i>x</i>, <i>y</i>) is a point on the original graph and the last column says where it lands on the new graph.</p>
+  <div style="overflow-x:auto"><table class="t">
+    <tr><th>Change</th><th>New equation</th><th>Point (<i>x</i>, <i>y</i>) goes to</th><th>What you see</th></tr>
+    <tr><td>Shift up <i>k</i></td><td><i>f</i>(<i>x</i>) + <i>k</i></td><td>(<i>x</i>, <i>y</i> + <i>k</i>)</td><td>Up for <i>k</i> &gt; 0, down for <i>k</i> &lt; 0</td></tr>
+    <tr><td>Shift right <i>h</i></td><td><i>f</i>(<i>x</i> − <i>h</i>)</td><td>(<i>x</i> + <i>h</i>, <i>y</i>)</td><td>Right for <i>h</i> &gt; 0, left for <i>h</i> &lt; 0</td></tr>
+    <tr><td>Vertical stretch or compression by <i>a</i></td><td><i>a</i> · <i>f</i>(<i>x</i>)</td><td>(<i>x</i>, <i>a</i><i>y</i>)</td><td>Taller if |<i>a</i>| &gt; 1, shorter if 0 &lt; |<i>a</i>| &lt; 1</td></tr>
+    <tr><td>Horizontal compression or stretch by <i>b</i></td><td><i>f</i>(<i>bx</i>)</td><td>(<i>x</i> / <i>b</i>, <i>y</i>)</td><td>Narrower if |<i>b</i>| &gt; 1, wider if 0 &lt; |<i>b</i>| &lt; 1</td></tr>
+    <tr><td>Reflect over the x-axis</td><td>−<i>f</i>(<i>x</i>)</td><td>(<i>x</i>, −<i>y</i>)</td><td>Flipped upside down</td></tr>
+    <tr><td>Reflect over the y-axis</td><td><i>f</i>(−<i>x</i>)</td><td>(−<i>x</i>, <i>y</i>)</td><td>Flipped left to right</td></tr>
+  </table></div>
+
+  <h2>Vertical shift</h2>
+  <p><i>y</i> = <i>f</i>(<i>x</i>) + <i>k</i>. Add <i>k</i> to every output. The graph moves up <i>k</i> units, or down if <i>k</i> is negative. Horizontal asymptotes move too: if <i>f</i> has the asymptote <i>y</i> = 0, then <i>f</i>(<i>x</i>) + <i>k</i> has <i>y</i> = <i>k</i>. The range shifts by <i>k</i> but the domain does not change.</p>
+
+  <h2>Horizontal shift</h2>
+  <p><i>y</i> = <i>f</i>(<i>x</i> − <i>h</i>). See the big idea above. The domain shifts by <i>h</i>, and vertical asymptotes move with the graph. For example <i>y</i> = 1/(<i>x</i> − 3) has its vertical asymptote at <i>x</i> = 3, not −3. The range does not change.</p>
+
+  <h2>Vertical stretch and compression</h2>
+  <p><i>y</i> = <i>a</i> · <i>f</i>(<i>x</i>). Multiply every height by <i>a</i>. If |<i>a</i>| &gt; 1 the graph is <b>stretched</b> away from the x-axis. If 0 &lt; |<i>a</i>| &lt; 1 it is <b>compressed</b> toward the x-axis. The x-intercepts stay where they are, because 0 times anything is still 0. A negative <i>a</i> also flips the graph over the x-axis.</p>
+
+  <h2>Horizontal stretch and compression</h2>
+  <p><i>y</i> = <i>f</i>(<i>bx</i>). The new graph reaches a given height when <i>bx</i> equals the old input, so <i>x</i> = (old input) / <i>b</i>. Every x-coordinate is divided by <i>b</i>. If |<i>b</i>| &gt; 1 the graph is <b>compressed</b> toward the y-axis, and if 0 &lt; |<i>b</i>| &lt; 1 it is <b>stretched</b> away from it. The y-intercept stays where it is. In the tool above, the slider <i>b</i> is this number.</p>
+  <p>Careful with the wording. <i>f</i>(2<i>x</i>) is a horizontal compression by a factor of ½ (the graph gets half as wide), and <i>f</i>(<i>x</i>/2) is a horizontal stretch by a factor of 2. If you factor the inside, <i>f</i>(<i>b</i>(<i>x</i> − <i>h</i>)) shifts by <i>h</i>, but <i>f</i>(<i>bx</i> − <i>c</i>) shifts by <i>c</i>/<i>b</i>. Always factor out <i>b</i> first.</p>
+
+  <h2>Reflections</h2>
+  <p>−<i>f</i>(<i>x</i>) changes the sign of every output, so each point (<i>x</i>, <i>y</i>) goes to (<i>x</i>, −<i>y</i>): the graph is flipped over the x-axis. <i>f</i>(−<i>x</i>) changes the sign of every input, so each point goes to (−<i>x</i>, <i>y</i>): the graph is flipped over the y-axis. If <i>f</i> is an even function, <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>) and the second reflection changes nothing.</p>
+
+  <h2>Rotation</h2>
+  <p>Turning the graph about the origin by θ sends (<i>x</i>, <i>y</i>) to (<i>x</i> cos θ − <i>y</i> sin θ, <i>x</i> sin θ + <i>y</i> cos θ). A rotated graph is often no longer a function, so it cannot be written as <i>y</i> = <i>f</i>(<i>x</i>). A 180° rotation equals both reflections together.</p>
+
   <h2>Order of the changes</h2>
-  <p>The tool applies the changes in this order: squeeze and reflect over the y-axis inside the function, then the shift <i>h</i>, then the stretch <i>a</i> and reflection over the x-axis, then the shift <i>k</i>, and finally the rotation. Changing the order can give a different graph, which is why teachers ask you to do them in a fixed order.</p>
+  <p>The tool applies the changes in this order: <i>b</i> and the y-axis reflection inside the function, then the shift <i>h</i>, then <i>a</i> and the x-axis reflection, then the shift <i>k</i>, and finally the rotation. When you read an equation such as <i>y</i> = −2<i>f</i>(3(<i>x</i> − 1)) + 4, work from the inside out: compress by 3, shift right 1, stretch by 2 and flip over the x-axis, then shift up 4. Doing the steps in a different order can give a different graph.</p>
+
+  <h2>Guided practice</h2>
+  <p>Try each problem on paper first, then press the line to see the solution. You can check any answer with the sliders above.</p>
+
+  <p class="pr"><b>1.</b> Start with <i>y</i> = <i>x</i>². Write the equation of the graph after it is shifted 3 units to the right and 2 units down.</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">Right 3 means replace <i>x</i> with (<i>x</i> − 3). Down 2 means subtract 2 at the end.<br><b><i>y</i> = (<i>x</i> − 3)² − 2.</b> The vertex moves from (0, 0) to (3, −2). Check: the point (1, 1) on <i>x</i>² lands on (4, −1), and (4 − 3)² − 2 = −1.</div></details>
+
+  <p class="pr"><b>2.</b> Describe the graph of <i>y</i> = |<i>x</i> + 4| + 1 compared with <i>y</i> = |<i>x</i>|.</p>
+  <details class="sol"><summary>Show solution</summary><div class="a"><i>x</i> + 4 = <i>x</i> − (−4), so <i>h</i> = −4: the graph moves <b>4 units left</b>. The + 1 outside moves it <b>1 unit up</b>. The vertex goes from (0, 0) to (−4, 1).</div></details>
+
+  <p class="pr"><b>3.</b> The point (2, 5) is on the graph of <i>y</i> = <i>f</i>(<i>x</i>). Find the matching point on <i>y</i> = <i>f</i>(<i>x</i> − 3) + 1.</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">The inside “− 3” moves points 3 to the right, so <i>x</i> becomes 2 + 3 = 5. The outside “+ 1” moves points up 1, so <i>y</i> becomes 5 + 1 = 6. The point is <b>(5, 6)</b>. Check: <i>f</i>(5 − 3) + 1 = <i>f</i>(2) + 1 = 5 + 1 = 6.</div></details>
+
+  <p class="pr"><b>4.</b> Start with <i>y</i> = √<i>x</i>. Stretch it vertically by a factor of 3, reflect it over the x-axis, and shift it up 2. Write the new equation and find where the point (4, 2) goes.</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">Stretch by 3: 3√<i>x</i>. Reflect over the x-axis: −3√<i>x</i>. Shift up 2: <b><i>y</i> = −3√<i>x</i> + 2</b>. For the point: <i>x</i> stays 4, and <i>y</i> = −3(2) + 2 = −4. So (4, 2) goes to <b>(4, −4)</b>.</div></details>
+
+  <p class="pr"><b>5.</b> The graph of <i>y</i> = <i>f</i>(<i>x</i>) contains (2, 5). Find the matching point on <i>y</i> = −<i>f</i>(<i>x</i> + 1).</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">Inside: <i>x</i> + 1 = <i>x</i> − (−1), so points move 1 to the left: <i>x</i> becomes 2 − 1 = 1. Outside: the minus sign flips over the x-axis, so <i>y</i> becomes −5. The point is <b>(1, −5)</b>.</div></details>
+
+  <p class="pr"><b>6.</b> Compress <i>y</i> = <i>x</i>² horizontally by a factor of ½. Write the equation and say where (2, 4) goes.</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">Compressing horizontally by ½ means every <i>x</i> is divided by 2, so use <i>b</i> = 2 inside: <b><i>y</i> = (2<i>x</i>)² = 4<i>x</i>²</b>. The point (2, 4) goes to (2 / 2, 4) = <b>(1, 4)</b>. Check: 4(1)² = 4. Notice that for a parabola this looks the same as a vertical stretch by 4.</div></details>
+
+  <p class="pr"><b>7.</b> Write the equation of a parabola with vertex (−2, 3) that opens downward and has the same width as <i>y</i> = <i>x</i>².</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">Start with <i>x</i>². Moving the vertex to (−2, 3) gives (<i>x</i> + 2)² + 3 (left 2, up 3). Opening downward adds a reflection over the x-axis, so put a minus sign in front of the squared part: <b><i>y</i> = −(<i>x</i> + 2)² + 3</b>. Check: at <i>x</i> = −2 the value is 3, and every other point is lower.</div></details>
+
+  <p class="pr"><b>8.</b> Describe every change from <i>y</i> = <i>f</i>(<i>x</i>) to <i>y</i> = 2<i>f</i>(−<i>x</i> + 4) − 1. (Hint: factor the inside first.)</p>
+  <details class="sol"><summary>Show solution</summary><div class="a">−<i>x</i> + 4 = −(<i>x</i> − 4). So the function is 2<i>f</i>(−(<i>x</i> − 4)) − 1. Inside: reflect over the y-axis, then shift right 4. Outside: stretch vertically by 2, then shift down 1. A point (<i>x</i>, <i>y</i>) goes to (4 − <i>x</i>, 2<i>y</i> − 1).</div></details>
+
   <p>See the eleven basic shapes on the <a href="/parent-functions.html">parent functions</a> page, and plot your own result in the <a href="/">graphing calculator</a>.</p>
 </div>
 
@@ -178,6 +246,17 @@ function update(){
     let calc=(Math.abs(A)===1?(A<0?'-':''):num(A).replace('\u2212','-')+'*')+s.p.c(innerCalc(B,s.h));
     if(s.k!==0)calc+=(s.k>0?'+':'-')+num(Math.abs(s.k));
     h+='<tr><td>Calculator</td><td><a href="/#e='+encodeURIComponent(calc)+'&c=2f6fed&v=0%2C0%2C48">Open this graph in the graphing calculator</a></td></tr>';
+  }
+  {
+    const pts=[];
+    for(const x of [-3,-2,-1,0,1,2,3]){
+      const y=s.p.f(x);if(!Number.isFinite(y)||Math.abs(y)>20)continue;
+      let nx=s.h+x/B,ny=A*y+s.k;
+      if(s.r){const t=s.r*Math.PI/180;const rx=nx*Math.cos(t)-ny*Math.sin(t),ry=nx*Math.sin(t)+ny*Math.cos(t);nx=rx;ny=ry}
+      pts.push('('+num(x)+', '+num(y)+') \u2192 ('+num(nx)+', '+num(ny)+')');
+      if(pts.length>=4)break;
+    }
+    if(pts.length)h+='<tr><td>Where points go</td><td>'+pts.join('<br>')+'</td></tr>';
   }
   h+='</table>';
   $('out').innerHTML=h;
