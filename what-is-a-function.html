@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Is a Function? Equations vs Functions and the Floor Function</title>
+<meta name="description" content="Learn what a function is, how equations and functions are related, and what the floor function (Gauss bracket) is, with graphs and practice problems.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
+</head>
+<body>
+<div class="w"><a href="/algebra-1.html">← Algebra 1</a> &nbsp;·&nbsp; <a href="/">Graphing Calculator</a></div>
+<h1 class="w">What Is a Function?</h1>
+<div class="w"><p class="sum"><b>In short:</b> A function gives exactly one output for each input. Solving an equation means asking a question about a graph.</p></div>
+<div class="w">
+
+<h2>What is a function?</h2>
+<ul class="lines">
+  <li>A <b>function</b> is a rule that takes an <span class="hl">input</span> and gives back <b>exactly one</b> <span class="hl2">output</span>.</li>
+  <li>Think of a machine: put in <i>x</i>, get out <i>f</i>(<i>x</i>).</li>
+  <li><i>f</i>(<i>x</i>) = 2<i>x</i> + 1 means “double the input, then add 1”. So <i>f</i>(3) = 7.</li>
+  <li>The set of allowed inputs is the <b>domain</b>. The set of outputs you actually get is the <b>range</b>.</li>
+</ul>
+<table class="t"><tr><th>Input <i>x</i></th><th>Rule: 2<i>x</i> + 1</th><th>Output</th></tr>
+<tr><td>0</td><td>2(0) + 1</td><td>1</td></tr><tr><td>1</td><td>2(1) + 1</td><td>3</td></tr><tr><td>3</td><td>2(3) + 1</td><td>7</td></tr></table>
+<h3>Is it a function?</h3>
+<ul class="lines">
+  <li><b>Table or pairs:</b> if the same input appears with <b>two different outputs</b>, it is <span class="hl2">not</span> a function.<br>(1, 2) and (1, 5) together: not a function.<br>(1, 2) and (3, 2) together: fine. Two inputs may share an output.</li>
+  <li><b>Graph:</b> the vertical line test. A vertical line must cross the graph <b>at most once</b>.</li>
+</ul>
+<p>More on this, including one-to-one, onto and inverses, on <a href="/functions-and-inverses.html">Functions and inverse functions</a>.</p>
+
+<h2 id="equations">Equations and functions: how are they related?</h2>
+<ul class="lines">
+  <li>An <b>equation</b> is a statement with an equals sign, like 2<i>x</i> + 1 = 7. It is true for some values and false for others. <b>Solving</b> it means finding the values that make it true.</li>
+  <li>A <b>function</b> is a rule, like <i>f</i>(<i>x</i>) = 2<i>x</i> + 1. It does not “solve” anything. It just turns inputs into outputs.</li>
+  <li>Writing <b><i>y</i> = <i>f</i>(<i>x</i>)</b> turns the function into an equation in two variables. <span class="hl">Its solutions are exactly the points on the graph.</span></li>
+</ul>
+<div class="key2"><b>The link:</b> solving an equation = asking a question about a function’s graph.</div>
+<table class="t"><tr><th>Equation</th><th>Question about the graph</th></tr>
+<tr><td><i>f</i>(<i>x</i>) = 0</td><td>Where does the graph cross the <b>x-axis</b>? (zeros, roots, x-intercepts)</td></tr>
+<tr><td><i>f</i>(<i>x</i>) = 5</td><td>Where does the graph meet the horizontal line <i>y</i> = 5?</td></tr>
+<tr><td><i>f</i>(<i>x</i>) = <i>g</i>(<i>x</i>)</td><td>Where do the two graphs <b>intersect</b>? The x-values are the solutions.</td></tr>
+<tr><td><i>f</i>(<i>x</i>) &gt; <i>g</i>(<i>x</i>)</td><td>Where is the graph of <i>f</i> <b>above</b> the graph of <i>g</i>?</td></tr></table>
+<h3>Example</h3>
+<ul class="lines">
+  <li>Solve <i>x</i>² = <i>x</i> + 2.</li>
+  <li>Graph <i>y</i> = <i>x</i>² and <i>y</i> = <i>x</i> + 2 together.</li>
+  <li>They meet at <b>(−1, 1)</b> and <b>(2, 4)</b>.</li>
+  <li>So the solutions are <b><i>x</i> = −1</b> and <b><i>x</i> = 2</b>.</li>
+  <li>Check algebraically: <i>x</i>² − <i>x</i> − 2 = (<i>x</i> − 2)(<i>x</i> + 1) = 0.</li>
+</ul>
+<p>Not every equation is a function. <i>x</i>² + <i>y</i>² = 9 is an equation, but it fails the vertical line test, so <i>y</i> is not a function of <i>x</i>.</p>
+<div class="lessons"><a class="lesson" href="/#e=x%5E2&e=x%2B2"><h3>Open x² and x + 2</h3><span>The calculator lists the intersection points for you.</span></a></div>
+
+<h2 id="floor">The floor function (Gauss bracket)</h2>
+<ul class="lines">
+  <li><b>⌊<i>x</i>⌋</b> = the greatest integer that is <b>less than or equal to</b> <i>x</i>. In other words: round <b>down</b>.</li>
+  <li>This is the <b>Gauss bracket</b> (가우스 기호), sometimes written [<i>x</i>]. In the calculator type <b>floor(x)</b>.</li>
+  <li>⌊3.7⌋ = 3 &nbsp;·&nbsp; ⌊5⌋ = 5 &nbsp;·&nbsp; ⌊0.2⌋ = 0</li>
+  <li><span class="hl2">Careful with negatives:</span> ⌊−2.3⌋ = <b>−3</b>, not −2. Round down means toward the left on the number line.</li>
+  <li>The <b>ceiling</b> ⌈<i>x</i>⌉ rounds <b>up</b>: ⌈3.2⌉ = 4. In the calculator: <b>ceil(x)</b>.</li>
+</ul>
+<canvas id="fl" style="width:100%;max-width:420px;aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;display:block" aria-label="Graph of the floor function"></canvas>
+<h3>Why the graph is a staircase</h3>
+<ul class="lines">
+  <li>Between two integers the output does not change, so you get a <b>flat step</b>.</li>
+  <li>At each integer the output <b>jumps up by 1</b>.</li>
+  <li>The <b>filled dot</b> on the left end of each step means the value is included (⌊2⌋ = 2).</li>
+  <li>The <b>open dot</b> on the right end means that value is not reached there.</li>
+  <li>This is a <b>jump discontinuity</b>, not an asymptote. A dashed asymptote line is for graphs that shoot off to infinity, like 1/<i>x</i>. The floor graph never does, so there is no dashed line.</li>
+  <li>Domain: all real numbers. Range: the integers only.</li>
+</ul>
+<h3>Where you see it</h3>
+<ul class="lines">
+  <li>Parking or taxi fees charged per started hour use the <b>ceiling</b>.</li>
+  <li>The fractional part of a number is <i>x</i> − ⌊<i>x</i>⌋. Its graph is a sawtooth: try <b>x-floor(x)</b>.</li>
+  <li>In programming, integer division works like a floor.</li>
+</ul>
+<div class="lessons"><a class="lesson" href="/#e=floor%28x%29"><h3>Open floor(x)</h3><span>Details shows the jumps and where it is not continuous.</span></a><a class="lesson" href="/#e=x-floor%28x%29"><h3>Open x − floor(x)</h3><span>The sawtooth (fractional part).</span></a></div>
+
+<h2>Practice</h2>
+<ol class="steps">
+  <li>Is {(1, 4), (2, 4), (3, 5)} a function?
+    <details class="sol"><summary>Show answer</summary><p>Yes. Each input appears once. Two inputs sharing the output 4 is allowed.</p></details></li>
+  <li><i>f</i>(<i>x</i>) = <i>x</i>² − 3. Find <i>f</i>(−2).
+    <details class="sol"><summary>Show answer</summary><p>(−2)² − 3 = 4 − 3 = <b>1</b>.</p></details></li>
+  <li>Use graphs to solve 2<i>x</i> + 1 = <i>x</i> + 4.
+    <details class="sol"><summary>Show answer</summary><p>The lines <i>y</i> = 2<i>x</i> + 1 and <i>y</i> = <i>x</i> + 4 meet at (3, 7), so <b><i>x</i> = 3</b>.</p></details></li>
+  <li>Find ⌊−1.5⌋, ⌊4⌋ and ⌈−1.5⌉.
+    <details class="sol"><summary>Show answer</summary><p>⌊−1.5⌋ = <b>−2</b>, ⌊4⌋ = <b>4</b>, ⌈−1.5⌉ = <b>−1</b>.</p></details></li>
+</ol>
+
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+<script>
+function dr(){const c=document.getElementById('fl'),d=devicePixelRatio||1,W=c.clientWidth,H=c.clientHeight;c.width=W*d;c.height=H*d;const g=c.getContext('2d');g.scale(d,d);
+const x0=-3.5,x1=3.5,y0=-4.5,y1=3.5,X=x=>(x-x0)/(x1-x0)*W,Y=y=>H-(y-y0)/(y1-y0)*H,cs=getComputedStyle(document.body),bg=cs.backgroundColor;
+g.strokeStyle='#8a99aa';g.lineWidth=1;g.beginPath();g.moveTo(X(0),0);g.lineTo(X(0),H);g.moveTo(0,Y(0));g.lineTo(W,Y(0));g.stroke();
+g.fillStyle='#8a99aa';g.font='11px sans-serif';for(let i=-3;i<=3;i++)if(i)g.fillText(i,X(i)-3,Y(0)+13);for(let i=-4;i<=3;i++)if(i)g.fillText(i,X(0)+4,Y(i)+4);
+g.strokeStyle='#2f6fed';g.lineWidth=2.4;for(let n=-4;n<=3;n++){g.beginPath();g.moveTo(X(n),Y(n));g.lineTo(X(n+1),Y(n));g.stroke();
+g.fillStyle='#2f6fed';g.beginPath();g.arc(X(n),Y(n),4,0,7);g.fill();g.fillStyle=bg;g.beginPath();g.arc(X(n+1),Y(n),4,0,7);g.fill();g.stroke()}}
+dr();addEventListener('resize',dr);
+</script>
+</body>
+</html>

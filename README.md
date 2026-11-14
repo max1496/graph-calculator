@@ -41,3 +41,5 @@ Live site: https://graph-calculator-chi.vercel.app
 
 
 New pages: precalculus.html, functions-and-inverses.html, continuity-and-derivatives.html, polynomial-degrees.html
+
+Also: what-is-a-function.html, toc.js (page navigation and search)

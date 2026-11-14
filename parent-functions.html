@@ -62,6 +62,7 @@ ul.lines{padding-left:22px;line-height:1.75}ul.lines li{margin:4px 0}
 .lead{font-size:18px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
 </head>
 <body>
 <div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-1.html">Algebra 1</a> &nbsp;·&nbsp; <a href="/algebra-2.html">Algebra 2</a></div>
@@ -110,6 +111,14 @@ ul.lines{padding-left:22px;line-height:1.75}ul.lines li{margin:4px 0}
       <ul><li>Passes through the origin and is <b>always increasing</b>.</li><li>Very steep at (0, 0): the tangent line there is <b>vertical</b>, so it is not differentiable at <i>x</i> = 0.</li><li>Odd function: symmetric about the origin.</li><li>It is the inverse of <i>y</i> = <i>x</i>³.</li></ul>
       <div class="more">Learn more: <a href="/functions-and-inverses.html">Functions and inverses</a></div>
       <a class="go" href="/#e=cbrt%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
+    </details>
+    <details class="card" id="floor">
+      <summary><h3>Floor (Gauss bracket)</h3><div class="eq"><i>y</i> = ⌊<i>x</i>⌋</div></summary>
+      <canvas data-k="floor" aria-label="Graph of the floor function"></canvas>
+      <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>The integers</dd></dl>
+      <ul><li>⌊<i>x</i>⌋ = the greatest integer less than or equal to <i>x</i> (round <b>down</b>). ⌊3.7⌋ = 3 and ⌊−2.3⌋ = −3.</li><li>A <b>step function</b>: flat steps with a jump of 1 at every integer.</li><li>Filled dot = included, open dot = not included. The jumps are discontinuities, not asymptotes.</li><li>Neither even nor odd.</li></ul>
+      <div class="more">Learn more: <a href="/what-is-a-function.html#floor">The floor function</a></div>
+      <a class="go" href="/#e=floor%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
     </details>
     <details class="card" id="abs">
       <summary><h3>Absolute value</h3><div class="eq"><i>y</i> = |<i>x</i>|</div></summary>
@@ -199,6 +208,7 @@ ul.lines{padding-left:22px;line-height:1.75}ul.lines li{margin:4px 0}
 <tr><td>Sine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>odd (origin)</td></tr>
 <tr><td>Cosine</td><td>all reals</td><td>−1 ≤ y ≤ 1</td><td>even (y-axis)</td></tr>
 <tr><td>Tangent</td><td>x ≠ π/2 + kπ</td><td>all reals</td><td>odd (origin)</td></tr>
+<tr><td>Floor ⌊x⌋</td><td>all reals</td><td>integers</td><td>neither</td></tr>
 <tr><td>Cube root</td><td>all reals</td><td>all reals</td><td>odd (origin)</td></tr>
 <tr><td>Circle (not a function)</td><td>[−r, r]</td><td>[−r, r]</td><td>both axes and origin</td></tr>
   </table></div>
@@ -235,7 +245,7 @@ ul.lines{padding-left:22px;line-height:1.75}ul.lines li{margin:4px 0}
 </div>
 
 <script>
-const SPEC={"linear":{f:x=>x,x:[-5, 5],y:[-4, 4],va:[],ha:[],vapi:false},"quad":{f:x=>x*x,x:[-3, 3],y:[-1, 6],va:[],ha:[],vapi:false},"cubic":{f:x=>x*x*x,x:[-2.5, 2.5],y:[-6, 6],va:[],ha:[],vapi:false},"cbrt":{f:Math.cbrt,x:[-8,8],y:[-3,3],va:[],ha:[],vapi:false},"circle":{circle:2,f:x=>NaN,x:[-4,4],y:[-3,3],va:[],ha:[],vapi:false},"abs":{f:Math.abs,x:[-4, 4],y:[-1, 5],va:[],ha:[],vapi:false},"sqrt":{f:Math.sqrt,x:[-1, 9],y:[-1, 4],va:[],ha:[],vapi:false},"recip":{f:x=>1/x,x:[-5, 5],y:[-4, 4],va:[0],ha:[0],vapi:false},"exp":{f:x=>Math.pow(2,x),x:[-4, 4],y:[-1, 8],va:[],ha:[0],vapi:false},"log":{f:Math.log,x:[-1, 9],y:[-4, 4],va:[0],ha:[],vapi:false},"sin":{f:Math.sin,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"cos":{f:Math.cos,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"tan":{f:Math.tan,x:[-6.6, 6.6],y:[-4, 4],va:[],ha:[],vapi:true}};
+const SPEC={"linear":{f:x=>x,x:[-5, 5],y:[-4, 4],va:[],ha:[],vapi:false},"quad":{f:x=>x*x,x:[-3, 3],y:[-1, 6],va:[],ha:[],vapi:false},"cubic":{f:x=>x*x*x,x:[-2.5, 2.5],y:[-6, 6],va:[],ha:[],vapi:false},"cbrt":{f:Math.cbrt,x:[-8,8],y:[-3,3],va:[],ha:[],vapi:false},"circle":{circle:2,f:x=>NaN,x:[-4,4],y:[-3,3],va:[],ha:[],vapi:false},"floor":{step:true,f:Math.floor,x:[-3.5,3.5],y:[-3.5,3.5],va:[],ha:[],vapi:false},"abs":{f:Math.abs,x:[-4, 4],y:[-1, 5],va:[],ha:[],vapi:false},"sqrt":{f:Math.sqrt,x:[-1, 9],y:[-1, 4],va:[],ha:[],vapi:false},"recip":{f:x=>1/x,x:[-5, 5],y:[-4, 4],va:[0],ha:[0],vapi:false},"exp":{f:x=>Math.pow(2,x),x:[-4, 4],y:[-1, 8],va:[],ha:[0],vapi:false},"log":{f:Math.log,x:[-1, 9],y:[-4, 4],va:[0],ha:[],vapi:false},"sin":{f:Math.sin,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"cos":{f:Math.cos,x:[-6.6, 6.6],y:[-2, 2],va:[],ha:[],vapi:false},"tan":{f:Math.tan,x:[-6.6, 6.6],y:[-4, 4],va:[],ha:[],vapi:true}};
 function drawAll(){
   const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
   document.querySelectorAll('canvas[data-k]').forEach(cv=>{
@@ -259,6 +269,7 @@ function drawAll(){
     if(s.vapi)for(let k=-3;k<=3;k++){const a=Math.PI/2+k*Math.PI;if(a>x0&&a<x1){g.moveTo(X(a),0);g.lineTo(X(a),H)}}
     g.stroke();g.restore();
     g.strokeStyle='#2f6fed';g.lineWidth=2.4;g.lineJoin='round';g.beginPath();
+    if(s.step){for(let n=Math.ceil(x0)-1;n<x1;n++){g.beginPath();g.moveTo(X(n),Y(n));g.lineTo(X(n+1),Y(n));g.stroke();g.fillStyle='#2f6fed';g.beginPath();g.arc(X(n),Y(n),3.5,0,7);g.fill();g.fillStyle=c('--bg');g.beginPath();g.arc(X(n+1),Y(n),3.5,0,7);g.fill();g.stroke()}return}
     if(s.circle){g.arc(X(0),Y(0),s.circle*W/(x1-x0),0,7);g.stroke();return}
     let pen=false,py=0;
     for(let px=0;px<=W;px++){

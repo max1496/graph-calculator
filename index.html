@@ -8,6 +8,7 @@
 <meta name="description" content="Free online graphing calculator. Type an equation like x^2 or sin(x) and see the graph instantly. Zoom, pan, and plot several equations at once.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
 <style>
+.today{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 14px;margin:6px 0 10px;color:var(--ink)}.today b.tt{font-size:16px}.today .td{margin:4px 0;color:var(--sub)}.today button,.today a.rd{border:1px solid var(--line);background:var(--bg);color:#2f6fed;border-radius:14px;padding:4px 12px;font-size:13px;cursor:pointer;text-decoration:none;margin:2px 6px 2px 0;display:inline-block}.sitesearch{margin:6px 0 10px}
 :root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
 @media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
 *{box-sizing:border-box}
@@ -106,6 +107,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
 </head>
 <body>
 <h1>Graphing Calculator</h1>
@@ -199,6 +201,8 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 <details class="hist" id="hist"><summary>History (<span id="hn">0</span>)</summary><div class="hl" id="hl"></div><button type="button" class="hc" id="hclr">Clear history</button></details>
 
 <section class="help">
+  <div class="today" id="today"></div>
+  <div id="sitesearch" class="sitesearch"></div>
   <h2>Quick start</h2>
   <ul>
     <li>Type an equation such as <b>x^2</b> or <b>sin(x)</b>. The graph appears at once.</li>
@@ -442,7 +446,8 @@ function pretty(raw){
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const v={cx:0,cy:0,s:48};
 const COLORS=['#2f6fed','#e0483e','#1f9d6b','#d98a00','#8e44ad','#00a3a3'];
-const rows=[{t:'x^2',c:COLORS[0]}];
+const START=['x','sqrt(x)','x^2','x^3','abs(x)','1/x','sin(x)','2^x','ln(x)','cbrt(x)','floor(x)','x^2-4','x^3-3x','cos(x)','x^4-5x^2+4'];
+const rows=[{t:START[Math.floor(Math.random()*START.length)],c:COLORS[0]}];
 let focusIdx=0;
 const marks=[];let mmode='look';let mdec=null;
 const MCOL=['#8e44ad','#d81b60','#00a6a6','#8d5b2e','#4a5d8f'];let mcn=0;const nextMC=()=>MCOL[mcn++%MCOL.length];
@@ -473,6 +478,11 @@ function piText(n,q){
 }
 function xText(x){const f=piFrac(x);return f?piText(f[0],f[1]):fmt(x).replace('-','−')}
 
+function jumpAt(f,a,b){
+  let ya=f(a),yb=f(b);if(!isFinite(ya)||!isFinite(yb))return null;const g0=Math.abs(yb-ya);if(g0<1e-9)return null;
+  for(let i=0;i<40;i++){const m=(a+b)/2,ym=f(m);if(!isFinite(ym))return null;if(Math.abs(ym-ya)>Math.abs(yb-ym)){b=m;yb=ym}else{a=m;ya=ym}}
+  return Math.abs(yb-ya)>0.5*g0?{x:(a+b)/2,yl:ya,yr:yb}:null;
+}
 function draw(){
   const [W,H]=fit();
   const cs=getComputedStyle(document.documentElement);
@@ -519,17 +529,30 @@ function draw(){
       drawImplicit(r.f,W,H,x0,y1);ctx.setLineDash([]);return;
     }
     ctx.beginPath();
-    let pen=false,prev=0;
+    let pen=false,prev=0;const jumps=[];
     for(let px=0;px<=W;px+=1){
-      const y=r.f(x0+px/v.s);
+      const xx=x0+px/v.s,y=r.f(xx);
       if(!isFinite(y)){pen=false;continue}
       const py=Y(y);
       if(Math.abs(py)>1e6){pen=false;continue}
       if(pen&&Math.abs(py-prev)>H*2)pen=false;
+      if(pen&&Math.abs(py-prev)>14){const j=jumpAt(r.f,xx-1/v.s,xx);if(j){pen=false;if(jumps.length<300)jumps.push(j)}}
       if(!pen){ctx.moveTo(px,py);pen=true}else ctx.lineTo(px,py);
       prev=py;
     }
     ctx.stroke();
+    if(!r.pw&&jumps.length){
+      const bg=col('--bg');ctx.lineWidth=2;
+      jumps.forEach(j=>{
+        const xr=Math.round(j.x*1e7)/1e7,fv=r.f(xr);if(!isFinite(fv))return;
+        const leftIn=Math.abs(fv-j.yl)<Math.abs(fv-j.yr);
+        [[j.yl,leftIn],[j.yr,!leftIn]].forEach(([yy,filled])=>{
+          const px=X(xr),py=Y(yy);if(px<-9||px>W+9||py<-9||py>H+9)return;
+          ctx.beginPath();ctx.arc(px,py,4.5,0,7);ctx.fillStyle=filled?r.c:bg;ctx.fill();ctx.strokeStyle=r.c;ctx.stroke();
+        });
+      });
+      ctx.lineWidth=2.2;
+    }
   });
   rows.forEach(r=>{
     if(!r.f||!r.holes||!r.holes.length)return;
@@ -1268,6 +1291,8 @@ function classify(r,t){
   if(r.pol)return {n:'Polar curve (flower, rose, spiral…)',u:null};
   if(r.pw||r.ineq)return null;
   const c=t.toLowerCase().replace(/\s+/g,'').replace(/^y=/,'').replace(/π/g,'pi').replace(/√/g,'sqrt');
+  if(/^[-+]?[0-9.]*\*?floor\(x\)([+-][0-9.]+)?$/.test(c))return {n:'Floor function (Gauss bracket ⌊x⌋)',u:'/parent-functions.html#floor'};
+  if(/^[-+]?[0-9.]*\*?ceil\(x\)([+-][0-9.]+)?$/.test(c))return {n:'Ceiling function ⌈x⌉',u:'/what-is-a-function.html#floor'};
   if(r.imp){
     if(/x\^2/.test(c)&&/y\^2/.test(c)){
       if(/[a-z0-9)]-[0-9.]*y\^2|y\^2[^=]*-[0-9.]*x\^2|x\^2[^=]*-[^=]*y\^2/.test(c))return {n:'Hyperbola',u:'/conic-sections.html'};
@@ -1372,15 +1397,40 @@ document.querySelectorAll('#ex button[data-ex]').forEach(b=>{
     inp.value=b.dataset.ex;inp.focus();inp.dispatchEvent(new Event('input'));
   };
 });
-document.querySelectorAll('#fun button[data-fun]').forEach(b=>{
-  b.onclick=()=>{
-    const list2=JSON.parse(b.dataset.fun);
-    rows.length=0;list2.forEach((t,i)=>rows.push({t,c:COLORS[i]}));
-    marks.length=0;
-    const [W,H]=fit();v.cx=0;v.cy=0;v.s=Math.min(W,H)/(list2.length>1?9:/exp/.test(list2[0])?10:/t\/4/.test(list2[0])?14:/^r=2\+/.test(list2[0])?6.4:/^r=1-/.test(list2[0])?4.6:2.7);
-    focusIdx=0;build();draw();
-  };
-});
+function setRows(list2){
+  rows.length=0;list2.forEach((t,i)=>rows.push({t,c:COLORS[i]}));
+  marks.length=0;
+  const [W,H]=fit();v.cx=0;v.cy=0;
+  const pol=/^r=/.test(list2[0]);
+  v.s=Math.min(W,H)/(!pol?12:list2.length>1?9:/exp/.test(list2[0])?10:/t\/4/.test(list2[0])?14:/^r=2\+/.test(list2[0])?6.4:/^r=1-/.test(list2[0])?4.6:2.7);
+  focusIdx=0;build();draw();
+}
+document.querySelectorAll('#fun button[data-fun]').forEach(b=>{b.onclick=()=>setRows(JSON.parse(b.dataset.fun))});
+const TOPICS=[
+{t:'What is a function?',d:'One input, exactly one output. Is a circle a function? Try the vertical line test.',u:'/what-is-a-function.html',e:['x^2+y^2=9']},
+{t:'Equations and functions',d:'Solving x² = x + 2 is the same as asking where two graphs meet.',u:'/what-is-a-function.html#equations',e:['x^2','x+2']},
+{t:'The floor function ⌊x⌋',d:'The Gauss bracket rounds down. Look at the staircase graph and its jumps.',u:'/what-is-a-function.html#floor',e:['floor(x)']},
+{t:'Why does x − 3 move the graph right?',d:'Inside changes do the opposite of what you expect.',u:'/function-transformations.html',e:['x^2','(x-3)^2']},
+{t:'Inverse functions',d:'Swap x and y. The graph reflects over y = x.',u:'/functions-and-inverses.html',e:['x^3','cbrt(x)','x']},
+{t:'Is |x| differentiable?',d:'It is continuous, but is there a tangent at the corner?',u:'/continuity-and-derivatives.html',e:['abs(x)']},
+{t:'How many turns can a cubic have?',d:'Polynomials of degree n have at most n − 1 turning points.',u:'/polynomial-degrees.html',e:['x^3-3x']},
+{t:'Draw a flower',d:'Polar curves like r = cos(4t) make petals. Change the 4.',u:'/#fun',e:['r=cos(4t)']},
+{t:'Find the vertex of a parabola',d:'The vertex is at x = −b/(2a). Check it on the graph.',u:'/quadratic-function.html',e:['x^2-4x+3']},
+{t:'Slope and y-intercept',d:'In y = mx + b, m is the steepness and b is where the line crosses the y-axis.',u:'/linear-function.html',e:['2x+1']},
+{t:'Sine and the unit circle',d:'Why does sine repeat every 2π?',u:'/trigonometry.html',e:['sin(x)']},
+{t:'Asymptotes of 1/x',d:'The graph gets closer and closer to the axes but never touches them.',u:'/rational-functions.html',e:['1/x']},
+{t:'Ellipses',d:'Stretch a circle and you get an ellipse.',u:'/conic-sections.html',e:['x^2/4+y^2=1']},
+{t:'Even and odd functions',d:'x² is a mirror image across the y-axis. x³ turns upside down about the origin.',u:'/parent-functions.html#cubic',e:['x^2','x^3']}
+];
+let ti=(()=>{const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/864e5)%TOPICS.length})();
+function renderToday(){
+  const T=TOPICS[ti],el=document.getElementById('today');
+  el.innerHTML='<div>📚 <b>Today\'s study</b></div><div><b class="tt"></b></div><div class="td"></div><button type="button" id="tTry">Try it on the graph</button><a class="rd" href="'+T.u+'">Read the lesson</a><button type="button" id="tNext">Another topic</button>';
+  el.querySelector('.tt').textContent=T.t;el.querySelector('.td').textContent=T.d;
+  document.getElementById('tTry').onclick=()=>{setRows(T.e);document.getElementById('stage').scrollIntoView({behavior:'smooth',block:'center'})};
+  document.getElementById('tNext').onclick=()=>{ti=(ti+1)%TOPICS.length;renderToday()};
+}
+renderToday();
 const YT_URL='https://www.youtube.com/@graph-calculator';/* paste your YouTube channel URL between the quotes, e.g. 'https://www.youtube.com/@yourchannel' */
 document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('yt');if(YT_URL&&a){a.href=YT_URL;a.hidden=false}});
 new ResizeObserver(draw).observe(document.getElementById('stage'));

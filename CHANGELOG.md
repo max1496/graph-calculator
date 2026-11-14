@@ -9,6 +9,10 @@ Newest first. Dates are in Korean time.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
 ### Calculator (latest)
+- The starting graph is random each visit (x, sqrt(x), x^2, ...). Share links still open exactly what was shared.
+- Today's study card: a daily topic with Try it, Read the lesson and Another topic buttons.
+- Floor and other jump graphs: the vertical connector is gone. Filled and open dots now mark each jump. Floor is labeled "Floor function (Gauss bracket)".
+- Search box for topics and features on the main page.
 - Up to 6 equations can be plotted at once (was 4).
 - Polar curves: type r=cos(4t) (t is the angle). Fun shapes buttons: flower, 3 petals, daisy, cardioid, spiral, butterfly and a 6-flower bouquet.
 - Details of graph now has Function properties: domain, range, function?, one-to-one, onto, symmetry, increasing/decreasing, concave up/down, continuous?, differentiable?
@@ -22,7 +26,10 @@ Newest first. Dates are in Korean time.
 - Parent functions: cube root and circle cards; easier to read text.
 - Function transformations: explanations rewritten as short lines with color emphasis.
 - Word problems on Linear and Quadratic pages.
-- sitemap.xml now lists 22 pages.
+- New: What is a function? page (functions, equations vs functions, floor function / Gauss bracket).
+- Floor card on Parent functions.
+- toc.js: "On this page" navigation button with the current section, plus site search, on every page.
+- sitemap.xml now lists 23 pages.
 
 ### Calculator
 - Type label next to the equation (for example "Quadratic function") with a Learn more link.
