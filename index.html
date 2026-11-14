@@ -75,6 +75,15 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <button type="button" data-v="√(">√</button>
     <button type="button" data-v="abs(">abs</button>
     <button type="button" data-v="π">π</button>
+    <button type="button" data-v="asin(" title="inverse sine">sin⁻¹</button>
+    <button type="button" data-v="acos(" title="inverse cosine">cos⁻¹</button>
+    <button type="button" data-v="atan(" title="inverse tangent">tan⁻¹</button>
+    <button type="button" data-v="ln(" title="natural logarithm">ln</button>
+    <button type="button" data-v="log(" title="logarithm base 10">log</button>
+    <button type="button" data-v="exp(" title="e to the power of">eˣ</button>
+    <button type="button" data-v="floor(" title="round down">floor</button>
+    <button type="button" data-v="ceil(" title="round up">ceil</button>
+    <button type="button" data-v="e" title="Euler's number">e</button>
     <button type="button" class="add" id="add">+ Add equation</button>
   </div>
 </div>
@@ -84,13 +93,14 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
   <ul>
     <li>Type an equation such as x^2, 2x+1 or sin(x) and the graph is drawn instantly. Your equation is shown below in standard math notation (x²).</li>
     <li>Drag the graph to move it. Use the mouse wheel or pinch with two fingers to zoom.</li>
-    <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e</li>
+    <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e. The buttons sin⁻¹, cos⁻¹ and tan⁻¹ insert asin, acos and atan, the inverse trigonometric functions. ln is the natural logarithm and log is base 10.</li>
     <li>Equations with both x and y also work, such as x^2+y^2=1 or y^2=x.</li>
     <li>Under any y = f(x) equation, click Details of graph to see intercepts, maximum and minimum points, inflection points, asymptotes, end behavior and derivatives.</li>
     <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
   </ul>
   <h2>Learn</h2>
   <ul>
+    <li><a href="/algebra-1.html">Algebra 1: interactive graphs, calculators and key formulas</a></li>
     <li><a href="/linear-function.html">Linear function y = ax + b: interactive graph with sliders</a></li>
     <li><a href="/quadratic-function.html">Quadratic function y = ax² + bx + c: vertex, discriminant and roots</a></li>
     <li><a href="/regression.html">Linear regression calculator: slope, R² and standard deviation</a></li>
@@ -209,7 +219,7 @@ function pretty(raw){
       while(w){
         const nm=NAMES.find(n=>w.startsWith(n));
         if(!nm){o+=esc(w[0]);w=w.slice(1);continue}
-        o+=nm==='pi'?'π':nm==='sqrt'?'√':(nm==='x'||nm==='y'||nm==='e')?'<i>'+nm+'</i>':nm;
+        o+=nm==='pi'?'π':nm==='sqrt'?'√':nm==='asin'?'sin<sup>−1</sup>':nm==='acos'?'cos<sup>−1</sup>':nm==='atan'?'tan<sup>−1</sup>':(nm==='x'||nm==='y'||nm==='e')?'<i>'+nm+'</i>':nm;
         w=w.slice(nm.length);
       }
     }else{o+=esc(c);i++}
@@ -531,7 +541,7 @@ function loadMath(){
 }
 
 function derivText(node,n){
-  const t=node.toString().replace(/\blog\(/g,'ln(');
+  const t=node.toString().replace(/\blog\(/g,'ln(').replace(/\d+\.\d{7,}/g,m=>String(parseFloat(parseFloat(m).toPrecision(6))));
   return (n===1?'<i>f</i>′':'<i>f</i>″')+'(<i>x</i>) = '+pretty(t);
 }
 
@@ -615,6 +625,6 @@ new ResizeObserver(draw).observe(document.getElementById('stage'));
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 build();
 </script>
-<div class="ft"><a href="/">Graphing Calculator</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
 </body>
 </html>

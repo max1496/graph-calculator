@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algebra 1: Interactive Graphs, Calculators and Key Formulas</title>
+<meta name="description" content="Algebra 1 study hub with interactive graphs and calculators for linear functions, quadratic functions and lines of best fit, plus a quick list of key formulas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.7}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:24px;margin:4px 0 0}
+h2{font-size:18px;margin:26px 0 6px}
+h3{font-size:16px;margin:0}
+p{margin:6px 0}
+ul{padding-left:20px;margin:6px 0}
+.lessons{display:grid;gap:10px;margin-top:10px}
+.lesson{display:block;border:1px solid var(--line);border-radius:8px;padding:12px 14px;text-decoration:none;color:var(--ink);background:var(--panel)}
+.lesson span{display:block;color:var(--sub);font-size:14px;margin-top:2px}
+.lesson:focus-visible{outline:2px solid #2f6fed;outline-offset:2px}
+.soon{color:var(--sub)}
+dl{margin:8px 0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+dt{color:var(--sub)}
+dd{margin:0;font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:17px}
+dd sup{font-size:.62em;line-height:0}
+.note{color:var(--sub);font-size:14px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px}
+.ft a{color:var(--sub);margin:0 6px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a></div>
+<h1 class="w">Algebra 1</h1>
+<div class="w">
+  <p>Algebra 1 is where numbers turn into relationships. You learn to describe how one quantity changes with another using equations, graphs and tables. This page collects the interactive tools on this site that go with Algebra 1, in a sensible order to study them.</p>
+
+  <h2>Lessons and tools</h2>
+  <div class="lessons">
+    <a class="lesson" href="/linear-function.html"><h3>Linear functions</h3><span>Slope, y-intercept and the equation of a line from two points. Move the sliders and watch the line change.</span></a>
+    <a class="lesson" href="/quadratic-function.html"><h3>Quadratic functions</h3><span>Parabolas, vertex, axis of symmetry, discriminant and roots, with the quadratic formula explained.</span></a>
+    <a class="lesson" href="/regression.html"><h3>Scatter plots and lines of best fit</h3><span>Enter data points to get the best-fit line, correlation, R² and standard deviation.</span></a>
+    <a class="lesson" href="/"><h3>Graphing calculator</h3><span>Plot any equation you are working on, then open Details of graph for intercepts, extrema and derivatives.</span></a>
+  </div>
+
+  <h2>Coming next</h2>
+  <p class="soon">Systems of equations, linear inequalities, exponents and exponential functions, polynomials and factoring.</p>
+
+  <h2>How to study this unit</h2>
+  <ul>
+    <li>Start with linear functions. Slope and intercept are the idea that everything else in Algebra 1 builds on.</li>
+    <li>Move to quadratic functions once you can read a graph quickly. The sign of <i>a</i> and the discriminant tell you most of what the graph will look like before you draw it.</li>
+    <li>Use the graphing calculator to check your own answers. Solve a problem by hand first, then graph it to see whether it makes sense.</li>
+  </ul>
+
+  <h2>Key formulas</h2>
+  <dl>
+    <dt>Slope</dt><dd><i>m</i> = (<i>y</i><sub>2</sub> − <i>y</i><sub>1</sub>) / (<i>x</i><sub>2</sub> − <i>x</i><sub>1</sub>)</dd>
+    <dt>Slope-intercept form</dt><dd><i>y</i> = <i>m</i><i>x</i> + <i>b</i></dd>
+    <dt>Point-slope form</dt><dd><i>y</i> − <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> − <i>x</i><sub>1</sub>)</dd>
+    <dt>Standard form of a line</dt><dd><i>A</i><i>x</i> + <i>B</i><i>y</i> = <i>C</i></dd>
+    <dt>Quadratic function</dt><dd><i>y</i> = <i>a</i><i>x</i><sup>2</sup> + <i>b</i><i>x</i> + <i>c</i></dd>
+    <dt>Vertex x-coordinate</dt><dd><i>x</i> = −<i>b</i> / (2<i>a</i>)</dd>
+    <dt>Discriminant</dt><dd><i>D</i> = <i>b</i><sup>2</sup> − 4<i>a</i><i>c</i></dd>
+    <dt>Quadratic formula</dt><dd><i>x</i> = (−<i>b</i> ± √(<i>b</i><sup>2</sup> − 4<i>a</i><i>c</i>)) / (2<i>a</i>)</dd>
+  </dl>
+  <p class="note">Many textbooks write the slope of a line as <i>m</i>. The linear function page on this site uses <i>a</i> for the same thing, matching the form <i>y</i> = <i>a</i><i>x</i> + <i>b</i>.</p>
+</div>
+
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
