@@ -71,6 +71,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <li>Type an equation such as x^2, 2x+1 or sin(x) and the graph is drawn instantly. Your equation is shown below in standard math notation (x²).</li>
     <li>Drag the graph to move it. Use the mouse wheel or pinch with two fingers to zoom.</li>
     <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e</li>
+    <li>Equations with both x and y also work, such as x^2+y^2=1 or y^2=x.</li>
     <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
   </ul>
 </section>
@@ -78,7 +79,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 <script>
 const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,log:Math.log10,exp:Math.exp,floor:Math.floor,ceil:Math.ceil};
 const CONST={pi:Math.PI,e:Math.E};
-const NAMES=['asin','acos','atan','sqrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','e'];
+const NAMES=['asin','acos','atan','sqrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
 
 function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/^y=/,'')}
 
@@ -95,9 +96,8 @@ function tokenize(s){
   return t;
 }
 
-function compile(text){
-  const T=tokenize(clean(text));
-  if(!T.length)return null;
+function parse(s){
+  const T=tokenize(s);
   let p=0;
   const peek=()=>T[p];
   const isO=v=>peek()&&peek().k==='o'&&peek().v===v;
@@ -106,7 +106,7 @@ function compile(text){
     let a=term();
     while(isO('+')||isO('-')){
       const o=T[p++].v,b=term(),l=a;
-      a=o==='+'?x=>l(x)+b(x):x=>l(x)-b(x);
+      a=o==='+'?(x,y)=>l(x,y)+b(x,y):(x,y)=>l(x,y)-b(x,y);
     }
     return a;
   }
@@ -116,32 +116,32 @@ function compile(text){
       const q=peek();
       if(isO('*')||isO('/')){
         p++;const b=unary(),l=a;
-        a=q.v==='*'?x=>l(x)*b(x):x=>l(x)/b(x);
+        a=q.v==='*'?(x,y)=>l(x,y)*b(x,y):(x,y)=>l(x,y)/b(x,y);
       }else if(q.k==='n'||q.k==='i'||q.k==='f'||isO('(')){
-        const b=power(),l=a;a=x=>l(x)*b(x);
+        const b=power(),l=a;a=(x,y)=>l(x,y)*b(x,y);
       }else break;
     }
     return a;
   }
   function unary(){
-    if(isO('-')){p++;const a=unary();return x=>-a(x)}
+    if(isO('-')){p++;const a=unary();return (x,y)=>-a(x,y)}
     if(isO('+')){p++;return unary()}
     return power();
   }
   function power(){
     const a=atom();
-    if(isO('^')){p++;const b=unary();return x=>Math.pow(a(x),b(x))}
+    if(isO('^')){p++;const b=unary();return (x,y)=>Math.pow(a(x,y),b(x,y))}
     return a;
   }
   function atom(){
     const q=peek();
     if(!q)throw new Error('bad');
     if(q.k==='n'){p++;return()=>q.v}
-    if(q.k==='i'){p++;return q.v==='x'?x=>x:()=>CONST[q.v]}
+    if(q.k==='i'){p++;return q.v==='x'?(x,y)=>x:q.v==='y'?(x,y)=>y:()=>CONST[q.v]}
     if(q.k==='f'){
       p++;const fn=FN[q.v];let a;
       if(isO('(')){p++;a=expr();need(')')}else a=power();
-      return x=>fn(a(x));
+      return (x,y)=>fn(a(x,y));
     }
     if(isO('(')){p++;const a=expr();need(')');return a}
     throw new Error('bad');
@@ -149,6 +149,18 @@ function compile(text){
   const f=expr();
   if(p<T.length)throw new Error('bad');
   return f;
+}
+
+function compile(text){
+  const s=clean(text);
+  if(!s)return null;
+  if(s.includes('=')){
+    const parts=s.split('=');
+    if(parts.length!==2||!parts[0]||!parts[1])throw new Error('bad');
+    const L=parse(parts[0]),R=parse(parts[1]);
+    return {imp:true,f:(x,y)=>L(x,y)-R(x,y)};
+  }
+  return {imp:false,f:parse(s)};
 }
 
 const esc=c=>c==='<'?'&lt;':c==='>'?'&gt;':c==='&'?'&amp;':c;
@@ -170,12 +182,13 @@ function pretty(raw){
       o+='<sup>'+pretty(g)+'</sup>';
     }else if(c==='*'){o+='·';i++}
     else if(c==='-'){o+='−';i++}
+    else if(c==='='){o+=' = ';i++}
     else if(/[a-z]/i.test(c)){
       let w=/^[a-z]+/i.exec(s.slice(i))[0];i+=w.length;w=w.toLowerCase();
       while(w){
         const nm=NAMES.find(n=>w.startsWith(n));
         if(!nm){o+=esc(w[0]);w=w.slice(1);continue}
-        o+=nm==='pi'?'π':nm==='sqrt'?'√':(nm==='x'||nm==='e')?'<i>'+nm+'</i>':nm;
+        o+=nm==='pi'?'π':nm==='sqrt'?'√':(nm==='x'||nm==='y'||nm==='e')?'<i>'+nm+'</i>':nm;
         w=w.slice(nm.length);
       }
     }else{o+=esc(c);i++}
@@ -224,7 +237,9 @@ function draw(){
   ctx.lineWidth=2.2;ctx.lineJoin='round';
   rows.forEach(r=>{
     if(!r.f)return;
-    ctx.strokeStyle=r.c;ctx.beginPath();
+    ctx.strokeStyle=r.c;
+    if(r.imp){drawImplicit(r.f,W,H,x0,y1);return}
+    ctx.beginPath();
     let pen=false,prev=0;
     for(let px=0;px<=W;px+=1){
       const y=r.f(x0+px/v.s);
@@ -237,6 +252,31 @@ function draw(){
     }
     ctx.stroke();
   });
+}
+
+function drawImplicit(f,W,H,x0,y1){
+  const cell=4,nx=Math.ceil(W/cell)+1,ny=Math.ceil(H/cell)+1;
+  const val=new Float64Array(nx*ny);
+  for(let j=0;j<ny;j++){
+    const y=y1-j*cell/v.s;
+    for(let i=0;i<nx;i++)val[j*nx+i]=f(x0+i*cell/v.s,y);
+  }
+  const cross=(p,q)=>(p<0)!==(q<0),t=(p,q)=>p/(p-q);
+  ctx.beginPath();
+  for(let j=0;j<ny-1;j++)for(let i=0;i<nx-1;i++){
+    const a=val[j*nx+i],b=val[j*nx+i+1],c=val[(j+1)*nx+i+1],d=val[(j+1)*nx+i];
+    if(!isFinite(a+b+c+d))continue;
+    const px=i*cell,py=j*cell,pts=[];
+    if(cross(a,b))pts.push([px+t(a,b)*cell,py]);
+    if(cross(b,c))pts.push([px+cell,py+t(b,c)*cell]);
+    if(cross(d,c))pts.push([px+t(d,c)*cell,py+cell]);
+    if(cross(a,d))pts.push([px,py+t(a,d)*cell]);
+    if(pts.length>=2){
+      ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);
+      if(pts.length===4){ctx.moveTo(pts[2][0],pts[2][1]);ctx.lineTo(pts[3][0],pts[3][1])}
+    }
+  }
+  ctx.stroke();
 }
 
 function zoomAt(f,mx,my){
@@ -276,7 +316,7 @@ function upd(r,d){
   r.f=null;
   if(!t){pv.className='pv hint';pv.textContent='Enter an equation'}
   else{
-    try{r.f=compile(t);pv.className='pv';pv.innerHTML='<i>y</i> = '+pretty(t)}
+    try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;pv.className='pv';pv.innerHTML=(c.imp?'':'<i>y</i> = ')+pretty(t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
   draw();
@@ -286,7 +326,7 @@ function build(){
   list.innerHTML='';
   rows.forEach((r,i)=>{
     const d=document.createElement('div');d.className='row';
-    d.innerHTML='<span class="dot"></span><div class="fld"><input type="text" placeholder="e.g. x^2, 2x+1, sin(x)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
+    d.innerHTML='<span class="dot"></span><div class="fld"><input type="text" placeholder="e.g. x^2, sin(x), x^2+y^2=1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
     d.querySelector('.dot').style.background=r.c;
     const inp=d.querySelector('input');inp.value=r.t;
     inp.addEventListener('input',()=>{r.t=inp.value;upd(r,d)});
