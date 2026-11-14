@@ -238,6 +238,8 @@ function drawAll(){
     g.stroke();
   });
 }
+function openHash(){const d=document.getElementById(location.hash.slice(1));if(d&&d.tagName==='DETAILS'){d.open=true;setTimeout(()=>d.scrollIntoView({block:'start'}),50)}}
+openHash();addEventListener('hashchange',openHash);
 document.querySelectorAll("details.card").forEach(d=>d.addEventListener("toggle",()=>requestAnimationFrame(drawAll)));
 drawAll();
 new ResizeObserver(drawAll).observe(document.body);

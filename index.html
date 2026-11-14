@@ -44,6 +44,8 @@ canvas{width:100%;height:100%;display:block;cursor:grab}
 .ix{width:min(100%,760px);font-size:14px;line-height:1.6;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 12px}
 .ix[hidden]{display:none}
 .ix small{display:block;color:var(--sub);margin-top:4px;font-size:12px}
+.ty{font-size:13px;color:var(--sub);padding:0 2px 2px}
+.ty a{color:#2f6fed;margin-left:6px}
 .hist{width:min(100%,760px);font-size:14px}
 .hist summary{cursor:pointer;color:#2f6fed}
 .hist .hl{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -1032,6 +1034,46 @@ function previewHtml(c,t){
   if(c.ineq)return pretty(spaced(t))+(c.iv?'<span class="iv"><i>x</i> ∈ '+ivText(c.iv)+'</span>':'');
   return (c.imp?'':'<i>y</i> = ')+pretty(t);
 }
+function classify(r,t){
+  if(r.pw||r.ineq)return null;
+  const c=t.toLowerCase().replace(/\s+/g,'').replace(/^y=/,'').replace(/π/g,'pi').replace(/√/g,'sqrt');
+  if(r.imp){
+    if(/x\^2/.test(c)&&/y\^2/.test(c)){
+      if(/[a-z0-9)]-[0-9.]*y\^2|y\^2[^=]*-[0-9.]*x\^2|x\^2[^=]*-[^=]*y\^2/.test(c))return {n:'Hyperbola',u:'/conic-sections.html'};
+      return {n:'Circle or ellipse',u:'/conic-sections.html'};
+    }
+    return null;
+  }
+  if(!r.f)return null;
+  const ys=[];for(let x=-3;x<=4;x++){const y=r.f(x);if(!isFinite(y))break;ys.push(y)}
+  if(ys.length===8){
+    const tol=1e-6*(1+Math.max(...ys.map(Math.abs)));let d=ys.slice();
+    for(let k=0;k<5;k++){
+      if(d.every(v=>Math.abs(v)<tol)){
+        if(k===1)return {n:'Constant function',u:null};
+        if(k===2)return {n:'Linear function',u:'/linear-function.html'};
+        if(k===3)return {n:'Quadratic function',u:'/quadratic-function.html'};
+        if(k===4)return {n:'Cubic function',u:'/parent-functions.html#cubic'};
+        return null;
+      }
+      d=d.slice(1).map((v,i)=>v-d[i]);
+    }
+  }
+  const m=/^[-+]?[0-9.]*\*?(abs|sqrt|ln|log|sin|cos|tan|exp)\((.*)\)([+-][0-9.]+)?$/.exec(c);
+  if(m&&!/(abs|sqrt|ln|log|sin|cos|tan|exp)\(/.test(m[2])){
+    return {abs:{n:'Absolute value function',u:'/parent-functions.html#abs'},sqrt:{n:'Square root function',u:'/parent-functions.html#sqrt'},ln:{n:'Logarithmic function',u:'/parent-functions.html#log'},log:{n:'Logarithmic function',u:'/parent-functions.html#log'},sin:{n:'Sine function',u:'/trigonometry.html'},cos:{n:'Cosine function',u:'/trigonometry.html'},tan:{n:'Tangent function',u:'/trigonometry.html'},exp:{n:'Exponential function',u:'/parent-functions.html#exp'}}[m[1]];
+  }
+  if(/^[-+]?[0-9.]*\*?(\d+\.?\d*|e)\^\(?[-+]?[0-9.]*x\)?([+-][0-9.]+)?$/.test(c)&&!/x\^/.test(c))return {n:'Exponential function',u:'/parent-functions.html#exp'};
+  if(/^[-+]?[0-9.]*\/\(?[-+]?[0-9.]*x\)?([+-][0-9.]+)?$/.test(c))return {n:'Reciprocal function',u:'/parent-functions.html#recip'};
+  return null;
+}
+function setType(r,d){
+  const pv=d.querySelector('.pv');let ty=d.querySelector('.ty');
+  if(!ty){ty=document.createElement('div');ty.className='ty';pv.after(ty)}
+  let k=null;try{k=r.f||r.imp?classify(r,r.t.trim()):null}catch(e){}
+  if(!k){ty.hidden=true;ty.textContent='';return}
+  ty.hidden=false;ty.innerHTML=k.n+(k.u?'<a href="'+k.u+'">Learn more</a>':'');
+}
 function upd(r,d){
   const pv=d.querySelector('.pv'),t=r.t.trim();
   r.f=null;r.pvh='';r.an=null;r.pw=null;r.ineq=null;r.holes=[];clearTimeout(r.at);
@@ -1040,7 +1082,7 @@ function upd(r,d){
     try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;r.pw=c.pw||null;r.ineq=c.ineq||null;r.holes=c.holes||[];pv.className='pv';pv.innerHTML=r.pvh=previewHtml(c,t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
-  detailsSync(r,d);updLegend();renderMarks();interSoon();
+  detailsSync(r,d);updLegend();renderMarks();interSoon();setType(r,d);
   if(r.f&&!r.imp&&!r.pw){const tt=r.t,ff=r.f;r.at=setTimeout(()=>{if(r.f!==ff)return;try{r.an=analyze(ff);r.anT=tt}catch(e){r.an=null}draw()},200)}
   draw();
 }
@@ -1216,7 +1258,7 @@ function histAdd(){
   if(e.length===1&&e[0].replace(/\s/g,'')==='x^2')return;
   const key=e.join('\u0001');
   let a=histLoad().filter(h=>h.e.join('\u0001')!==key);
-  a.unshift({e,c});a=a.slice(0,20);histSave(a);histRender();
+  a.unshift({e,c});a=a.slice(0,10);histSave(a);histRender();
 }
 function histRender(){
   const a=histLoad(),hl=document.getElementById('hl');

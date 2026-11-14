@@ -35,6 +35,14 @@ p{margin:6px 0}
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
 input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:17px}
+details.ex[open] summary{margin-bottom:6px}
+.hint{color:var(--sub);font-size:14px;margin:14px 0 0}
+.stage{position:relative}
+.tip{position:absolute;z-index:3;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:13px;line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.18);white-space:nowrap}
+.tip small{display:block;color:var(--sub);font-size:12px}
+.tip[hidden]{display:none}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -43,7 +51,7 @@ input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
 <h1 class="w">Quadratic Function: <i>y</i> = <i>a</i><i>x</i><sup>2</sup> + <i>b</i><i>x</i> + <i>c</i></h1>
 <div class="w"><p class="sum"><b>In short:</b> A quadratic function makes a U-shaped curve called a parabola. Move the sliders to see its vertex, roots and discriminant change.</p></div>
 <div class="eq" id="eq"></div>
-<div class="stage"><canvas id="cv"></canvas></div>
+<div class="stage"><canvas id="cv"></canvas><div class="tip" id="tip" hidden></div></div>
 
 <div class="w">
   <div class="ctl">
@@ -53,29 +61,34 @@ input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
   </div>
   <div id="out"></div>
 
-  <h2>What is a quadratic function?</h2>
+  <p class="hint">Tap a title to show or hide the explanation.</p>
+  <details class="ex"><summary>What is a quadratic function?</summary>
   <p>A quadratic function has the form <i>y</i> = <i>a</i><i>x</i><sup>2</sup> + <i>b</i><i>x</i> + <i>c</i>, where <i>a</i> is not 0. Its graph is a U-shaped curve called a parabola.</p>
 
-  <h2>What <i>a</i>, <i>b</i> and <i>c</i> do</h2>
+  </details>
+  <details class="ex"><summary>What <i>a</i>, <i>b</i> and <i>c</i> do</summary>
   <ul>
     <li><b><i>a</i></b> sets the direction and width. A positive <i>a</i> opens upward, a negative <i>a</i> opens downward, and a larger |<i>a</i>| makes the parabola narrower.</li>
     <li><b><i>c</i></b> is the y-intercept. The parabola crosses the y-axis at (0, <i>c</i>).</li>
     <li><b><i>b</i></b> works together with <i>a</i> to move the vertex sideways, because the vertex sits at <i>x</i> = −<i>b</i> / (2<i>a</i>).</li>
   </ul>
 
-  <h2>How to find the vertex</h2>
+  </details>
+  <details class="ex"><summary>How to find the vertex</summary>
   <p>The x-coordinate of the vertex is</p>
   <div class="f"><i>h</i> = −<i>b</i> / (2<i>a</i>)</div>
   <p>Put that value back into the function to get the y-coordinate <i>k</i> = <i>a</i><i>h</i><sup>2</sup> + <i>b</i><i>h</i> + <i>c</i>. The vertex is (<i>h</i>, <i>k</i>), and the vertical line <i>x</i> = <i>h</i> is the axis of symmetry.</p>
   <p>Example: for <i>y</i> = <i>x</i><sup>2</sup> − 4<i>x</i> + 3, <i>h</i> = −(−4) / (2 × 1) = 2 and <i>k</i> = 4 − 8 + 3 = −1, so the vertex is (2, −1). The sliders above start with these values.</p>
   <p>The vertex is the lowest point when <i>a</i> &gt; 0 (a minimum) and the highest point when <i>a</i> &lt; 0 (a maximum).</p>
 
-  <h2>Vertex form</h2>
+  </details>
+  <details class="ex"><summary>Vertex form</summary>
   <p>Completing the square rewrites the function as</p>
   <div class="f"><i>y</i> = <i>a</i>(<i>x</i> − <i>h</i>)<sup>2</sup> + <i>k</i></div>
   <p>In this form the vertex (<i>h</i>, <i>k</i>) can be read directly. The page above shows both forms for any <i>a</i>, <i>b</i> and <i>c</i> you choose.</p>
 
-  <h2>Discriminant and roots</h2>
+  </details>
+  <details class="ex"><summary>Discriminant and roots</summary>
   <p>The roots are the x-values where the parabola crosses the x-axis, that is, where <i>y</i> = 0. The quadratic formula gives them:</p>
   <div class="f"><i>x</i> = (−<i>b</i> ± √(<i>b</i><sup>2</sup> − 4<i>a</i><i>c</i>)) / (2<i>a</i>)</div>
   <p>The part under the square root is the discriminant, <i>D</i> = <i>b</i><sup>2</sup> − 4<i>a</i><i>c</i>. It tells you how many real roots there are before you solve anything.</p>
@@ -86,12 +99,14 @@ input:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
   </ul>
   <p>Example: for <i>y</i> = <i>x</i><sup>2</sup> − 4<i>x</i> + 3, <i>D</i> = 16 − 12 = 4, so the roots are (4 ± 2) / 2, which gives <i>x</i> = 1 and <i>x</i> = 3.</p>
 
-  <h2>Common questions</h2>
+  </details>
+  <details class="ex"><summary>Common questions</summary>
   <ul>
     <li><b>What if <i>a</i> = 0?</b> The <i>x</i><sup>2</sup> term disappears and the function becomes a line. See the <a href="/linear-function.html">linear function page</a>.</li>
     <li><b>How do I tell if there is a maximum or a minimum?</b> Look at the sign of <i>a</i>. Positive means a minimum, negative means a maximum.</li>
     <li><b>Want to plot your own equation?</b> Type it into the <a href="/">graphing calculator</a>, then open Details of graph to see its extrema, intercepts and derivatives.</li>
   </ul>
+  </details>
 </div>
 
 <div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
@@ -180,6 +195,37 @@ function update(){
   $('s'+k).addEventListener('input',()=>{$('n'+k).value=$('s'+k).value;update()});
   $('n'+k).addEventListener('input',()=>{$('s'+k).value=$('n'+k).value;update()});
 });
+function keyPts(){
+  const [a,b,c]=cur,o=[];
+  if(a===0){o.push({x:0,y:c,name:'y-intercept'});return o}
+  const h=-b/(2*a),k=c-b*b/(4*a);let D=b*b-4*a*c;if(Math.abs(D)<1e-9)D=0;
+  if(D>=0){const s=Math.sqrt(D);o.push({x:(-b-s)/(2*a),y:0,name:D>0?'Root (x-intercept)':'Root (repeated)'});if(D>0)o.push({x:(-b+s)/(2*a),y:0,name:'Root (x-intercept)'})}
+  o.push({x:0,y:c,name:'y-intercept'});
+  o.push({x:h,y:k,name:a>0?'Vertex (minimum)':'Vertex (maximum)'});
+  return o;
+}
+const tip=$('tip');
+function hover(cx,cy){
+  const rc=cv.getBoundingClientRect(),W=rc.width,H=rc.height,mx=cx-rc.left,my=cy-rc.top,R=10,s=W/(2*R);
+  const X=u=>W/2+u*s,Y=u=>H/2-u*s;
+  let best=null;
+  keyPts().forEach(p=>{const d=Math.hypot(X(p.x)-mx,Y(p.y)-my);if(d<18&&(!best||d<best.d))best={d,p}});
+  if(!best){
+    const x=(mx-W/2)/s,[a,b,c]=cur,y=a*x*x+b*x+c;
+    if(Math.abs(Y(y)-my)<12)best={d:99,p:{x,y,name:'Point on the curve'}};
+  }
+  if(!best){tip.hidden=true;return}
+  const p=best.p;
+  tip.innerHTML=p.name+'<small>('+n(p.x)+', '+n(p.y)+')</small>';
+  tip.hidden=false;
+  const px=X(p.x),py=Y(p.y),tw=tip.offsetWidth,th=tip.offsetHeight;
+  let tx=px+12,ty=py-th-10;
+  if(tx+tw>W-4)tx=px-tw-12;if(tx<4)tx=4;if(ty<4)ty=py+14;
+  tip.style.left=tx+'px';tip.style.top=ty+'px';
+}
+cv.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')hover(e.clientX,e.clientY)});
+cv.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')hover(e.clientX,e.clientY)});
+cv.addEventListener('pointerleave',()=>{tip.hidden=true});
 new ResizeObserver(draw).observe(cv);
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
 update();
