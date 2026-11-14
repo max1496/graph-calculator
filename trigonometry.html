@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trigonometry: Unit Circle, Sine, Cosine and Tangent</title>
+<meta name="description" content="Learn trigonometry with an interactive unit circle. Move the angle and see sine, cosine and tangent, special angle values, radians and the graphs of sin and cos.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+select{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btns button{margin-right:8px}
+.steps{margin:6px 0 0;padding-left:18px}
+.btns button{margin:6px 6px 0 0}
+table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td{border:1px solid var(--line);padding:6px 10px;text-align:left}table.t th{background:var(--panel)}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-2.html">Algebra 2</a> &nbsp;·&nbsp; <a href="/parent-functions.html">Parent functions</a></div>
+<h1 class="w">Trigonometry</h1>
+<div class="w"><p class="sum"><b>In short:</b> Trigonometry links angles to lengths. On the unit circle, the point at angle θ is (cos θ, sin θ), and tan θ = sin θ / cos θ.</p></div>
+
+<div class="w">
+  <h2>What is trigonometry?</h2>
+  <p>Trigonometry starts with right triangles. For an acute angle θ, the three basic ratios are:</p>
+  <ul>
+    <li><b>sin θ</b> = opposite / hypotenuse</li>
+    <li><b>cos θ</b> = adjacent / hypotenuse</li>
+    <li><b>tan θ</b> = opposite / adjacent</li>
+  </ul>
+  <p>Many students remember this as <b>SOH-CAH-TOA</b>. The unit circle extends these ideas to every angle, including angles bigger than 90° and negative angles.</p>
+  <h2>The unit circle</h2>
+  <p>Move the slider. The blue segment is cos θ (the x-coordinate) and the red segment is sin θ (the y-coordinate). The green segment on the line <i>x</i> = 1 is tan θ.</p>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <label>Angle θ<output id="oa"></output><input type="range" id="sa" min="-360" max="720" step="1" value="45"></label>
+  <div class="btns" id="q"></div>
+  <div class="facts" id="out"></div>
+
+  <h2>Graphs of sine and cosine</h2>
+  <p>As θ goes around the circle, the height of the point traces the sine wave. The dot below follows your angle.</p>
+</div>
+<div class="stage" style="aspect-ratio:2/1"><canvas id="cv2"></canvas></div>
+
+<div class="w">
+  <h2>Degrees and radians</h2>
+  <p>A full turn is 360° or 2π radians, so 180° = π radians. To convert degrees to radians, multiply by π/180. To convert radians to degrees, multiply by 180/π. For example, 60° = π/3 and 5π/6 = 150°.</p>
+
+  <h2>Special angles</h2>
+  <div style="overflow-x:auto"><table class="t">
+    <tr><th>θ (degrees)</th><th>θ (radians)</th><th>sin θ</th><th>cos θ</th><th>tan θ</th></tr>
+    <tr><td>0°</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>30°</td><td>π/6</td><td>1/2</td><td>√3/2</td><td>√3/3</td></tr>
+    <tr><td>45°</td><td>π/4</td><td>√2/2</td><td>√2/2</td><td>1</td></tr>
+    <tr><td>60°</td><td>π/3</td><td>√3/2</td><td>1/2</td><td>√3</td></tr>
+    <tr><td>90°</td><td>π/2</td><td>1</td><td>0</td><td>undefined</td></tr>
+  </table></div>
+  <p>Other angles use these values and the signs of each quadrant. In quadrant I all three are positive. In II only sine is positive, in III only tangent, and in IV only cosine.</p>
+
+  <h2>Key identities</h2>
+  <dl>
+    <dt>Pythagorean identity</dt><dd>sin²θ + cos²θ = 1</dd>
+    <dt>Tangent</dt><dd>tan θ = sin θ / cos θ</dd>
+    <dt>Reciprocals</dt><dd>csc θ = 1/sin θ, sec θ = 1/cos θ, cot θ = 1/tan θ</dd>
+    <dt>Negative angle</dt><dd>sin(−θ) = −sin θ, cos(−θ) = cos θ</dd>
+    <dt>Double angle</dt><dd>sin 2θ = 2 sin θ cos θ, cos 2θ = cos²θ − sin²θ</dd>
+    <dt>Sum formulas</dt><dd>sin(A + B) = sin A cos B + cos A sin B<br>cos(A + B) = cos A cos B − sin A sin B</dd>
+    <dt>Law of sines</dt><dd>a / sin A = b / sin B = c / sin C</dd>
+    <dt>Law of cosines</dt><dd>c² = a² + b² − 2ab cos C</dd>
+  </dl>
+
+  <h2>Trigonometric functions as graphs</h2>
+  <p>Sine and cosine repeat every 2π and stay between −1 and 1. Tangent repeats every π and has vertical asymptotes where cos θ = 0. See all three side by side on the <a href="/parent-functions.html">parent functions</a> page, or change their amplitude, period and shift in the <a href="/function-transformations.html">function transformations</a> tool.</p>
+  <p>Open the graph in the calculator with the x-axis in units of π: <a href="/#e=sin%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">sin(x)</a>, <a href="/#e=cos%28x%29&c=e0483e&v=0%2C0%2C40&pi=1">cos(x)</a>, <a href="/#e=tan%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">tan(x)</a>.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d'),cv2=$('cv2'),ctx2=cv2.getContext('2d');
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const nf=v=>{if(Math.abs(v)<1e-10)return '0';return String(+v.toFixed(4)).replace('-','−')};
+function radText(d){
+  if(d===0)return '0';
+  const g=gcd(d,180),n=d/g,m=180/g,sg=n<0?'−':'',an=Math.abs(n);
+  const top=an===1?'π':an+'π';
+  return sg+top+(m===1?'':'/'+m);
+}
+const EX={sin:{0:'0',30:'1/2',45:'√2/2',60:'√3/2',90:'1'},cos:{0:'1',30:'√3/2',45:'√2/2',60:'1/2',90:'0'},tan:{0:'0',30:'√3/3',45:'1',60:'√3',90:null}};
+function exact(fn,deg){
+  const a=((deg%360)+360)%360;
+  let r,sin=1,cos=1;
+  if(a<=90){r=a}else if(a<=180){r=180-a;cos=-1}else if(a<=270){r=a-180;sin=-1;cos=-1}else{r=360-a;sin=-1}
+  if(!(r in EX.sin))return null;
+  if(fn==='tan'){const v=EX.tan[r];if(v===null)return 'undefined';if(v==='0')return '0';return (sin*cos<0?'−':'')+v}
+  const v=EX[fn][r];if(v==='0')return '0';
+  const s=fn==='sin'?sin:cos;return (s<0?'−':'')+v;
+}
+const Q=[0,30,45,60,90,120,135,150,180,270,360];
+Q.forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=d+'°';b.onclick=()=>{$('sa').value=d;update()};$('q').appendChild(b)});
+function colors(){const cs=getComputedStyle(document.documentElement);return k=>cs.getPropertyValue(k).trim()}
+const BL='#2f6fed',RD='#e0483e',GR='#1f9d55';
+function setup(c,cx){const dpr=window.devicePixelRatio||1,W=c.clientWidth,H=c.clientHeight;c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);cx.setTransform(dpr,0,0,dpr,0,0);return [W,H]}
+function draw(){
+  const deg=+$('sa').value,t=deg*Math.PI/180,co=Math.cos(t),si=Math.sin(t),c=colors();
+  let [W,H]=setup(cv,ctx);
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  const x0=-1.7,x1=1.7,y0=-1.7*H/W,y1=1.7*H/W;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.strokeStyle=c('--sub');ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(X(0),Y(0),X(1)-X(0),0,7);ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='12px sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
+  ctx.fillText('1',X(1)+3,Y(0)+3);ctx.fillText('−1',X(-1)+3,Y(0)+3);ctx.textBaseline='bottom';ctx.fillText('1',X(0)+4,Y(1)+14);
+  ctx.setLineDash([5,4]);ctx.strokeStyle=c('--grid');ctx.beginPath();ctx.moveTo(X(1),0);ctx.lineTo(X(1),H);ctx.stroke();ctx.setLineDash([]);
+  const seg=(ax,ay,bx,by,col,w)=>{ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(X(ax),Y(ay));ctx.lineTo(X(bx),Y(by));ctx.stroke()};
+  const tn=Math.tan(t);
+  if(Math.abs(co)>1e-9){const ty=Math.max(-1.6,Math.min(1.6,tn));seg(1,0,1,ty,GR,3);}
+  seg(0,0,co,0,BL,4);seg(co,0,co,si,RD,4);
+  seg(0,0,co,si,c('--ink'),2);
+  ctx.strokeStyle=c('--ink');ctx.lineWidth=1.5;ctx.beginPath();
+  const r=0.25;const N=Math.max(2,Math.abs(Math.round(deg/4)));ctx.moveTo(X(r),Y(0));
+  for(let i=1;i<=N;i++){const a=t*i/N;ctx.lineTo(X(r*Math.cos(a)),Y(r*Math.sin(a)))}ctx.stroke();
+  ctx.fillStyle=c('--ink');ctx.beginPath();ctx.arc(X(co),Y(si),6,0,7);ctx.fill();
+  ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle=BL;ctx.fillText('cos',X(co/2),Y(0)+(si>=0?14:-14));
+  ctx.fillStyle=RD;ctx.fillText('sin',X(co)+(co>=0?20:-20),Y(si/2));
+  if(Math.abs(co)>1e-9){ctx.fillStyle=GR;ctx.fillText('tan',X(1)+(co>=0?-20:20),Y(Math.max(-1.6,Math.min(1.6,tn))/2))}
+  ctx.fillStyle=c('--ink');ctx.textAlign='left';ctx.fillText('θ',X(0.32*Math.cos(t/2))-5,Y(0.32*Math.sin(t/2)));
+  /* graph */
+  [W,H]=setup(cv2,ctx2);
+  ctx2.fillStyle=c('--bg');ctx2.fillRect(0,0,W,H);
+  const gx0=-0.4,gx1=2*Math.PI+0.4,gy0=-1.5,gy1=1.5;
+  const GX=u=>(u-gx0)/(gx1-gx0)*W,GY=u=>H-(u-gy0)/(gy1-gy0)*H;
+  ctx2.strokeStyle=c('--grid');ctx2.lineWidth=1;ctx2.beginPath();
+  for(let k=0;k<=4;k++){const u=k*Math.PI/2;ctx2.moveTo(GX(u)+.5,0);ctx2.lineTo(GX(u)+.5,H)}
+  for(const u of [-1,1]){ctx2.moveTo(0,GY(u));ctx2.lineTo(W,GY(u))}ctx2.stroke();
+  ctx2.strokeStyle=c('--axis');ctx2.lineWidth=1.4;ctx2.beginPath();ctx2.moveTo(0,GY(0));ctx2.lineTo(W,GY(0));ctx2.moveTo(GX(0),0);ctx2.lineTo(GX(0),H);ctx2.stroke();
+  ctx2.fillStyle=c('--sub');ctx2.font='11px sans-serif';ctx2.textAlign='center';ctx2.textBaseline='top';
+  ['π/2','π','3π/2','2π'].forEach((s,i)=>ctx2.fillText(s,GX((i+1)*Math.PI/2),GY(0)+4));
+  ctx2.textAlign='right';ctx2.textBaseline='middle';ctx2.fillText('1',GX(0)-4,GY(1));ctx2.fillText('−1',GX(0)-4,GY(-1));
+  const wave=(f,col)=>{ctx2.strokeStyle=col;ctx2.lineWidth=2.4;ctx2.beginPath();for(let i=0;i<=300;i++){const u=2*Math.PI*i/300;i?ctx2.lineTo(GX(u),GY(f(u))):ctx2.moveTo(GX(u),GY(f(u)))}ctx2.stroke()};
+  wave(Math.sin,RD);wave(Math.cos,BL);
+  ctx2.fillStyle=RD;ctx2.textAlign='left';ctx2.font='bold 12px sans-serif';ctx2.fillText('sin',GX(0.15),GY(1.25));
+  ctx2.fillStyle=BL;ctx2.fillText('cos',GX(0.9),GY(1.25));
+  const m=((t%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+  ctx2.setLineDash([5,4]);ctx2.strokeStyle=c('--sub');ctx2.beginPath();ctx2.moveTo(GX(m),0);ctx2.lineTo(GX(m),H);ctx2.stroke();ctx2.setLineDash([]);
+  ctx2.fillStyle=RD;ctx2.beginPath();ctx2.arc(GX(m),GY(Math.sin(m)),5,0,7);ctx2.fill();
+  ctx2.fillStyle=BL;ctx2.beginPath();ctx2.arc(GX(m),GY(Math.cos(m)),5,0,7);ctx2.fill();
+}
+function update(){
+  const deg=+$('sa').value,t=deg*Math.PI/180,co=Math.cos(t),si=Math.sin(t);
+  $('oa').textContent=deg+'° = '+radText(deg)+' rad';
+  const und=Math.abs(co)<1e-9;
+  const val=(fn,v)=>{const e=exact(fn,deg);if(e&&/^[−0-9]+$/.test(e))return e;return (e&&e!=='undefined'?e+' ≈ ':'')+nf(v)};
+  const a=((deg%360)+360)%360;
+  const quad=a%90===0?'on an axis':'quadrant '+['I','II','III','IV'][Math.floor(a/90)];
+  $('out').innerHTML='<table><tr><td>Point on the circle</td><td>('+nf(co)+', '+nf(si)+')</td></tr>'+
+   '<tr><td>cos θ</td><td>'+val('cos',co)+'</td></tr>'+
+   '<tr><td>sin θ</td><td>'+val('sin',si)+'</td></tr>'+
+   '<tr><td>tan θ</td><td>'+(und?'undefined (cos θ = 0)':val('tan',Math.tan(t)))+'</td></tr>'+
+   '<tr><td>Location</td><td>'+quad+'</td></tr></table>';
+  draw();
+}
+$('sa').addEventListener('input',update);
+new ResizeObserver(draw).observe(cv);new ResizeObserver(draw).observe(cv2);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>

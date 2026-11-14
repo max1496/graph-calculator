@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ellipses, Hyperbolas, Circles and Parabolas: Conic Sections Calculator</title>
+<meta name="description" content="Explore conic sections with an interactive graph. Change the center, axes or focus and see the equation, vertices, foci, eccentricity, asymptotes and directrix of a circle, ellipse, hyperbola or parabola.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+select{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.chk{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btns button{margin-right:8px}
+.steps{margin:6px 0 0;padding-left:18px}
+.btns button{margin:6px 6px 0 0}
+table.t{border-collapse:collapse;width:100%;font-size:15px}table.t th,table.t td{border:1px solid var(--line);padding:6px 10px;text-align:left}table.t th{background:var(--panel)}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-2.html">Algebra 2</a></div>
+<h1 class="w">Conic Sections: Ellipses, Hyperbolas, Circles and Parabolas</h1>
+<div class="w"><p class="sum"><b>In short:</b> A conic section is the curve you get when a plane cuts a cone. Choose a type, change the numbers, and see its equation, vertices, foci and more.</p></div>
+
+<div class="w">
+  <label>Type
+    <select id="tp">
+      <option value="ci">Circle</option>
+      <option value="el" selected>Ellipse</option>
+      <option value="hy">Hyperbola</option>
+      <option value="pa">Parabola</option>
+    </select>
+  </label>
+  <label id="orw" hidden>Direction <select id="or"></select></label>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="two">
+    <label><span id="lh">Center</span> <i>h</i><output id="oh"></output><input type="range" id="sh" min="-6" max="6" step="0.5" value="0"></label>
+    <label><span id="lk">Center</span> <i>k</i><output id="ok"></output><input type="range" id="sk" min="-6" max="6" step="0.5" value="0"></label>
+    <label id="wa"><span id="la">a</span><output id="oa"></output><input type="range" id="sa" min="0.5" max="8" step="0.5" value="5"></label>
+    <label id="wb"><span id="lb">b</span><output id="ob"></output><input type="range" id="sb" min="0.5" max="8" step="0.5" value="3"></label>
+  </div>
+  <div class="btns" style="margin-top:6px"><button type="button" id="reset">Reset</button></div>
+  <div class="facts" id="out"></div>
+
+  <h2>The four conic sections</h2>
+  <dl>
+    <dt>Circle</dt><dd>(<i>x</i> − <i>h</i>)² + (<i>y</i> − <i>k</i>)² = <i>r</i>². All points at distance <i>r</i> from the center.</dd>
+    <dt>Ellipse</dt><dd>(<i>x</i> − <i>h</i>)²/<i>a</i>² + (<i>y</i> − <i>k</i>)²/<i>b</i>² = 1. The sum of the distances to the two foci is constant.</dd>
+    <dt>Hyperbola</dt><dd>(<i>x</i> − <i>h</i>)²/<i>a</i>² − (<i>y</i> − <i>k</i>)²/<i>b</i>² = 1. The difference of the distances to the two foci is constant.</dd>
+    <dt>Parabola</dt><dd>(<i>x</i> − <i>h</i>)² = 4<i>p</i>(<i>y</i> − <i>k</i>). Every point is the same distance from the focus and the directrix.</dd>
+  </dl>
+  <h2>Key facts</h2>
+  <ul>
+    <li><b>Ellipse:</b> the foci are on the longer axis. <i>c</i>² = (larger)² − (smaller)². The eccentricity <i>e</i> = <i>c</i> / (half of the longer axis) is between 0 and 1. A circle is an ellipse with <i>e</i> = 0.</li>
+    <li><b>Hyperbola:</b> <i>c</i>² = <i>a</i>² + <i>b</i>². The eccentricity is bigger than 1. The branches get close to the asymptotes but never touch them.</li>
+    <li><b>Parabola:</b> the eccentricity is exactly 1. The vertex is halfway between the focus and the directrix.</li>
+  </ul>
+  <p>You can type these equations straight into the <a href="/">graphing calculator</a>, for example <code>x^2/25+y^2/9=1</code>. Related pages: <a href="/function-transformations.html">function transformations</a> and <a href="/parent-functions.html">parent functions</a>.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const nf=v=>{if(Math.abs(v)<1e-10)return '0';return String(+v.toFixed(3)).replace('-','−')};
+const pt=(x,y)=>'('+nf(x)+', '+nf(y)+')';
+const ORS={hy:[['h','Opens left and right'],['v','Opens up and down']],pa:[['u','Opens up'],['d','Opens down'],['r','Opens right'],['l','Opens left']]};
+function fillOr(tp){
+  const o=$('or');o.innerHTML='';
+  (ORS[tp]||[]).forEach(([v,t])=>{const e=document.createElement('option');e.value=v;e.textContent=t;o.appendChild(e)});
+  $('orw').hidden=!ORS[tp];
+}
+function shift(v,s){return v===0?s:'('+s+' '+(v<0?'+':'−')+' '+nf(Math.abs(v))+')'}
+function calcShift(v,s){return v===0?s:'('+s+'-('+v+'))'}
+function model(){
+  const tp=$('tp').value,h=+$('sh').value,k=+$('sk').value,a=+$('sa').value,b=+$('sb').value,o=$('or').value;
+  const m={tp,h,k,a,b,o,info:[],foci:[],lines:[],curves:[]};
+  const X=shift(h,'x'),Y=shift(k,'y');
+  if(tp==='ci'){
+    m.eq=X+'² + '+Y+'² = '+nf(a*a);
+    m.calc=calcShift(h,'x')+'^2+'+calcShift(k,'y')+'^2='+(a*a);
+    m.info=[['Center',pt(h,k)],['Radius',nf(a)],['Diameter',nf(2*a)],['Circumference','2πr ≈ '+nf(2*Math.PI*a)],['Area','πr² ≈ '+nf(Math.PI*a*a)]];
+    const c=[];for(let i=0;i<=200;i++){const t=2*Math.PI*i/200;c.push([h+a*Math.cos(t),k+a*Math.sin(t)])}m.curves=[c];
+  }else if(tp==='el'){
+    m.eq=X+'²/'+nf(a*a)+' + '+Y+'²/'+nf(b*b)+' = 1';
+    m.calc='('+calcShift(h,'x')+')^2/'+(a*a)+'+('+calcShift(k,'y')+')^2/'+(b*b)+'=1';
+    const horiz=a>=b,big=Math.max(a,b),sm=Math.min(a,b),c=Math.sqrt(big*big-sm*sm);
+    m.foci=horiz?[[h-c,k],[h+c,k]]:[[h,k-c],[h,k+c]];
+    m.info=[['Center',pt(h,k)],['Major axis',(horiz?'horizontal':'vertical')+', length '+nf(2*big)],['Minor axis','length '+nf(2*sm)],
+      ['Vertices',horiz?pt(h-a,k)+' and '+pt(h+a,k):pt(h,k-b)+' and '+pt(h,k+b)],
+      ['Co-vertices',horiz?pt(h,k-b)+' and '+pt(h,k+b):pt(h-a,k)+' and '+pt(h+a,k)],
+      ['Foci',c<1e-9?'at the center (this is a circle)':m.foci.map(f=>pt(f[0],f[1])).join(' and ')+', c = '+nf(c)],
+      ['Eccentricity','e = c/'+(horiz?'a':'b')+' = '+nf(c/big)]];
+    const cu=[];for(let i=0;i<=240;i++){const t=2*Math.PI*i/240;cu.push([h+a*Math.cos(t),k+b*Math.sin(t)])}m.curves=[cu];
+  }else if(tp==='hy'){
+    const hz=o==='h',c=Math.sqrt(a*a+b*b);
+    if(hz){m.eq=X+'²/'+nf(a*a)+' − '+Y+'²/'+nf(b*b)+' = 1';m.calc='('+calcShift(h,'x')+')^2/'+(a*a)+'-('+calcShift(k,'y')+')^2/'+(b*b)+'=1'}
+    else{m.eq=Y+'²/'+nf(a*a)+' − '+X+'²/'+nf(b*b)+' = 1';m.calc='('+calcShift(k,'y')+')^2/'+(a*a)+'-('+calcShift(h,'x')+')^2/'+(b*b)+'=1'}
+    m.foci=hz?[[h-c,k],[h+c,k]]:[[h,k-c],[h,k+c]];
+    const sl=hz?b/a:a/b;
+    m.lines=[{kind:'asym',m:sl},{kind:'asym',m:-sl}];
+    m.info=[['Center',pt(h,k)],['Vertices',hz?pt(h-a,k)+' and '+pt(h+a,k):pt(h,k-a)+' and '+pt(h,k+a)],
+      ['Foci',m.foci.map(f=>pt(f[0],f[1])).join(' and ')+', c = '+nf(c)],
+      ['Asymptotes','y = '+(k===0?'':nf(k)+' ')+'\u00B1 '+nf(sl)+(h===0?'x':'(x '+(h<0?'+ ':'\u2212 ')+nf(Math.abs(h))+')')],
+      ['Eccentricity','e = c/a = '+nf(c/a)],['Transverse axis','length '+nf(2*a)+', '+(hz?'horizontal':'vertical')]];
+    const b1=[],b2=[];for(let i=-60;i<=60;i++){const t=i/20;
+      if(hz){b1.push([h+a*Math.cosh(t),k+b*Math.sinh(t)]);b2.push([h-a*Math.cosh(t),k+b*Math.sinh(t)])}
+      else{b1.push([h+b*Math.sinh(t),k+a*Math.cosh(t)]);b2.push([h+b*Math.sinh(t),k-a*Math.cosh(t)])}}
+    m.curves=[b1,b2];
+  }else{
+    const p=a/2;/* a slider is the focal distance 2p scale */
+    const v=o==='u'||o==='d'?'x':'y';
+    let eq,fo,dirText,calc,param;
+    if(o==='u'){eq=X+'² = '+nf(4*p)+Y.replace(/^\((.*)\)$/,'($1)');eq=X+'² = '+nf(4*p)+(k===0?'y':'(y '+(k<0?'+ ':'− ')+nf(Math.abs(k))+')');fo=[h,k+p];dirText='y = '+nf(k-p);calc=calcShift(h,'x')+'^2='+(4*p)+'*'+calcShift(k,'y');param=t=>[h+t,k+t*t/(4*p)]}
+    if(o==='d'){eq=X+'² = −'+nf(4*p)+(k===0?'y':'(y '+(k<0?'+ ':'− ')+nf(Math.abs(k))+')');fo=[h,k-p];dirText='y = '+nf(k+p);calc=calcShift(h,'x')+'^2=-'+(4*p)+'*'+calcShift(k,'y');param=t=>[h+t,k-t*t/(4*p)]}
+    if(o==='r'){eq=Y+'² = '+nf(4*p)+(h===0?'x':'(x '+(h<0?'+ ':'− ')+nf(Math.abs(h))+')');fo=[h+p,k];dirText='x = '+nf(h-p);calc=calcShift(k,'y')+'^2='+(4*p)+'*'+calcShift(h,'x');param=t=>[h+t*t/(4*p),k+t]}
+    if(o==='l'){eq=Y+'² = −'+nf(4*p)+(h===0?'x':'(x '+(h<0?'+ ':'− ')+nf(Math.abs(h))+')');fo=[h-p,k];dirText='x = '+nf(h+p);calc=calcShift(k,'y')+'^2=-'+(4*p)+'*'+calcShift(h,'x');param=t=>[h-t*t/(4*p),k+t]}
+    m.eq=eq;m.calc=calc;m.foci=[fo];
+    m.lines=[{kind:'dir',o,h,k,p}];
+    m.info=[['Vertex',pt(h,k)],['Focus',pt(fo[0],fo[1])],['Directrix',dirText],['Distance p','p = '+nf(p)+' (vertex to focus)'],['Axis of symmetry',v==='x'?'x = '+nf(h):'y = '+nf(k)],['Eccentricity','e = 1']];
+    const cu=[];for(let i=-80;i<=80;i++)cu.push(param(i/4));m.curves=[cu];
+  }
+  return m;
+}
+function draw(){
+  const m=model(),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  const x0=-12,x1=12,y0=-9,y1=9;
+  const X=u=>(u-x0)/(x1-x0)*W,Y=u=>H-(u-y0)/(y1-y0)*H;
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=x0;u<=x1;u++){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=y0;u<=y1;u++){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let u=-10;u<=10;u+=2)if(u)ctx.fillText(u,X(u),Y(0)+4);
+  ctx.textAlign='right';ctx.textBaseline='middle';for(let u=-8;u<=8;u+=2)if(u)ctx.fillText(u,X(0)-5,Y(u));
+  ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.5;ctx.strokeStyle='#d98a00';
+  m.lines.forEach(L=>{ctx.beginPath();
+    if(L.kind==='asym'){ctx.moveTo(X(x0),Y(m.k+L.m*(x0-m.h)));ctx.lineTo(X(x1),Y(m.k+L.m*(x1-m.h)))}
+    else{if(L.o==='u'){ctx.moveTo(0,Y(L.k-L.p));ctx.lineTo(W,Y(L.k-L.p))}if(L.o==='d'){ctx.moveTo(0,Y(L.k+L.p));ctx.lineTo(W,Y(L.k+L.p))}
+         if(L.o==='r'){ctx.moveTo(X(L.h-L.p),0);ctx.lineTo(X(L.h-L.p),H)}if(L.o==='l'){ctx.moveTo(X(L.h+L.p),0);ctx.lineTo(X(L.h+L.p),H)}}
+    ctx.stroke()});
+  ctx.restore();
+  ctx.strokeStyle='#2f6fed';ctx.lineWidth=2.8;ctx.lineJoin='round';
+  m.curves.forEach(cu=>{ctx.beginPath();cu.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke()});
+  ctx.fillStyle=c('--ink');ctx.beginPath();ctx.arc(X(m.h),Y(m.k),4,0,7);ctx.fill();
+  ctx.fillStyle='#e0483e';m.foci.forEach(f=>{ctx.beginPath();ctx.arc(X(f[0]),Y(f[1]),5,0,7);ctx.fill()});
+}
+function update(){
+  const tp=$('tp').value;
+  const lab={ci:['Center','Center','Radius <i>r</i>'],el:['Center','Center','Horizontal radius <i>a</i>'],hy:['Center','Center','<i>a</i>'],pa:['Vertex','Vertex','Size (focal distance 2<i>p</i>)']}[tp];
+  $('lh').textContent=lab[0];$('lk').textContent=lab[1];$('la').innerHTML=lab[2];
+  $('lb').innerHTML=tp==='el'?'Vertical radius <i>b</i>':'<i>b</i>';
+  $('wb').hidden=(tp==='ci'||tp==='pa');
+  const m=model();
+  $('oh').textContent=nf(m.h);$('ok').textContent=nf(m.k);$('oa').textContent=nf(m.a);$('ob').textContent=nf(m.b);
+  $('out').innerHTML='<table><tr><td>Equation</td><td>'+m.eq+'</td></tr>'+m.info.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')+
+    '<tr><td>Calculator</td><td><a href="/#e='+encodeURIComponent(m.calc)+'&c=2f6fed&v=0%2C0%2C32">Open this curve in the graphing calculator</a></td></tr></table>';
+  draw();
+}
+$('tp').addEventListener('change',()=>{fillOr($('tp').value);update()});
+['or','sh','sk','sa','sb'].forEach(id=>$(id).addEventListener('input',update));
+$('reset').onclick=()=>{$('sh').value=0;$('sk').value=0;$('sa').value=5;$('sb').value=3;update()};
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+fillOr($('tp').value);update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
