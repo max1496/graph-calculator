@@ -36,6 +36,16 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .help h2{font-size:15px;color:var(--ink);margin:12px 0 4px}
 .help ul{margin:0;padding-left:18px}
 .help a{color:#2f6fed}
+.dt{margin:2px 0 0;border:0;background:none;color:#2f6fed;font:inherit;font-size:14px;cursor:pointer;padding:4px 0}
+.det{margin:4px 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:14px;overflow-x:auto}
+.det[hidden],.dt[hidden]{display:none}
+.det table{width:100%;border-collapse:collapse}
+.det td{padding:6px;vertical-align:top;border-bottom:1px solid var(--line)}
+.det td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.det tr:last-child td{border-bottom:0}
+.det .m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:16px}
+.det .m sup{font-size:.62em;line-height:0}
+.det .note{color:var(--sub);font-size:12px;margin-top:8px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -74,6 +84,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
     <li>Drag the graph to move it. Use the mouse wheel or pinch with two fingers to zoom.</li>
     <li>Supported: + − * / ^ ( ), sqrt, abs, sin, cos, tan, asin, acos, atan, ln, log, exp, floor, ceil, pi, e</li>
     <li>Equations with both x and y also work, such as x^2+y^2=1 or y^2=x.</li>
+    <li>Under any y = f(x) equation, click Details of graph to see intercepts, maximum and minimum points, inflection points, asymptotes, end behavior and derivatives.</li>
     <li>You can leave out the multiplication sign (2x works). Up to 4 equations can be plotted at once.</li>
   </ul>
   <h2>Learn</h2>
@@ -316,6 +327,238 @@ document.getElementById('zout').onclick=()=>zoomAt(1/1.4,cv.clientWidth/2,cv.cli
 document.getElementById('home').onclick=()=>{v.cx=0;v.cy=0;v.s=48;draw()};
 
 /* ---- 식 입력 ---- */
+/* ---- details of graph ---- */
+const AN={lo:-100,hi:100,n:20000};
+const fin=Number.isFinite;
+const snap=v=>Math.abs(v)<1e-7?0:v;
+const nf=v=>{if(v===Infinity)return '+∞';if(v===-Infinity)return '−∞';if(!fin(v))return '—';return String(parseFloat(snap(v).toPrecision(5))).replace('-','−')};
+const pt=(x,y)=>'('+nf(x)+', '+nf(y)+')';
+const r6=v=>Math.round(v*1e6)/1e6;
+
+function endBeh(f,sg){
+  const v=[1e3,1e4,1e5,1e6].map(k=>f(sg*k));
+  if(v.some(Number.isNaN))return {k:'undef'};
+  const d=v[3],c=v[2],b=v[1];
+  if(!fin(d))return (d===Infinity||d===-Infinity)?{k:'inf',s:d>0?1:-1}:{k:'undef'};
+  if(!v.every(fin))return {k:'none'};
+  if(Math.abs(d-c)<=1e-12*(1+Math.abs(d)))return {k:'lim',L:snap(d)};
+  const r=(d-c)/(c-b);
+  if(c!==b&&Math.abs(d-c)<0.01*(1+Math.abs(d))&&Math.abs(r)<0.6){
+    let L=d+(d-c)*r/(1-r);
+    L=Math.abs(L)<1e-6?0:+L.toPrecision(6);
+    return {k:'lim',L};
+  }
+  if(Math.abs(d)>Math.abs(c)&&Math.abs(c)>Math.abs(b)&&Math.abs(d)>10){
+    let m=(d-c)/(sg*9e5);
+    const mr=+m.toPrecision(6);if(Math.abs(m-mr)<1e-8*(1+Math.abs(m)))m=mr;
+    const cc=d-m*sg*1e6,pb=m*sg*1e4+cc;
+    const line=x=>m*x+cc;
+    if(Math.abs(m)>1e-9&&Math.abs(b-pb)<=1e-4*(1+Math.abs(b))&&[123456.789,654321.123].every(x=>Math.abs(f(sg*x)-line(sg*x))<=1e-3*(1+Math.abs(m)))){
+      const own=[1.7,2.3,40.1].every(x=>Math.abs(f(sg*x)-line(sg*x))<=1e-9*(1+Math.abs(f(sg*x))));
+      if(!own)return {k:'obl',m:+m.toPrecision(6),c:Math.abs(cc)<1e-4?0:+cc.toPrecision(5),y:Math.sign(m*sg)};
+    }
+    return {k:'inf',s:d>0?1:-1};
+  }
+  return {k:'none'};
+}
+
+function analyze(f){
+  const N=AN.n,step=(AN.hi-AN.lo)/N;
+  const xs=new Float64Array(N+1),ys=new Float64Array(N+1);
+  for(let i=0;i<=N;i++){xs[i]=AN.lo+i*step;ys[i]=f(xs[i])}
+  const o={};
+  const y0=f(0);o.yint=fin(y0)?y0:null;
+  let mn=Infinity,mx=-Infinity,all=true;
+  for(let i=0;i<=N;i++){const y=ys[i];if(!fin(y)){all=false;continue}if(y<mn)mn=y;if(y>mx)mx=y}
+  if(all&&mx-mn<=1e-12*(1+Math.abs(mx))){o.constant=true;o.cval=ys[0];return o}
+
+  const D=x=>{const h=1e-6*Math.max(1,Math.abs(x));return (f(x+h)-f(x-h))/(2*h)};
+  const S=x=>{const h=1e-3;return (f(x+h)-2*f(x)+f(x-h))/(h*h)};
+  const tD=x=>1e-8*(1+Math.abs(f(x)))/Math.max(1,Math.abs(x));
+  const tS=x=>1e-13*(1+Math.abs(f(x)))/1e-6;
+  const t0=()=>0;
+  const flips=(g,tol)=>{
+    const res=[];let ls=0,li=-1;
+    for(let i=0;i<=N;i++){
+      const x=xs[i],v=g(x);
+      if(!fin(v)){ls=0;li=-1;continue}
+      const t=tol(x),s=v>t?1:v<-t?-1:0;
+      if(s===0)continue;
+      if(ls!==0&&s!==ls&&i-li<=6)res.push([xs[li],x,ls]);
+      ls=s;li=i;
+    }
+    return res;
+  };
+  const refine=(g,tol,lo,hi,s)=>{
+    for(let k=0;k<60;k++){const m=(lo+hi)/2,v=g(m);if(!fin(v))break;if(v*s>tol(m))lo=m;else hi=m}
+    return (lo+hi)/2;
+  };
+  const mid=(g,tol,a,b,s)=>(refine(g,tol,a,b,s)+refine(g,tol,b,a,-s))/2;
+  const dd=a=>a.filter((e,i)=>a.findIndex(g=>Math.abs(g.x-e.x)<1e-4)===i).sort((p,q)=>p.x-q.x);
+
+  // extrema
+  let ex=[];
+  flips(D,tD).forEach(([a,b,s])=>{
+    const xc=mid(D,tD,a,b,s),y=f(xc),x=r6(xc);
+    if(!fin(y)||Math.abs(y)>1e7)return;
+    const l=f(xc-1e-3),r=f(xc+1e-3);
+    if(l>y&&r>y)ex.push({x,y,t:'min'});else if(l<y&&r<y)ex.push({x,y,t:'max'});
+  });
+  o.ex=dd(ex);
+
+  // x-intercepts
+  let rt=[];
+  flips(f,t0).forEach(([a,b,s])=>{
+    const x=refine(f,t0,a,b,s),y=f(x);
+    if(fin(y)&&Math.abs(y)<1e-6)rt.push({x});
+  });
+  o.ex.forEach(e=>{if(Math.abs(e.y)<1e-9&&!rt.some(r=>Math.abs(r.x-e.x)<1e-5))rt.push({x:e.x})});
+  o.roots=dd(rt).map(r=>r.x);
+
+  // inflection points
+  let inf=[];
+  flips(S,tS).forEach(([a,b,s])=>{
+    const xc=mid(S,tS,a,b,s),y=f(xc),x=r6(xc);
+    if(!fin(y)||Math.abs(y)>1e7)return;
+    const d=1e-2;
+    if(Math.abs(y)>10*Math.max(1,Math.abs(f(xc-0.5)),Math.abs(f(xc+0.5))))return;
+    if(S(xc-d)*s>tS(xc-d)&&S(xc+d)*s<-tS(xc+d))inf.push({x,y});
+  });
+  o.infl=dd(inf);
+
+  // vertical asymptotes
+  const ab=i=>{const y=ys[i];return Number.isNaN(y)?-1:Math.abs(y)};
+  const isInf=y=>y===Infinity||y===-Infinity;
+  const g=t=>{const y=f(t);return Number.isNaN(y)?-1:Math.min(Math.abs(y),1e300)};
+  let va=[];
+  for(let i=1;i<N;i++){
+    const a=ab(i);
+    if(a<=ab(i-1)||a<ab(i+1))continue;
+    const hit=isInf(ys[i]);
+    if(hit&&(isInf(ys[i-1])||isInf(ys[i+1])))continue;
+    if(!hit&&a<20)continue;
+    let x;
+    if(hit)x=xs[i];
+    else{
+      let lo=xs[i-1],hi=xs[i+1];
+      for(let k=0;k<100;k++){const m1=lo+(hi-lo)/3,m2=hi-(hi-lo)/3;if(g(m1)<g(m2))lo=m1;else hi=m2}
+      x=(lo+hi)/2;
+      if(!(g(x)>1e6))continue;
+    }
+    x=snap(x);
+    const e=1e-6*Math.max(1,Math.abs(x)),vl=f(x-e),vr=f(x+e);
+    if(!hit&&!(Math.abs(vl)>100||Math.abs(vr)>100))continue;
+    va.push({x,pos:vl>1e4||vr>1e4||ys[i]===Infinity,neg:vl<-1e4||vr<-1e4||ys[i]===-Infinity});
+  }
+  o.va=dd(va);
+
+  // end behavior
+  o.el=endBeh(f,-1);o.er=endBeh(f,1);
+  const sides=[[o.el,-1],[o.er,1]];
+  const up=o.va.some(v=>v.pos)||sides.some(([e])=>(e.k==='inf'&&e.s>0)||(e.k==='obl'&&e.y>0));
+  const down=o.va.some(v=>v.neg)||sides.some(([e])=>(e.k==='inf'&&e.s<0)||(e.k==='obl'&&e.y<0));
+
+  // absolute extrema
+  const tol=1e-6*(1+Math.max(Math.abs(mx),Math.abs(mn)));
+  const maxs=o.ex.filter(e=>e.t==='max'),mins=o.ex.filter(e=>e.t==='min');
+  o.absMax=null;o.absMin=null;
+  if(!up&&maxs.length){const b=maxs.reduce((p,q)=>q.y>p.y?q:p);if(b.y>=mx-tol)o.absMax=b}
+  if(!down&&mins.length){const b=mins.reduce((p,q)=>q.y<p.y?q:p);if(b.y<=mn+tol)o.absMin=b}
+  return o;
+}
+
+function detailHtml(a){
+  const rows=[];
+  const add=(k,v)=>rows.push('<tr><td>'+k+'</td><td class="m">'+v+'</td></tr>');
+  const lst=(arr,fn)=>arr.length?arr.slice(0,6).map(fn).join(', ')+(arr.length>6?' … ('+arr.length+' in total)':''):'None';
+  add('y-intercept',a.yint===null?'None (undefined at <i>x</i> = 0)':pt(0,a.yint));
+  if(a.constant){
+    add('x-intercepts',a.cval===0?'Every point on the x-axis':'None');
+    add('Extrema','None, every value equals '+nf(a.cval));
+  }else{
+    add('x-intercepts',lst(a.roots,x=>pt(x,0)));
+    add('Local maxima',lst(a.ex.filter(e=>e.t==='max'),e=>pt(e.x,e.y)));
+    add('Local minima',lst(a.ex.filter(e=>e.t==='min'),e=>pt(e.x,e.y)));
+    add('Absolute maximum',a.absMax?pt(a.absMax.x,a.absMax.y):'None');
+    add('Absolute minimum',a.absMin?pt(a.absMin.x,a.absMin.y):'None');
+    add('Inflection points',lst(a.infl,e=>pt(e.x,e.y)));
+    add('Vertical asymptotes',lst(a.va,v=>'<i>x</i> = '+nf(v.x)));
+    const h=[];
+    if(a.el.k==='lim'&&a.er.k==='lim'&&Math.abs(a.el.L-a.er.L)<1e-9)h.push('<i>y</i> = '+nf(a.er.L)+' (both directions)');
+    else{
+      if(a.el.k==='lim')h.push('<i>y</i> = '+nf(a.el.L)+' (as <i>x</i> → −∞)');
+      if(a.er.k==='lim')h.push('<i>y</i> = '+nf(a.er.L)+' (as <i>x</i> → +∞)');
+    }
+    add('Horizontal asymptotes',h.length?h.join('<br>'):'None');
+    const ob=[],oe=e=>'<i>y</i> = '+(e.m===1?'':e.m===-1?'−':nf(e.m))+'<i>x</i>'+(e.c>0?' + '+nf(e.c):e.c<0?' − '+nf(-e.c):'');
+    if(a.el.k==='obl'&&a.er.k==='obl'&&a.el.m===a.er.m&&a.el.c===a.er.c)ob.push(oe(a.er)+' (both directions)');
+    else{
+      if(a.el.k==='obl')ob.push(oe(a.el)+' (as <i>x</i> → −∞)');
+      if(a.er.k==='obl')ob.push(oe(a.er)+' (as <i>x</i> → +∞)');
+    }
+    if(ob.length)add('Oblique asymptotes',ob.join('<br>'));
+    const eb=e=>e.k==='lim'?nf(e.L):e.k==='inf'?(e.s>0?'+∞':'−∞'):e.k==='obl'?(e.y>0?'+∞':'−∞'):e.k==='undef'?'not defined there':'no limit';
+    add('End behavior','<i>x</i> → −∞: <i>y</i> → '+eb(a.el)+'<br><i>x</i> → +∞: <i>y</i> → '+eb(a.er));
+  }
+  add('First derivative','<span data-d="1">Loading…</span>');
+  add('Second derivative','<span data-d="2">Loading…</span>');
+  return '<table>'+rows.join('')+'</table><div class="note">Values are numerical approximations found by searching <i>x</i> from −100 to 100.</div>';
+}
+
+function toMath(text){
+  const T=tokenize(clean(text));let s='';
+  T.forEach((t,i)=>{
+    const p=T[i-1];
+    if(p&&(p.k==='n'||p.k==='i'||(p.k==='o'&&p.v===')'))&&(t.k==='n'||t.k==='i'||t.k==='f'||(t.k==='o'&&t.v==='(')))s+='*';
+    s+=t.k==='f'?(t.v==='ln'?'log':t.v==='log'?'log10':t.v):String(t.v);
+  });
+  return s;
+}
+
+let mathP=null;
+function loadMath(){
+  if(window.math)return Promise.resolve();
+  if(!mathP)mathP=new Promise((ok,no)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/mathjs@12/lib/browser/math.js';
+    s.onload=ok;s.onerror=()=>{mathP=null;no()};
+    document.head.appendChild(s);
+  });
+  return mathP;
+}
+
+function derivText(node,n){
+  const t=node.toString().replace(/\blog\(/g,'ln(');
+  return (n===1?'<i>f</i>′':'<i>f</i>″')+'(<i>x</i>) = '+pretty(t);
+}
+
+function fillDeriv(box,text){
+  const put=(n,h)=>{const el=box.querySelector('[data-d="'+n+'"]');if(el&&box.dataset.t===text)el.innerHTML=h};
+  loadMath().then(()=>{
+    let d1=null;
+    try{d1=math.derivative(toMath(text),'x');put(1,derivText(d1,1))}catch(e){put(1,'Not available for this equation')}
+    try{if(!d1)throw 0;put(2,derivText(math.derivative(d1,'x'),2))}catch(e){put(2,'Not available for this equation')}
+  }).catch(()=>{put(1,'Could not load the math library');put(2,'Could not load the math library')});
+}
+
+function showDetails(r,box){
+  box.hidden=false;box.dataset.t=r.t;
+  let a;
+  try{a=analyze(r.f)}catch(e){box.innerHTML='<div class="note">Could not analyze this equation.</div>';return}
+  box.innerHTML=detailHtml(a);
+  fillDeriv(box,r.t);
+}
+
+function detailsSync(r,d,now){
+  const bt=d.querySelector('.dt'),box=d.querySelector('.det');
+  const ok=!!r.f&&!r.imp;
+  bt.hidden=!ok;
+  bt.textContent=r.open?'Hide details':'Details of graph';
+  clearTimeout(r.tm);
+  if(!ok||!r.open){box.hidden=true;return}
+  r.tm=setTimeout(()=>showDetails(r,box),now?0:250);
+}
+
 const list=document.getElementById('list'),addBtn=document.getElementById('add');
 
 function upd(r,d){
@@ -326,6 +569,7 @@ function upd(r,d){
     try{const c=compile(t);if(!c)throw new Error('bad');r.f=c.f;r.imp=c.imp;pv.className='pv';pv.innerHTML=(c.imp?'':'<i>y</i> = ')+pretty(t)}
     catch(e){pv.className='pv hint';pv.textContent='Check your equation'}
   }
+  detailsSync(r,d);
   draw();
 }
 
@@ -333,11 +577,12 @@ function build(){
   list.innerHTML='';
   rows.forEach((r,i)=>{
     const d=document.createElement('div');d.className='row';
-    d.innerHTML='<span class="dot"></span><div class="fld"><input type="text" placeholder="e.g. x^2, sin(x), x^2+y^2=1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
+    d.innerHTML='<span class="dot"></span><div class="fld"><input type="text" placeholder="e.g. x^2, sin(x), x^2+y^2=1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Equation"><div class="pv"></div><button type="button" class="dt" hidden>Details of graph</button><div class="det" hidden></div></div><button class="del" type="button" aria-label="Remove equation">×</button>';
     d.querySelector('.dot').style.background=r.c;
     const inp=d.querySelector('input');inp.value=r.t;
     inp.addEventListener('input',()=>{r.t=inp.value;upd(r,d)});
     inp.addEventListener('focus',()=>{focusIdx=i});
+    d.querySelector('.dt').onclick=()=>{r.open=!r.open;detailsSync(r,d,true)};
     const del=d.querySelector('.del');
     del.hidden=rows.length<2;
     del.onclick=()=>{rows.splice(i,1);focusIdx=0;build()};
