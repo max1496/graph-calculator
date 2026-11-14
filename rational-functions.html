@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rational Function Calculator: Asymptotes, Holes and Intercepts</title>
+<meta name="description" content="Enter the numerator and denominator of a rational function to find vertical asymptotes, holes, horizontal or slant asymptotes, and intercepts, with a graph. Includes a worked example.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-2.html">Algebra 2</a></div>
+<h1 class="w">Rational Function Calculator</h1>
+<div class="w"><p>A rational function is a polynomial divided by a polynomial. Enter the coefficients of the numerator and the denominator from the highest power down to the constant term, separated by commas. Write 0 for a missing term. For (<i>x</i>² − 1) / (<i>x</i>² − <i>x</i> − 2) enter <b>1, 0, -1</b> and <b>1, -1, -2</b>.</p></div>
+
+<div class="w">
+  <label>Numerator coefficients<input type="text" id="nu" value="1, 0, -1" autocomplete="off" spellcheck="false"></label>
+  <label>Denominator coefficients<input type="text" id="de" value="1, -1, -2" autocomplete="off" spellcheck="false"></label>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="stage"><canvas id="cv"></canvas></div>
+
+<div class="w">
+  <div class="facts" id="out"></div>
+
+  <h2>What is a rational function?</h2>
+  <p>A rational function has the form <i>f</i>(<i>x</i>) = <i>N</i>(<i>x</i>) / <i>D</i>(<i>x</i>), where <i>N</i> and <i>D</i> are polynomials and <i>D</i> is not zero. Its graph can have breaks: vertical lines it approaches but never touches, and single missing points.</p>
+
+  <h2>Vertical asymptotes and holes</h2>
+  <p>First cancel any factor that appears in both the numerator and the denominator. Each cancelled factor <i>x</i> − <i>a</i> gives a <b>hole</b> at <i>x</i> = <i>a</i>, a single point the graph skips. Every zero of the denominator that is left after cancelling gives a <b>vertical asymptote</b>. Near a vertical asymptote the function grows without bound, either up or down.</p>
+  <p>If the factor <i>x</i> − <i>a</i> appears an odd number of times in the remaining denominator, the graph goes up on one side and down on the other. If it appears an even number of times, the graph goes the same way on both sides.</p>
+
+  <h2>Horizontal and slant asymptotes</h2>
+  <p>Compare the degree of the numerator (<i>n</i>) with the degree of the denominator (<i>m</i>) after cancelling.</p>
+  <ul>
+    <li><b><i>n</i> &lt; <i>m</i>:</b> the horizontal asymptote is <i>y</i> = 0.</li>
+    <li><b><i>n</i> = <i>m</i>:</b> the horizontal asymptote is <i>y</i> = (leading coefficient of <i>N</i>) / (leading coefficient of <i>D</i>).</li>
+    <li><b><i>n</i> = <i>m</i> + 1:</b> there is no horizontal asymptote, but there is a slant (oblique) asymptote. Divide <i>N</i> by <i>D</i> with polynomial long division. The quotient <i>y</i> = <i>mx</i> + <i>b</i> is the asymptote.</li>
+    <li><b><i>n</i> &gt; <i>m</i> + 1:</b> there is no horizontal or slant asymptote. The graph goes to infinity like a polynomial of degree <i>n</i> − <i>m</i>.</li>
+  </ul>
+
+  <h2>Intercepts</h2>
+  <p>The x-intercepts are the zeros of the numerator after cancelling. The y-intercept is <i>f</i>(0) = <i>N</i>(0) / <i>D</i>(0), which does not exist if the denominator is 0 at <i>x</i> = 0.</p>
+
+  <h2>Worked example</h2>
+  <p>Take <i>f</i>(<i>x</i>) = (<i>x</i>² − 1) / (<i>x</i>² − <i>x</i> − 2). Factor both parts: (<i>x</i> − 1)(<i>x</i> + 1) / ((<i>x</i> − 2)(<i>x</i> + 1)). The factor <i>x</i> + 1 cancels, so there is a hole at <i>x</i> = −1. The simplified function is (<i>x</i> − 1) / (<i>x</i> − 2), whose value at −1 is 2/3, so the hole is the point (−1, 2/3). The remaining denominator gives a vertical asymptote at <i>x</i> = 2. The degrees are equal and both leading coefficients are 1, so the horizontal asymptote is <i>y</i> = 1. The x-intercept is 1 and the y-intercept is 1/2. The calculator above shows all of this on the graph.</p>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>A graph can cross a horizontal asymptote in the middle of the graph. The asymptote describes what happens far to the left and right.</li>
+    <li>A slant asymptote and a horizontal asymptote cannot both appear for the same rational function.</li>
+    <li>To factor higher-degree polynomials, see the <a href="/rational-root-theorem.html">Rational Root Theorem calculator</a>. To plot your own rational function, use the <a href="/">graphing calculator</a>, and open Details of graph for the asymptotes.</li>
+  </ul>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const N=v=>!Number.isFinite(+v)?'undefined':Math.abs(v)<1e-12?'0':String(+(+v).toPrecision(6)).replace('-','\u2212');
+function gcdB(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b){[a,b]=[b,a%b]}return a}
+class F{
+  constructor(n,d=1n){if(d<0n){n=-n;d=-d}const g=gcdB(n,d)||1n;this.n=n/g;this.d=d/g}
+  add(o){return new F(this.n*o.d+o.n*this.d,this.d*o.d)}
+  sub(o){return new F(this.n*o.d-o.n*this.d,this.d*o.d)}
+  mul(o){return new F(this.n*o.n,this.d*o.d)}
+  div(o){return new F(this.n*o.d,this.d*o.n)}
+  isZero(){return this.n===0n}
+  num(){return Number(this.n)/Number(this.d)}
+}
+const Z=new F(0n),O=new F(1n);
+const fmtF=f=>(f.n<0n?'\u2212':'')+(f.n<0n?-f.n:f.n)+(f.d===1n?'':'/'+f.d);
+/* polynomials: arrays low -> high of F */
+const trim=p=>{p=p.slice();while(p.length&&p[p.length-1].isZero())p.pop();return p};
+const deg=p=>p.length-1;
+function psub(a,b){const n=Math.max(a.length,b.length),r=[];for(let i=0;i<n;i++)r.push((a[i]||Z).sub(b[i]||Z));return trim(r)}
+function pdivmod(a,b){
+  a=trim(a);b=trim(b);
+  const q=new Array(Math.max(a.length-b.length+1,0)).fill(Z);let r=a.slice();
+  while(r.length>=b.length&&r.length>0){
+    const k=r.length-b.length,c=r[r.length-1].div(b[b.length-1]);
+    q[k]=c;for(let i=0;i<b.length;i++)r[i+k]=r[i+k].sub(c.mul(b[i]));
+    r=trim(r);
+  }
+  return [trim(q),r];
+}
+function pgcd(a,b){
+  a=trim(a);b=trim(b);
+  while(b.length){const r=pdivmod(a,b)[1];a=b;b=r}
+  if(!a.length)return a;
+  const l=a[a.length-1];return a.map(c=>c.div(l));
+}
+const pder=p=>trim(p.slice(1).map((c,i)=>c.mul(new F(BigInt(i+1)))));
+/* square-free decomposition (Yun): list of {p, m} where roots of p have multiplicity m */
+function sqfree(p){
+  p=trim(p);if(deg(p)<1)return [];
+  const dp=pder(p),c=pgcd(p,dp);
+  let w=pdivmod(p,c)[0],y=pdivmod(dp,c)[0],z=psub(y,pder(w));
+  const out=[];let i=1;
+  while(z.length&&i<40){
+    const g=pgcd(w,z);
+    if(deg(g)>=1)out.push({p:g,m:i});
+    w=pdivmod(w,g)[0];y=pdivmod(z,g)[0];z=psub(y,pder(w));i++;
+  }
+  if(deg(w)>=1)out.push({p:w,m:i});
+  return out;
+}
+const ev=(p,x)=>{let y=0;for(let i=p.length-1;i>=0;i--)y=y*x+p[i];return y};
+function simpleRoots(pf){
+  const p=pf.map(c=>c.num());
+  const lead=Math.abs(p[p.length-1]);
+  const B=1+Math.max(...p.slice(0,-1).map(a=>Math.abs(a)/lead),0);
+  const out=[],M=8000;
+  let px=-B,py=ev(p,px);
+  if(py===0)out.push(px);
+  for(let i=1;i<=M;i++){
+    const x=-B+2*B*i/M,y=ev(p,x);
+    if(y===0){out.push(x)}
+    else if(py!==0&&(py<0)!==(y<0)){
+      let a=px,b=x,fa=py;
+      for(let k=0;k<70;k++){const m=(a+b)/2,fm=ev(p,m);if((fm<0)===(fa<0)){a=m;fa=fm}else b=m}
+      out.push((a+b)/2);
+    }
+    px=x;py=y;
+  }
+  return out.map(r=>Math.abs(r)<1e-10?0:r);
+}
+function realRoots(pf){
+  const res=[];
+  sqfree(pf).forEach(s=>simpleRoots(s.p).forEach(r=>res.push({x:r,m:s.m})));
+  res.sort((a,b)=>a.x-b.x);
+  return res.filter((r,i)=>!i||Math.abs(r.x-res[i-1].x)>1e-9);
+}
+function approxFrac(r){
+  for(let q=1;q<=1000;q++){const p=Math.round(r*q);if(Math.abs(r-p/q)<1e-9*Math.max(1,Math.abs(r)))return (p<0?'\u2212':'')+Math.abs(p)+(q===1?'':'/'+q)}
+  return N(r);
+}
+const xs=r=>approxFrac(r);
+/* input */
+function ratParse(t){
+  t=t.trim().replace(/\u2212/g,'-');
+  let m=/^(-?)(\d*)\.?(\d*)$/.exec(t);
+  if(m&&(m[2]||m[3])){const k=m[3].length,n=BigInt((m[2]||'0')+m[3]);return new F(m[1]?-n:n,10n**BigInt(k))}
+  m=/^(-?\d+)\/(\d+)$/.exec(t);
+  if(m&&BigInt(m[2])!==0n)return new F(BigInt(m[1]),BigInt(m[2]));
+  return null;
+}
+function readPoly(id,name){
+  const parts=$(id).value.split(/[,;\s]+/).filter(Boolean);
+  if(!parts.length){$('err').textContent='Enter the '+name+' coefficients.';return null}
+  if(parts.length>9){$('err').textContent='Please use at most 9 coefficients (degree 8) for the '+name+'.';return null}
+  const c=parts.map(ratParse);
+  if(c.some(x=>x===null)){$('err').textContent='Coefficients must be integers, decimals or fractions, separated by commas.';return null}
+  return trim(c.reverse());
+}
+function polyHtml(p){
+  let s='';
+  for(let k=p.length-1;k>=0;k--){
+    const c=p[k];if(c.isZero())continue;
+    const neg=c.n<0n,a=new F(neg?-c.n:c.n,c.d);
+    const one=a.n===1n&&a.d===1n;
+    let t=(one&&k>0)?'':(a.d===1n?String(a.n):'('+a.n+'/'+a.d+')');
+    if(k>0)t+='<i>x</i>'+(k>1?'<sup>'+k+'</sup>':'');
+    s+=(s?(neg?' \u2212 ':' + '):(neg?'\u2212':''))+t;
+  }
+  return s||'0';
+}
+let S=null;
+function update(){
+  $('err').textContent='';
+  const Np=readPoly('nu','numerator'),Dp=Np&&readPoly('de','denominator');
+  S=null;
+  if(!Np||!Dp){$('out').innerHTML='';draw();return}
+  if(!Np.length){$('err').textContent='The numerator cannot be 0 for every coefficient.';$('out').innerHTML='';draw();return}
+  if(!Dp.length){$('err').textContent='The denominator cannot be 0 for every coefficient.';$('out').innerHTML='';draw();return}
+  const g=pgcd(Np,Dp);
+  let N2=Np,D2=Dp;
+  if(deg(g)>=1){N2=pdivmod(Np,g)[0];D2=pdivmod(Dp,g)[0]}
+  const nd=deg(N2),dd=deg(D2);
+  const Nf=N2.map(c=>c.num()),Df=D2.map(c=>c.num());
+  const dRoots=realRoots(D2);       /* vertical asymptotes */
+  const gRoots=deg(g)>=1?realRoots(g):[];
+  const isVA=x=>dRoots.some(r=>Math.abs(r.x-x)<1e-7);
+  const holes=gRoots.filter(r=>!isVA(r.x)).map(r=>({x:r.x,y:ev(Nf,r.x)/ev(Df,r.x)}));
+  const xInt=realRoots(N2).filter(r=>!holes.some(h=>Math.abs(h.x-r.x)<1e-7));
+  /* asymptote */
+  let asy=null,asyHtml='',endHtml='';
+  if(dd===0){asyHtml='None. After cancelling, the function is a polynomial.'}
+  else if(nd<dd){asy={t:'h',y:0};asyHtml='Horizontal: <i>y</i> = 0 (the degree of the numerator is less than the degree of the denominator)'}
+  else if(nd===dd){const L=N2[nd].div(D2[dd]);asy={t:'h',y:L.num()};asyHtml='Horizontal: <i>y</i> = '+fmtF(L)+' (equal degrees: ratio of the leading coefficients)'}
+  else if(nd===dd+1){
+    const q=pdivmod(N2,D2)[0],m=q[1]||Z,b=q[0]||Z;
+    asy={t:'o',m:m.num(),b:b.num()};
+    asyHtml='Slant: <i>y</i> = '+(m.n===1n&&m.d===1n?'':m.n===-1n&&m.d===1n?'\u2212':fmtF(m))+'<i>x</i>'+(b.isZero()?'':(b.n<0n?' \u2212 ':' + ')+fmtF(new F(b.n<0n?-b.n:b.n,b.d)))+' (the numerator has one more degree than the denominator; this is the quotient of the division)';
+  }else{
+    asyHtml='None. The numerator has at least two more degrees than the denominator.';
+    const k=nd-dd,s=N2[nd].div(D2[dd]).n<0n?-1:1;
+    endHtml='Like <i>y</i> = '+(s<0?'\u2212':'')+'<i>x</i>'+(k>1?'<sup>'+k+'</sup>':'')+' far from the origin';
+  }
+  /* side behaviour at each vertical asymptote */
+  const sideTxt=r=>{
+    const d=1e-6*(1+Math.abs(r.x)),f=x=>ev(Nf,x)/ev(Df,x);
+    const sg=v=>!isFinite(v)?'?':v>0?'+\u221E':'\u2212\u221E';
+    return '<i>x</i> \u2192 '+xs(r.x)+'\u207B: '+sg(f(r.x-d))+', <i>x</i> \u2192 '+xs(r.x)+'\u207A: '+sg(f(r.x+d));
+  };
+  S={Nf,Df,va:dRoots.map(r=>r.x),holes,xInt:xInt.map(r=>r.x),asy};
+  /* y-intercept */
+  const n0=Np[0]||Z,d0=Dp[0]||Z;
+  let yi;
+  if(!d0.isZero()){S.yi=n0.div(d0).num();yi='(0, '+fmtF(n0.div(d0))+')'}
+  else if(!n0.isZero()||!holes.some(h=>Math.abs(h.x)<1e-9))yi='None (the denominator is 0 at <i>x</i> = 0)';
+  else yi='None (there is a hole at <i>x</i> = 0)';
+  const domain=(()=>{const bad=gRoots.map(r=>r.x).concat(dRoots.map(r=>r.x)).sort((a,b)=>a-b).filter((v,i,a)=>!i||Math.abs(v-a[i-1])>1e-9);return bad.length?'All real numbers except <i>x</i> = '+bad.map(xs).join(', '):'All real numbers'})();
+  let h='<table>'+
+    '<tr><td><i>f</i>(<i>x</i>)</td><td>('+polyHtml(Np)+') / ('+polyHtml(Dp)+')</td></tr>';
+  if(deg(g)>=1)h+='<tr><td>Simplified</td><td>('+polyHtml(N2)+') / ('+polyHtml(D2)+')<br><span style="color:var(--sub);font-size:13px">after cancelling the common factor '+polyHtml(g)+'</span></td></tr>';
+  h+='<tr><td>Domain</td><td>'+domain+'</td></tr>'+
+    '<tr><td>Holes</td><td>'+(holes.length?holes.map(p=>'('+xs(p.x)+', '+xs(p.y)+')').join('<br>'):'None')+'</td></tr>'+
+    '<tr><td>Vertical asymptotes</td><td>'+(dRoots.length?dRoots.map(r=>'<i>x</i> = '+xs(r.x)+(r.m>1?' (multiplicity '+r.m+')':'')+'<br><span style="color:var(--sub);font-size:13px">'+sideTxt(r)+'</span>').join('<br>'):'None')+'</td></tr>'+
+    '<tr><td>Horizontal or slant asymptote</td><td>'+asyHtml+'</td></tr>'+
+    (endHtml?'<tr><td>End behavior</td><td>'+endHtml+'</td></tr>':'')+
+    '<tr><td>x-intercepts</td><td>'+(xInt.length?xInt.map(r=>'('+xs(r.x)+', 0)').join('<br>'):'None')+'</td></tr>'+
+    '<tr><td>y-intercept</td><td>'+yi+'</td></tr></table>'+
+    '<p style="margin:10px 0 0;font-size:14px;color:var(--sub)">On the graph, dashed lines are asymptotes, open circles are holes, green dots are x-intercepts and the red dot is the y-intercept.</p>';
+  $('out').innerHTML=h;
+  draw();
+}
+function draw(){
+  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),c=k=>cs.getPropertyValue(k).trim();
+  ctx.fillStyle=c('--bg');ctx.fillRect(0,0,W,H);
+  if(!S)return;
+  const {Nf,Df,va,holes,xInt,asy}=S;
+  const f=x=>ev(Nf,x)/ev(Df,x);
+  const sp=[0].concat(va,holes.map(h=>h.x),xInt);
+  let lo=Math.min(...sp),hi=Math.max(...sp);
+  const pad=Math.max(2,(hi-lo)*.3);lo-=pad;hi+=pad;
+  if(hi-lo<8){const m=(hi+lo)/2;lo=m-4;hi=m+4}
+  const ys=[];
+  for(let i=0;i<=800;i++){
+    const x=lo+(hi-lo)*i/800;
+    if(va.some(r=>Math.abs(r-x)<(hi-lo)*0.01))continue;
+    const y=f(x);if(Number.isFinite(y)&&Math.abs(y)<1e6)ys.push(y);
+  }
+  ys.sort((a,b)=>a-b);
+  let ya=ys.length?ys[Math.floor(ys.length*.06)]:-3,yb=ys.length?ys[Math.floor(ys.length*.94)]:3;
+  const must=[0];if(asy&&asy.t==='h')must.push(asy.y);
+  holes.forEach(h=>must.push(h.y));if(S.yi!==undefined)must.push(S.yi);
+  must.forEach(v=>{if(Number.isFinite(v)&&Math.abs(v)<1e6){ya=Math.min(ya,v);yb=Math.max(yb,v)}});
+  let span=Math.max(yb-ya,2);const mid=(ya+yb)/2;
+  ya=mid-span*.65;yb=mid+span*.65;
+  const X=u=>(u-lo)/(hi-lo)*W,Y=u=>H-(u-ya)/(yb-ya)*H;
+  const nice=r=>{const p=Math.pow(10,Math.floor(Math.log10(r/6))),n=r/6/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p};
+  const sx=nice(hi-lo),sy=nice(yb-ya);
+  ctx.lineWidth=1;ctx.strokeStyle=c('--grid');ctx.beginPath();
+  for(let u=Math.ceil(lo/sx)*sx;u<=hi;u+=sx){ctx.moveTo(X(u)+.5,0);ctx.lineTo(X(u)+.5,H)}
+  for(let u=Math.ceil(ya/sy)*sy;u<=yb;u+=sy){ctx.moveTo(0,Y(u)+.5);ctx.lineTo(W,Y(u)+.5)}
+  ctx.stroke();
+  ctx.strokeStyle=c('--axis');ctx.lineWidth=1.5;ctx.beginPath();
+  if(ya<=0&&yb>=0){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}
+  if(lo<=0&&hi>=0){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}
+  ctx.stroke();
+  ctx.fillStyle=c('--sub');ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  const ay=Math.min(Math.max(Y(0),0),H-14);
+  for(let u=Math.ceil(lo/sx)*sx;u<=hi;u+=sx){if(Math.abs(u)<sx/2)continue;ctx.fillText(N(u),X(u),ay+4)}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  const ax=Math.min(Math.max(X(0),30),W-4);
+  for(let u=Math.ceil(ya/sy)*sy;u<=yb;u+=sy){if(Math.abs(u)<sy/2)continue;ctx.fillText(N(u),ax-5,Y(u))}
+  /* asymptotes */
+  ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=1.5;ctx.strokeStyle='#e0483e';ctx.globalAlpha=.75;ctx.beginPath();
+  va.forEach(r=>{ctx.moveTo(X(r)+.5,0);ctx.lineTo(X(r)+.5,H)});
+  if(asy&&asy.t==='h'){ctx.moveTo(0,Y(asy.y));ctx.lineTo(W,Y(asy.y))}
+  if(asy&&asy.t==='o'){ctx.moveTo(0,Y(asy.m*lo+asy.b));ctx.lineTo(W,Y(asy.m*hi+asy.b))}
+  ctx.stroke();ctx.restore();
+  /* curve */
+  ctx.lineWidth=2.6;ctx.strokeStyle='#2f6fed';ctx.beginPath();
+  let pen=false,prevx=lo;
+  for(let px=0;px<=W;px++){
+    const x=lo+px/W*(hi-lo),y=f(x);
+    const cross=va.some(r=>r>prevx&&r<=x);
+    prevx=x;
+    if(cross||!Number.isFinite(y)||Math.abs(Y(y))>1e5){pen=false;continue}
+    if(!pen){ctx.moveTo(px,Y(y));pen=true}else ctx.lineTo(px,Y(y));
+  }
+  ctx.stroke();
+  holes.forEach(h=>{ctx.fillStyle=c('--bg');ctx.strokeStyle='#2f6fed';ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(h.x),Y(h.y),5,0,7);ctx.fill();ctx.stroke()});
+  xInt.forEach(r=>{ctx.fillStyle='#1f9d6b';ctx.beginPath();ctx.arc(X(r),Y(0),5,0,7);ctx.fill()});
+  if(S.yi!==undefined&&Number.isFinite(S.yi)){ctx.fillStyle='#e0483e';ctx.beginPath();ctx.arc(X(0),Y(S.yi),5,0,7);ctx.fill()}
+}
+['nu','de'].forEach(id=>$(id).addEventListener('input',update));
+new ResizeObserver(draw).observe(cv);
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+update();
+</script>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+</body>
+</html>
