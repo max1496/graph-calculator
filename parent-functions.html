@@ -39,7 +39,14 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
 .wide{width:min(100%,920px)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;width:min(100%,920px)}
-.card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel);display:flex;flex-direction:column;gap:6px}
+.grid{align-items:start}
+.card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel)}
+.card>*:not(summary){margin-top:8px}
+.card summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px}
+.card summary::-webkit-details-marker{display:none}
+.card summary::after{content:"\25B6";grid-row:1/3;grid-column:2;font-size:13px;color:var(--sub)}
+.card[open] summary::after{content:"\25BC"}
+.card .go{display:inline-block}
 .card h3{font-size:17px;margin:0}
 .card .eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:22px;text-align:left}
 .card canvas{width:100%;aspect-ratio:4/3;display:block;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
@@ -59,109 +66,98 @@ table.cmp{border-collapse:collapse;width:100%;font-size:15px}table.cmp th,table.
 <div class="w"><p class="sum"><b>In short:</b> Every function family has a basic shape. Learn the shape, the domain and the range of each one, and you can sketch most graphs quickly.</p></div>
 
 <div class="w">
-  <p>A <b>parent function</b> is the simplest member of a family of functions. Every other function in the family is the parent moved, stretched or flipped. Below are the eleven parent functions you meet in Algebra 1, Algebra 2 and Precalculus. Press <b>Open in the calculator</b> on any card to see it in the graphing calculator.</p>
+  <p>A <b>parent function</b> is the simplest member of a family of functions. Every other function in the family is the parent moved, stretched or flipped. Below are the eleven parent functions you meet in Algebra 1, Algebra 2 and Precalculus. Click a function to see its graph and details. Press <b>Open in the calculator</b> on any card to see it in the graphing calculator.</p>
 </div>
 
 <div class="grid">
-    <div class="card" id="linear">
-      <h3>Linear</h3>
-      <div class="eq"><i>y</i> = <i>x</i></div>
+    <details class="card" id="linear">
+      <summary><h3>Linear</h3><div class="eq"><i>y</i> = <i>x</i></div></summary>
       <canvas data-k="linear" aria-label="Graph of y = x"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>All real numbers</dd></dl>
       <ul><li>Straight line through the origin with slope 1.</li><li>Always increasing.</li><li>Symmetric about the origin (odd function).</li></ul>
       <div class="more">Learn more: <a href="/linear-function.html">Linear function page</a></div>
       <a class="go" href="/#e=x&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="quad">
-      <h3>Quadratic</h3>
-      <div class="eq"><i>y</i> = <i>x</i><sup>2</sup></div>
+    </details>
+    <details class="card" id="quad">
+      <summary><h3>Quadratic</h3><div class="eq"><i>y</i> = <i>x</i><sup>2</sup></div></summary>
       <canvas data-k="quad" aria-label="Graph of y = x2"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>[0, ∞)</dd></dl>
       <ul><li>U-shaped parabola with its vertex at (0, 0).</li><li>Decreasing for <i>x</i> &lt; 0, increasing for <i>x</i> &gt; 0.</li><li>Symmetric about the y-axis (even function).</li></ul>
       <div class="more">Learn more: <a href="/quadratic-function.html">Quadratic function page</a></div>
       <a class="go" href="/#e=x%5E2&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="cubic">
-      <h3>Cubic</h3>
-      <div class="eq"><i>y</i> = <i>x</i><sup>3</sup></div>
+    </details>
+    <details class="card" id="cubic">
+      <summary><h3>Cubic</h3><div class="eq"><i>y</i> = <i>x</i><sup>3</sup></div></summary>
       <canvas data-k="cubic" aria-label="Graph of y = x3"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>All real numbers</dd></dl>
       <ul><li>S-shaped curve through the origin.</li><li>Always increasing, with a flat point at (0, 0).</li><li>Symmetric about the origin (odd function).</li></ul>
       <div class="more">Learn more: <a href="/polynomial-from-roots.html">Polynomial from roots</a></div>
       <a class="go" href="/#e=x%5E3&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="abs">
-      <h3>Absolute value</h3>
-      <div class="eq"><i>y</i> = |<i>x</i>|</div>
+    </details>
+    <details class="card" id="abs">
+      <summary><h3>Absolute value</h3><div class="eq"><i>y</i> = |<i>x</i>|</div></summary>
       <canvas data-k="abs" aria-label="Graph of y = |x|"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>[0, ∞)</dd></dl>
       <ul><li>V-shaped with its vertex at (0, 0).</li><li>Decreasing for <i>x</i> &lt; 0, increasing for <i>x</i> &gt; 0.</li><li>Symmetric about the y-axis (even function).</li></ul>
       
       <a class="go" href="/#e=abs%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="sqrt">
-      <h3>Square root</h3>
-      <div class="eq"><i>y</i> = √<i>x</i></div>
+    </details>
+    <details class="card" id="sqrt">
+      <summary><h3>Square root</h3><div class="eq"><i>y</i> = √<i>x</i></div></summary>
       <canvas data-k="sqrt" aria-label="Graph of y = √x"></canvas>
       <dl><dt>Domain</dt><dd>[0, ∞)</dd><dt>Range</dt><dd>[0, ∞)</dd></dl>
       <ul><li>Starts at (0, 0) and rises more and more slowly.</li><li>Always increasing.</li><li>It is the inverse of <i>y</i> = <i>x</i>² for <i>x</i> ≥ 0.</li></ul>
       
       <a class="go" href="/#e=sqrt%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="recip">
-      <h3>Reciprocal</h3>
-      <div class="eq"><i>y</i> = 1 / <i>x</i></div>
+    </details>
+    <details class="card" id="recip">
+      <summary><h3>Reciprocal</h3><div class="eq"><i>y</i> = 1 / <i>x</i></div></summary>
       <canvas data-k="recip" aria-label="Graph of y = 1 / x"></canvas>
       <dl><dt>Domain</dt><dd><i>x</i> ≠ 0</dd><dt>Range</dt><dd><i>y</i> ≠ 0</dd></dl>
       <ul><li>Two separate branches, in quadrants I and III.</li><li>Vertical asymptote <i>x</i> = 0 and horizontal asymptote <i>y</i> = 0.</li><li>Symmetric about the origin (odd); decreasing on each branch.</li></ul>
       <div class="more">Learn more: <a href="/rational-functions.html">Rational function calculator</a></div>
       <a class="go" href="/#e=1%2Fx&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="exp">
-      <h3>Exponential</h3>
-      <div class="eq"><i>y</i> = 2<sup><i>x</i></sup></div>
+    </details>
+    <details class="card" id="exp">
+      <summary><h3>Exponential</h3><div class="eq"><i>y</i> = 2<sup><i>x</i></sup></div></summary>
       <canvas data-k="exp" aria-label="Graph of y = 2x"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>(0, ∞)</dd></dl>
       <ul><li>Passes through (0, 1).</li><li>Always increasing; horizontal asymptote <i>y</i> = 0 on the left.</li><li><i>y</i> = (1/2)<sup><i>x</i></sup> is the decay version, which is decreasing.</li></ul>
       
       <a class="go" href="/#e=2%5Ex&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="log">
-      <h3>Logarithm</h3>
-      <div class="eq"><i>y</i> = ln <i>x</i></div>
+    </details>
+    <details class="card" id="log">
+      <summary><h3>Logarithm</h3><div class="eq"><i>y</i> = ln <i>x</i></div></summary>
       <canvas data-k="log" aria-label="Graph of y = ln x"></canvas>
       <dl><dt>Domain</dt><dd>(0, ∞)</dd><dt>Range</dt><dd>All real numbers</dd></dl>
       <ul><li>Passes through (1, 0).</li><li>Always increasing, but slowly; vertical asymptote <i>x</i> = 0.</li><li>It is the inverse of <i>y</i> = <i>e</i><sup><i>x</i></sup>.</li></ul>
       
       <a class="go" href="/#e=ln%28x%29&c=2f6fed&v=0%2C0%2C48">Open in the calculator</a>
-    </div>
-    <div class="card" id="sin">
-      <h3>Sine</h3>
-      <div class="eq"><i>y</i> = sin <i>x</i></div>
+    </details>
+    <details class="card" id="sin">
+      <summary><h3>Sine</h3><div class="eq"><i>y</i> = sin <i>x</i></div></summary>
       <canvas data-k="sin" aria-label="Graph of y = sin x"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>[−1, 1]</dd></dl>
       <ul><li>A wave with period 2π and amplitude 1.</li><li>Passes through the origin (odd function).</li><li>Zeros at every multiple of π.</li></ul>
       
       <a class="go" href="/#e=sin%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">Open in the calculator</a>
-    </div>
-    <div class="card" id="cos">
-      <h3>Cosine</h3>
-      <div class="eq"><i>y</i> = cos <i>x</i></div>
+    </details>
+    <details class="card" id="cos">
+      <summary><h3>Cosine</h3><div class="eq"><i>y</i> = cos <i>x</i></div></summary>
       <canvas data-k="cos" aria-label="Graph of y = cos x"></canvas>
       <dl><dt>Domain</dt><dd>All real numbers</dd><dt>Range</dt><dd>[−1, 1]</dd></dl>
       <ul><li>The same wave as sine, shifted left by π/2.</li><li>Starts at its maximum (0, 1) (even function).</li><li>Zeros at π/2 plus any multiple of π.</li></ul>
       
       <a class="go" href="/#e=cos%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">Open in the calculator</a>
-    </div>
-    <div class="card" id="tan">
-      <h3>Tangent</h3>
-      <div class="eq"><i>y</i> = tan <i>x</i></div>
+    </details>
+    <details class="card" id="tan">
+      <summary><h3>Tangent</h3><div class="eq"><i>y</i> = tan <i>x</i></div></summary>
       <canvas data-k="tan" aria-label="Graph of y = tan x"></canvas>
       <dl><dt>Domain</dt><dd><i>x</i> ≠ π/2 + <i>k</i>π</dd><dt>Range</dt><dd>All real numbers</dd></dl>
       <ul><li>Period π; repeating S-shaped pieces.</li><li>Vertical asymptotes at <i>x</i> = π/2 + <i>k</i>π.</li><li>Zeros at every multiple of π; increasing on each piece.</li></ul>
       
       <a class="go" href="/#e=tan%28x%29&c=2f6fed&v=0%2C0%2C40&pi=1">Open in the calculator</a>
-    </div>
+    </details>
 </div>
 
 <div class="w">
@@ -242,6 +238,7 @@ function drawAll(){
     g.stroke();
   });
 }
+document.querySelectorAll("details.card").forEach(d=>d.addEventListener("toggle",()=>requestAnimationFrame(drawAll)));
 drawAll();
 new ResizeObserver(drawAll).observe(document.body);
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',drawAll);
