@@ -6,6 +6,7 @@
 <title>Linear Function y = ax + b: Interactive Graph with Sliders</title>
 <meta name="description" content="Learn the linear function y = ax + b. Move the slope and y-intercept sliders to see the line change, and find the equation of a line from two points.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
 <style>
 :root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
 @media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
@@ -34,6 +35,7 @@ input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offse
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
 details.wp{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}details.wp summary{cursor:pointer;font-weight:700}details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed;font-weight:400}.hl{color:#2f6fed;font-weight:700}
+ul.lines{padding-left:22px}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -64,10 +66,11 @@ details.wp{border:1px solid var(--line);border-radius:8px;background:var(--panel
   <p>A linear function is a function whose graph is a straight line. It is written <i>y</i> = <i>a</i><i>x</i> + <i>b</i>, where <i>a</i> and <i>b</i> are fixed numbers. Every time <i>x</i> goes up by 1, <i>y</i> changes by the same amount, and that amount is <i>a</i>.</p>
 
   <h2>What <i>a</i> and <i>b</i> mean</h2>
-  <ul>
-    <li><b>Slope (<i>a</i>)</b> tells you how steep the line is. A positive slope rises from left to right, a negative slope falls, and a slope of 0 gives a flat horizontal line.</li>
-    <li><b>y-intercept (<i>b</i>)</b> is where the line crosses the y-axis, the point (0, <i>b</i>).</li>
-    <li><b>x-intercept</b> is where the line crosses the x-axis. Set <i>y</i> = 0 and solve: <i>x</i> = −<i>b</i> / <i>a</i>. A flat line has none unless it lies on the axis itself.</li>
+  <ul class="lines">
+    <li><b>Slope (<i>a</i>)</b> = how steep the line is.<br>
+      Positive: <span class="ok">rises</span> from left to right. Negative: <span class="hl2">falls</span>. Zero: a flat horizontal line.</li>
+    <li><b>y-intercept (<i>b</i>)</b> = where the line crosses the y-axis, the point <b>(0, <i>b</i>)</b>.</li>
+    <li><b>x-intercept</b> = where the line crosses the x-axis.<br>Set <i>y</i> = 0 and solve: <b><i>x</i> = −<i>b</i> / <i>a</i></b>.<br>A flat line has none unless it lies on the axis.</li>
   </ul>
 
   <h2>How to graph a linear function</h2>

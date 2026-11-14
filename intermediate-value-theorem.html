@@ -6,6 +6,7 @@
 <title>Intermediate Value Theorem Calculator with Graph</title>
 <meta name="description" content="Check whether the Intermediate Value Theorem guarantees a solution f(c) = k on [a, b]. Enter a function, an interval and a value, then see f(a), f(b), the continuity check and the graph.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
 <style>
 :root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
 @media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
@@ -37,6 +38,7 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+ul.lines,ol.steps{padding-left:22px}.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -63,27 +65,39 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
   <div class="facts" id="out"></div>
 
   <h2>What is the Intermediate Value Theorem?</h2>
-  <p>If <i>f</i> is continuous on the closed interval [<i>a</i>, <i>b</i>] and <i>k</i> is any number between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), then there is at least one number <i>c</i> in [<i>a</i>, <i>b</i>] such that <i>f</i>(<i>c</i>) = <i>k</i>. In words: a continuous function cannot skip a value. To go from <i>f</i>(<i>a</i>) to <i>f</i>(<i>b</i>) its graph has to pass through every height in between.</p>
+  <div class="key2">If <i>f</i> is <b>continuous</b> on [<i>a</i>, <i>b</i>] and <i>k</i> is <b>between</b> <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), then there is at least one <i>c</i> in [<i>a</i>, <i>b</i>] with <b><i>f</i>(<i>c</i>) = <i>k</i></b>.</div>
+  <ul class="lines">
+    <li><b>In words:</b> a continuous function <span class="hl2">cannot skip a value</span>.</li>
+    <li>To go from <i>f</i>(<i>a</i>) to <i>f</i>(<i>b</i>), the graph must pass through every height in between.</li>
+    <li>With <i>k</i> = 0 it proves that an equation has a <b>root</b> without solving it.</li>
+  </ul>
 
   <h2>How to use it</h2>
-  <ol>
-    <li>Check that <i>f</i> is continuous on [<i>a</i>, <i>b</i>]. Polynomials, sin, cos and exp are continuous everywhere, but 1/<i>x</i> and tan(<i>x</i>) are not continuous at points where they are undefined.</li>
+  <ol class="steps">
+    <li>Check that <i>f</i> is <b>continuous</b> on [<i>a</i>, <i>b</i>].<br>Polynomials, sin, cos and exp are continuous everywhere.<br>1/<i>x</i> and tan(<i>x</i>) are <span class="hl2">not</span> continuous where they are undefined.</li>
     <li>Compute <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>).</li>
-    <li>Check that <i>k</i> lies between them.</li>
-    <li>Conclude that some <i>c</i> in [<i>a</i>, <i>b</i>] has <i>f</i>(<i>c</i>) = <i>k</i>.</li>
+    <li>Check that <i>k</i> lies <b>between</b> them.</li>
+    <li>Conclude: some <i>c</i> in [<i>a</i>, <i>b</i>] has <i>f</i>(<i>c</i>) = <i>k</i>.</li>
   </ol>
 
   <h2>Worked example: showing a root exists</h2>
-  <p>Show that <i>x</i>³ − <i>x</i> − 1 = 0 has a solution between 1 and 2. Let <i>f</i>(<i>x</i>) = <i>x</i>³ − <i>x</i> − 1. It is a polynomial, so it is continuous. <i>f</i>(1) = −1 and <i>f</i>(2) = 5, and 0 lies between −1 and 5. By the Intermediate Value Theorem there is a <i>c</i> in [1, 2] with <i>f</i>(<i>c</i>) = 0. The calculator above finds <i>c</i> ≈ 1.3247.</p>
+  <p><b>Show that</b> <i>x</i>³ − <i>x</i> − 1 = 0 has a solution between 1 and 2.</p>
+  <ol class="steps">
+    <li>Let <i>f</i>(<i>x</i>) = <i>x</i>³ − <i>x</i> − 1. It is a polynomial, so it is <b>continuous</b>.</li>
+    <li><i>f</i>(1) = <span class="hl2">−1</span> and <i>f</i>(2) = <span class="ok">5</span>.</li>
+    <li>0 lies between −1 and 5.</li>
+    <li>By the Intermediate Value Theorem there is a <i>c</i> in [1, 2] with <i>f</i>(<i>c</i>) = 0.</li>
+  </ol>
+  <p>The calculator above finds <i>c</i> ≈ <b>1.3247</b>.</p>
 
   <h2>Common mistakes</h2>
-  <ul>
-    <li><b>Forgetting continuity.</b> For <i>f</i>(<i>x</i>) = 1/<i>x</i> on [−1, 1], <i>f</i>(−1) = −1 and <i>f</i>(1) = 1, but <i>f</i>(<i>x</i>) is never 0. The function is not continuous at 0, so the theorem does not apply.</li>
-    <li><b>Reading it backwards.</b> If <i>k</i> is not between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), the theorem says nothing. A solution may still exist, because the graph can go beyond the endpoints and come back.</li>
-    <li><b>Expecting exactly one <i>c</i>.</b> The theorem only promises at least one. The tool lists every solution it finds on the interval.</li>
-    <li><b>Related result.</b> The special case <i>k</i> = 0, where <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>) have opposite signs, is sometimes called Bolzano's theorem. It is the idea behind the bisection method for finding roots.</li>
+  <ul class="lines">
+    <li><b>Forgetting continuity.</b><br>For <i>f</i>(<i>x</i>) = 1/<i>x</i> on [−1, 1]: <i>f</i>(−1) = −1 and <i>f</i>(1) = 1, but <i>f</i> is never 0.<br>It is not continuous at 0, so the theorem does not apply.</li>
+    <li><b>Reading it backwards.</b><br>If <i>k</i> is <u>not</u> between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>), the theorem says nothing. A solution may still exist.</li>
+    <li><b>Expecting exactly one <i>c</i>.</b><br>The theorem promises <b>at least one</b>. The tool lists every solution it finds.</li>
+    <li><b>Related result.</b> With <i>k</i> = 0 and opposite signs at the ends, it is sometimes called <b>Bolzano's theorem</b>. It is the idea behind the bisection method.</li>
   </ul>
-  <p>The continuity check here is numerical, so treat it as a helpful warning rather than a proof. To explore a function on its own, use the <a href="/">graphing calculator</a>, or see the <a href="/polynomial-from-roots.html">polynomial from roots</a> page.</p>
+  <p>The continuity check here is numerical, so treat it as a warning, not a proof.<br>See also <a href="/continuity-and-derivatives.html">Continuity and derivatives</a>, the <a href="/">graphing calculator</a> and <a href="/polynomial-from-roots.html">polynomial from roots</a>.</p>
 </div>
 
 <script>

@@ -1,0 +1,11 @@
+/* shared readability styles */
+:root{--hl:#1d5fd8;--hl2:#c8372d;--ok:#13804a}
+@media (prefers-color-scheme:dark){:root{--hl:#7fb0ff;--hl2:#ff8a80;--ok:#5fd39a}}
+.w b,.w strong{color:var(--hl)}
+.w .hl,.hl{color:var(--hl);font-weight:700}
+.w .hl2,.hl2{color:var(--hl2);font-weight:700}
+.w .ok,.ok{color:var(--ok);font-weight:700}
+.w .sum b{color:inherit}
+.w li{margin:5px 0;line-height:1.7}
+.w p{line-height:1.7}
+.w mark{background:rgba(255,200,0,.28);color:inherit;padding:0 3px;border-radius:3px}

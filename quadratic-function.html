@@ -6,6 +6,7 @@
 <title>Quadratic Function y = ax² + bx + c: Vertex, Roots, Discriminant</title>
 <meta name="description" content="Interactive quadratic function graph. Move the a, b and c sliders to see the parabola, vertex, axis of symmetry, discriminant and roots, and learn how to find each one.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
 <style>
 :root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
 @media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
@@ -44,6 +45,7 @@ details.ex[open] summary{margin-bottom:6px}
 .tip small{display:block;color:var(--sub);font-size:12px}
 .tip[hidden]{display:none}
 details.wp{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}details.wp summary{cursor:pointer;font-weight:700}details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed;font-weight:400}.hl{color:#2f6fed;font-weight:700}
+ul.lines{padding-left:22px}.hl{color:var(--hl);font-weight:700}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -69,12 +71,13 @@ details.wp{border:1px solid var(--line);border-radius:8px;background:var(--panel
 
   </details>
   <details class="ex"><summary>What <i>a</i>, <i>b</i> and <i>c</i> do</summary>
-  <ul>
-    <li><b><i>a</i></b> sets the direction and width. A positive <i>a</i> opens upward, a negative <i>a</i> opens downward, and a larger |<i>a</i>| makes the parabola narrower.</li>
-    <li><b><i>c</i></b> is the y-intercept. The parabola crosses the y-axis at (0, <i>c</i>).</li>
-    <li><b><i>b</i></b> works together with <i>a</i> to move the vertex sideways, because the vertex sits at <i>x</i> = −<i>b</i> / (2<i>a</i>).</li>
+  <ul class="lines">
+    <li><b><i>a</i></b> sets the <span class="hl">direction</span> and <span class="hl">width</span>.<br>
+      <i>a</i> &gt; 0: opens <b>upward</b>. <i>a</i> &lt; 0: opens <b>downward</b>.<br>
+      A larger |<i>a</i>| makes the parabola <b>narrower</b>.</li>
+    <li><b><i>c</i></b> is the <span class="hl">y-intercept</span>.<br>The parabola crosses the y-axis at <b>(0, <i>c</i>)</b>.</li>
+    <li><b><i>b</i></b> works together with <i>a</i> to move the vertex <span class="hl">sideways</span>.<br>The vertex sits at <b><i>x</i> = −<i>b</i> / (2<i>a</i>)</b>.</li>
   </ul>
-
   </details>
   <details class="ex"><summary>How to find the vertex</summary>
   <p>The x-coordinate of the vertex is</p>

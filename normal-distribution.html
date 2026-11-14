@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Normal Distribution, Z-Scores and Standard Deviation Calculator</title>
+<meta name="description" content="Visual normal distribution calculator: z-scores, probabilities, percentiles, the 68-95-99.7 rule, and mean, median and standard deviation of your data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
+</head>
+<body>
+<div class="w"><a href="/precalculus.html">← Precalculus</a> &nbsp;·&nbsp; <a href="/">Graphing Calculator</a></div>
+<h1 class="w">Normal Distribution and Z-Scores</h1>
+<div class="w"><p class="sum"><b>In short:</b> Move μ and σ, shade the area you care about, and see the z-score and probability.</p></div>
+<div class="w">
+<style>
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}select{font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;width:100%}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chips2 button{margin:0;border-radius:14px;padding:4px 10px;font-size:13px;color:#2f6fed;border-style:dashed}
+.big{font-size:22px}textarea{width:100%;font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;min-height:60px}
+table.num td,table.num th{padding:4px 8px;text-align:right;border-bottom:1px solid var(--line)}table.num th{color:var(--sub);font-size:13px}
+</style>
+<div class="w">
+  <div class="row2">
+    <label>Mean μ<input type="text" id="mu" value="100" inputmode="decimal"></label>
+    <label>Standard deviation σ<input type="text" id="sd" value="15" inputmode="decimal"></label>
+  </div>
+  <label>Question<select id="mode"><option value="le">P(X ≤ b)  (below)</option><option value="ge">P(X ≥ a)  (above)</option><option value="bt" selected>P(a ≤ X ≤ b)  (between)</option></select></label>
+  <div class="row2">
+    <label id="la">a<input type="text" id="a" value="85" inputmode="decimal"></label>
+    <label id="lb">b<input type="text" id="b" value="115" inputmode="decimal"></label>
+  </div>
+  <div class="chips2" id="ch"><button type="button" data-k="1">±1σ (68%)</button><button type="button" data-k="2">±2σ (95%)</button><button type="button" data-k="3">±3σ (99.7%)</button></div>
+  <div class="err" id="err"></div>
+</div>
+<div class="stage"><canvas id="cv"></canvas></div>
+<div class="w">
+  <div class="facts" id="out" style="line-height:1.8"></div>
+
+<h2>Find the value for a percentile</h2>
+<div class="row2"><label>Percentile (0 to 100)<input type="text" id="pc" value="90" inputmode="decimal"></label><div id="pcout" style="align-self:end;padding-bottom:8px"></div></div>
+
+<h2>What is a normal distribution?</h2>
+<ul class="lines">
+  <li>A <b>bell-shaped</b>, symmetric curve centered at the <b>mean μ</b>.</li>
+  <li>The <b>standard deviation σ</b> controls the width. Small σ: tall and narrow. Large σ: low and wide.</li>
+  <li>Mean = median = mode, all at the center.</li>
+  <li>The <span class="hl">total area under the curve is 1</span>. <b>Area = probability.</b></li>
+  <li>Heights, test scores and measurement errors are often close to normal.</li>
+</ul>
+<h2>The z-score</h2>
+<div class="key2"><b><i>z</i> = (<i>x</i> − μ) / σ</b> &nbsp; tells you how many standard deviations <i>x</i> is from the mean.</div>
+<ul class="lines">
+  <li><i>z</i> = 0: exactly at the mean.</li>
+  <li><i>z</i> = 2: two standard deviations <span class="ok">above</span> the mean.</li>
+  <li><i>z</i> = −1.5: one and a half standard deviations <span class="hl2">below</span> the mean.</li>
+  <li>The <b>standard normal</b> distribution has μ = 0 and σ = 1. Every normal curve can be converted to it with <i>z</i>.</li>
+  <li>A <b>z-table</b> (or this tool) gives the area to the left of <i>z</i>.</li>
+</ul>
+<h2>The empirical rule (68–95–99.7)</h2>
+<table class="t"><tr><th>Range</th><th>Share of data</th></tr>
+<tr><td>μ ± 1σ</td><td><b>about 68%</b></td></tr><tr><td>μ ± 2σ</td><td><b>about 95%</b></td></tr><tr><td>μ ± 3σ</td><td><b>about 99.7%</b></td></tr></table>
+<p>Press the ±1σ, ±2σ, ±3σ buttons above to see these areas.</p>
+<h2>Handy z-values</h2>
+<table class="t"><tr><th>Confidence</th><th>z*</th></tr><tr><td>90%</td><td><b>1.645</b></td></tr><tr><td>95%</td><td><b>1.96</b></td></tr><tr><td>99%</td><td><b>2.576</b></td></tr></table>
+
+<h2>Mean, median and standard deviation of your data</h2>
+<p>Type numbers separated by spaces or commas.</p>
+<textarea id="data" aria-label="data">4, 8, 6, 5, 3, 7, 9, 5, 6, 10</textarea>
+<div class="facts" id="dout" style="line-height:1.8"></div>
+<canvas id="hist" style="width:100%;height:150px;border:1px solid var(--line);border-radius:8px;margin-top:8px"></canvas>
+<ul class="lines">
+  <li><b>Mean</b> = sum ÷ count.</li>
+  <li><b>Median</b> = middle value when sorted.</li>
+  <li><b>Standard deviation</b> = typical distance from the mean. Population uses ÷ <i>n</i>, a sample uses ÷ (<i>n</i> − 1).</li>
+</ul>
+
+<h2>Practice</h2>
+<ol class="steps">
+  <li>Scores have μ = 70 and σ = 10. Find the z-score of 85.
+    <details class="sol"><summary>Show answer</summary><p><i>z</i> = (85 − 70)/10 = <b>1.5</b>.</p></details></li>
+  <li>Heights have μ = 170 cm and σ = 8 cm. About what share is between 162 and 178 cm?
+    <details class="sol"><summary>Show answer</summary><p>That is μ ± 1σ, so about <b>68%</b>.</p></details></li>
+  <li>IQ has μ = 100 and σ = 15. Find P(X ≥ 130).
+    <details class="sol"><summary>Show answer</summary><p><i>z</i> = 2, so the area above is about <b>2.3%</b>. Check it above.</p></details></li>
+  <li>Which is relatively higher: 82 on a test with μ = 75, σ = 5, or 90 on a test with μ = 80, σ = 8?
+    <details class="sol"><summary>Show answer</summary><p>First: <i>z</i> = 1.4. Second: <i>z</i> = 1.25. The <b>82</b> is relatively higher.</p></details></li>
+</ol>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y}
+const Phi=z=>0.5*(1+erf(z/Math.SQRT2));
+function invPhi(p){let lo=-8,hi=8;for(let i=0;i<80;i++){const m=(lo+hi)/2;if(Phi(m)<p)lo=m;else hi=m}return(lo+hi)/2}
+const num=id=>{const v=parseFloat($(id).value.replace('−','-'));if(!isFinite(v))throw 0;return v};
+const cv=$('cv'),ctx=cv.getContext('2d');let S=null;
+const fp=p=>{const v=p*100;return (v<0.01&&v>0?'<0.01':v.toFixed(v>=99.9||v<0.1?3:2))+'%'};
+function run(){
+  $('err').textContent='';const mode=$('mode').value;
+  $('la').style.display=mode==='le'?'none':'';$('lb').style.display=mode==='ge'?'none':'';
+  try{const mu=num('mu'),sd=num('sd');if(sd<=0)throw 0;
+    let a=mode==='le'?-Infinity:num('a'),b=mode==='ge'?Infinity:num('b');if(a>b)[a,b]=[b,a];
+    const za=(a-mu)/sd,zb=(b-mu)/sd,p=Phi(zb)-Phi(za);
+    let t='';
+    if(isFinite(a))t+='<div>z for a = ('+a+' − '+mu+') / '+sd+' = <b>'+(+za.toFixed(3))+'</b></div>';
+    if(isFinite(b))t+='<div>z for b = ('+b+' − '+mu+') / '+sd+' = <b>'+(+zb.toFixed(3))+'</b></div>';
+    t+='<div class="big">Probability = <b>'+fp(p)+'</b></div>';
+    if(mode==='le')t+='<div>b is at about the <b>'+(Phi(zb)*100).toFixed(1)+'th percentile</b>.</div>';
+    $('out').innerHTML=t;S={mu,sd,a,b};
+  }catch(e){$('err').textContent='Enter numbers. The standard deviation must be positive.';S=null}
+  draw();pcRun();
+}
+function pcRun(){try{const mu=num('mu'),sd=num('sd'),pc=parseFloat($('pc').value);if(!(pc>0&&pc<100))throw 0;const z=invPhi(pc/100);$('pcout').innerHTML='z = <b>'+(+z.toFixed(3))+'</b><br>x = <b>'+(+(mu+z*sd).toFixed(3))+'</b>'}catch(e){$('pcout').textContent=''}}
+function draw(){
+  const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+  const cs=getComputedStyle(document.body);ctx.fillStyle=cs.backgroundColor;ctx.fillRect(0,0,W,H);if(!S)return;
+  const {mu,sd,a,b}=S,x0=mu-4*sd,x1=mu+4*sd,pk=1/(sd*Math.sqrt(2*Math.PI)),X=x=>(x-x0)/(x1-x0)*W,base=H-34,Y=y=>base-y/pk*(H-64);
+  const f=x=>Math.exp(-0.5*((x-mu)/sd)**2)*pk;
+  ctx.fillStyle='rgba(47,111,237,.35)';ctx.beginPath();const lo=Math.max(a,x0),hi=Math.min(b,x1);
+  if(lo<hi){ctx.moveTo(X(lo),base);for(let px=Math.floor(X(lo));px<=X(hi);px++){ctx.lineTo(px,Y(f(x0+px/W*(x1-x0))))}ctx.lineTo(X(hi),Y(f(hi)));ctx.lineTo(X(hi),base);ctx.closePath();ctx.fill()}
+  ctx.strokeStyle='#2f6fed';ctx.lineWidth=2.4;ctx.beginPath();for(let px=0;px<=W;px++){const y=Y(f(x0+px/W*(x1-x0)));px?ctx.lineTo(px,y):ctx.moveTo(px,y)}ctx.stroke();
+  ctx.strokeStyle='#8a99aa';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,base);ctx.lineTo(W,base);ctx.stroke();
+  ctx.fillStyle=getComputedStyle(document.body).color;ctx.font='12px sans-serif';ctx.textAlign='center';
+  for(let k=-3;k<=3;k++){const px=X(mu+k*sd);ctx.beginPath();ctx.moveTo(px,base);ctx.lineTo(px,base+5);ctx.stroke();ctx.fillText(+(mu+k*sd).toFixed(2),px,base+17);ctx.fillStyle='#e0483e';ctx.fillText('z='+k,px,base+30);ctx.fillStyle=getComputedStyle(document.body).color}
+  ctx.setLineDash([4,4]);ctx.strokeStyle='#e0483e';ctx.beginPath();ctx.moveTo(X(mu),Y(pk));ctx.lineTo(X(mu),base);ctx.stroke();ctx.setLineDash([]);
+}
+['mu','sd','a','b','pc'].forEach(i=>$(i).addEventListener('input',run));$('mode').onchange=run;
+$('ch').onclick=e=>{const bt=e.target.closest('button');if(!bt)return;try{const mu=num('mu'),sd=num('sd'),k=+bt.dataset.k;$('mode').value='bt';$('a').value=+(mu-k*sd).toFixed(4);$('b').value=+(mu+k*sd).toFixed(4);run()}catch(x){}};
+function stats(){
+  const v=$('data').value.split(/[\s,;]+/).map(Number).filter(x=>isFinite(x)&&x===x);const raw=$('data').value.split(/[\s,;]+/).filter(Boolean);
+  const n=v.length;if(!n){$('dout').textContent='Enter some numbers.';return}
+  const s=[...v].sort((p,q)=>p-q),sum=v.reduce((p,q)=>p+q,0),m=sum/n,med=n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;
+  const ss=v.reduce((p,q)=>p+(q-m)**2,0),sdp=Math.sqrt(ss/n),sds=n>1?Math.sqrt(ss/(n-1)):NaN;
+  const cnt={};v.forEach(x=>cnt[x]=(cnt[x]||0)+1);const mx=Math.max(...Object.values(cnt)),mode=Object.keys(cnt).filter(k=>cnt[k]===mx);
+  const N=x=>+x.toFixed(4);
+  $('dout').innerHTML='n = <b>'+n+'</b> · mean = <b>'+N(m)+'</b> · median = <b>'+N(med)+'</b> · mode = <b>'+(mx>1?mode.join(', '):'none')+'</b><br>range = <b>'+N(s[n-1]-s[0])+'</b> · σ (population) = <b>'+N(sdp)+'</b> · s (sample) = <b>'+(isNaN(sds)?'–':N(sds))+'</b>';
+  const c=$('hist'),d=devicePixelRatio||1,W=c.clientWidth,H=c.clientHeight;c.width=W*d;c.height=H*d;const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);
+  const cs=getComputedStyle(document.body);g.fillStyle=cs.backgroundColor;g.fillRect(0,0,W,H);
+  const lo=s[0],hi=s[n-1],bins=Math.min(10,Math.max(3,Math.ceil(Math.sqrt(n)))),w=(hi-lo)/bins||1,h=new Array(bins).fill(0);v.forEach(x=>h[Math.min(bins-1,Math.floor((x-lo)/w))]++);
+  const bw=(W-20)/bins,mh=Math.max(...h);g.fillStyle='#2f6fed';h.forEach((c2,i)=>{const bh=c2/mh*(H-34);g.fillRect(10+i*bw+1,H-22-bh,bw-2,bh)});
+  g.fillStyle=cs.color;g.font='11px sans-serif';g.textAlign='center';h.forEach((c2,i)=>{g.fillText(c2,10+i*bw+bw/2,H-26-c2/mh*(H-34)-2);g.fillText(+(lo+i*w).toFixed(1),10+i*bw,H-8)});
+  const mpx=10+(m-lo)/(w*bins)*(W-20);g.strokeStyle='#e0483e';g.setLineDash([4,3]);g.beginPath();g.moveTo(mpx,4);g.lineTo(mpx,H-22);g.stroke();
+}
+$('data').addEventListener('input',stats);addEventListener('resize',()=>{draw();stats()});new ResizeObserver(draw).observe(cv);run();stats();
+</script>
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Limit Calculator: lim x→a, One-Sided Limits and Limits at Infinity</title>
+<meta name="description" content="Find limits numerically: left and right limits, lim x→0+, infinite limits and limits at infinity, with a graph, a table of values and practice problems.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
+</head>
+<body>
+<div class="w"><a href="/precalculus.html">← Precalculus</a> &nbsp;·&nbsp; <a href="/continuity-and-derivatives.html">Continuity and derivatives</a></div>
+<h1 class="w">Limit Calculator</h1>
+<div class="w"><p class="sum"><b>In short:</b> Type a function and the value x approaches. See the left limit, the right limit and the table of values.</p></div>
+<div class="w">
+<style>
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}select{font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;width:100%}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chips2 button{margin:0;border-radius:14px;padding:4px 10px;font-size:13px;color:#2f6fed;border-style:dashed}
+.res2{font-size:18px;line-height:1.7}.res2 .big{font-size:22px}
+table.num td,table.num th{padding:4px 8px;text-align:right;border-bottom:1px solid var(--line)}table.num th{color:var(--sub);font-size:13px}
+</style>
+
+<div class="w">
+  <label><i>f</i>(<i>x</i>) =<input type="text" id="fx" value="sin(x)/x" autocomplete="off" spellcheck="false" autocapitalize="off"></label>
+  <div class="row2">
+    <label>x approaches<input type="text" id="av" value="0" autocomplete="off" aria-label="value x approaches"></label>
+    <label>from<select id="side"><option value="both">both sides</option><option value="right">the right (a⁺)</option><option value="left">the left (a⁻)</option></select></label>
+  </div>
+  <p style="font-size:14px;color:var(--sub);margin:4px 0">Write a number, or <b>inf</b> / <b>-inf</b> for infinity.</p>
+  <div class="chips2" id="ch"></div>
+  <div class="err" id="err"></div>
+</div>
+<div class="stage"><canvas id="cv"></canvas></div>
+<div class="w">
+  <div class="facts res2" id="out"></div>
+  <div id="tbl"></div>
+  <p style="font-size:14px;color:var(--sub)">The tool tries values closer and closer to <i>a</i>, so the answer is a numerical estimate. Check it with algebra.</p>
+
+<h2>What is a limit?</h2>
+<ul class="lines">
+  <li>A <b>limit</b> asks: <span class="hl">what value does <i>f</i>(<i>x</i>) get close to</span> as <i>x</i> gets close to <i>a</i>?</li>
+  <li>It does <b>not</b> ask what happens <i>at</i> <i>x</i> = <i>a</i>. The function does not even need to be defined there.</li>
+  <li>Written: lim<sub><i>x</i>→<i>a</i></sub> <i>f</i>(<i>x</i>) = <i>L</i></li>
+</ul>
+<h2>One-sided limits</h2>
+<ul class="lines">
+  <li><b><i>x</i> → <i>a</i>⁺</b> : approach from the <b>right</b> (values bigger than <i>a</i>).</li>
+  <li><b><i>x</i> → <i>a</i>⁻</b> : approach from the <b>left</b> (values smaller than <i>a</i>).</li>
+  <li>The two-sided limit exists only if <span class="hl">left = right</span>.</li>
+  <li>Example: lim<sub><i>x</i>→0⁺</sub> 1/<i>x</i> = <b>+∞</b> but lim<sub><i>x</i>→0⁻</sub> 1/<i>x</i> = <b>−∞</b>. So lim<sub><i>x</i>→0</sub> 1/<i>x</i> does not exist.</li>
+</ul>
+<h2>Four things that can happen</h2>
+<table class="t"><tr><th>Case</th><th>Example</th></tr>
+<tr><td><b>A number <i>L</i></b></td><td>lim<sub><i>x</i>→2</sub> <i>x</i>² = 4</td></tr>
+<tr><td><b>Hole</b>: limit exists, <i>f</i>(<i>a</i>) is missing</td><td>(<i>x</i>² − 1)/(<i>x</i> − 1) at 1 gives 2</td></tr>
+<tr><td><b>Jump</b>: left ≠ right</td><td>floor(<i>x</i>) at 2: left 1, right 2</td></tr>
+<tr><td><b>Infinite</b>: goes to ±∞</td><td>1/<i>x</i>² at 0 gives +∞</td></tr></table>
+<h2>How to find a limit by hand</h2>
+<ol class="steps">
+  <li><b>Plug in</b> <i>a</i>. If you get a number, that is the limit (for continuous functions).</li>
+  <li>If you get <b>0/0</b>: factor and cancel, or multiply by the conjugate.</li>
+  <li>If you get <b>number/0</b>: check the sign on each side. The limit is ±∞ or does not exist.</li>
+  <li>For <i>x</i> → ∞: divide by the highest power of <i>x</i>.</li>
+</ol>
+<div class="key2"><b>Example:</b> lim<sub><i>x</i>→1</sub> (<i>x</i>² − 1)/(<i>x</i> − 1) = lim (<i>x</i> − 1)(<i>x</i> + 1)/(<i>x</i> − 1) = lim (<i>x</i> + 1) = <b>2</b>.</div>
+<p>Limits connect to <a href="/continuity-and-derivatives.html">continuity and derivatives</a>: <i>f</i> is continuous at <i>a</i> when the limit equals <i>f</i>(<i>a</i>).</p>
+<h2>Practice</h2>
+<ol class="steps">
+  <li>lim<sub><i>x</i>→3</sub> (2<i>x</i> + 1)<details class="sol"><summary>Show answer</summary><p>Plug in: <b>7</b>.</p></details></li>
+  <li>lim<sub><i>x</i>→0⁺</sub> 1/<i>x</i><details class="sol"><summary>Show answer</summary><p>Tiny positive numbers give huge positive values: <b>+∞</b>. Try it above.</p></details></li>
+  <li>lim<sub><i>x</i>→∞</sub> (3<i>x</i> + 1)/(<i>x</i> + 2)<details class="sol"><summary>Show answer</summary><p>Divide by <i>x</i>: (3 + 1/<i>x</i>)/(1 + 2/<i>x</i>) → <b>3</b>.</p></details></li>
+  <li>lim<sub><i>x</i>→2⁻</sub> floor(<i>x</i>)<details class="sol"><summary>Show answer</summary><p>Just below 2 the floor is 1: <b>1</b>.</p></details></li>
+</ol>
+</div>
+<script>
+const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,sqrt:Math.sqrt,abs:Math.abs,ln:Math.log,log:Math.log10,exp:Math.exp,cbrt:Math.cbrt,floor:Math.floor,ceil:Math.ceil};
+const CONST={pi:Math.PI,e:Math.E};
+const NAMES=['asin','acos','atan','sqrt','cbrt','floor','ceil','sin','cos','tan','abs','exp','log','ln','pi','x','y','e'];
+
+function clean(s){return s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/√/g,'sqrt').replace(/−/g,'-').replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/^y=/,'')}
+
+function tokenize(s){
+  const t=[];let i=0;
+  while(i<s.length){
+    const r=s.slice(i);let m;
+    if(m=/^(\d+\.?\d*|\.\d+)/.exec(r)){t.push({k:'n',v:+m[1]});i+=m[1].length;continue}
+    const nm=NAMES.find(n=>r.startsWith(n));
+    if(nm){t.push({k:FN[nm]?'f':'i',v:nm});i+=nm.length;continue}
+    if('+-*/^()'.includes(r[0])){t.push({k:'o',v:r[0]});i++;continue}
+    throw new Error('bad');
+  }
+  return t;
+}
+
+function parse(s){
+  const T=tokenize(s);
+  let p=0;
+  const peek=()=>T[p];
+  const isO=v=>peek()&&peek().k==='o'&&peek().v===v;
+  const need=v=>{if(!isO(v))throw new Error('bad');p++};
+  function expr(){
+    let a=term();
+    while(isO('+')||isO('-')){
+      const o=T[p++].v,b=term(),l=a;
+      a=o==='+'?(x,y)=>l(x,y)+b(x,y):(x,y)=>l(x,y)-b(x,y);
+    }
+    return a;
+  }
+  function term(){
+    let a=unary();
+    while(peek()){
+      const q=peek();
+      if(isO('*')||isO('/')){
+        p++;const b=unary(),l=a;
+        a=q.v==='*'?(x,y)=>l(x,y)*b(x,y):(x,y)=>l(x,y)/b(x,y);
+      }else if(q.k==='n'||q.k==='i'||q.k==='f'||isO('(')){
+        const b=power(),l=a;a=(x,y)=>l(x,y)*b(x,y);
+      }else break;
+    }
+    return a;
+  }
+  function unary(){
+    if(isO('-')){p++;const a=unary();return (x,y)=>-a(x,y)}
+    if(isO('+')){p++;return unary()}
+    return power();
+  }
+  function power(){
+    const a=atom();
+    if(isO('^')){p++;const b=unary();return (x,y)=>Math.pow(a(x,y),b(x,y))}
+    return a;
+  }
+  function atom(){
+    const q=peek();
+    if(!q)throw new Error('bad');
+    if(q.k==='n'){p++;return()=>q.v}
+    if(q.k==='i'){p++;return q.v==='x'?(x,y)=>x:q.v==='y'?(x,y)=>y:()=>CONST[q.v]}
+    if(q.k==='f'){
+      p++;const fn=FN[q.v];let a;
+      if(isO('(')){p++;a=expr();need(')')}else a=power();
+      return (x,y)=>fn(a(x,y));
+    }
+    if(isO('(')){p++;const a=expr();need(')');return a}
+    throw new Error('bad');
+  }
+  const f=expr();
+  if(p<T.length)throw new Error('bad');
+  return f;
+}
+
+
+
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+const EX=[['sin(x)/x','0','both'],['1/x','0','right'],['1/x','0','left'],['(x^2-1)/(x-1)','1','both'],['abs(x)/x','0','both'],['floor(x)','2','both'],['1/x^2','0','both'],['(3x+1)/(x+2)','inf','both'],['x*sin(1/x)','0','both'],['sin(1/x)','0','both']];
+$('ch').innerHTML=EX.map((e,i)=>'<button type="button" data-i="'+i+'">'+e[0]+' → '+e[1]+(e[2]==='right'?'⁺':e[2]==='left'?'⁻':'')+'</button>').join('');
+$('ch').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=EX[+b.dataset.i];$('fx').value=x[0];$('av').value=x[1];$('side').value=x[2];run()};
+const fmt=v=>!isFinite(v)?(v>0?'+∞':v<0?'−∞':'undefined'):Math.abs(v)<1e-12?'0':String(+(+v).toPrecision(7)).replace('-','\u2212');
+function seq(f,a,dir){const out=[];for(let k=1;k<=8;k++){const h=Math.pow(10,-k);const x=a===Infinity?Math.pow(10,k):a===-Infinity?-Math.pow(10,k):a+dir*h;out.push([x,f(x,0)])}return out}
+function judge(s){
+  const v=s.map(p=>p[1]);if(v.some(y=>!isFinite(y)&&!isNaN(y))){return {k:'inf',s:Math.sign(v.find(y=>!isFinite(y)))}}
+  if(v.slice(-3).some(isNaN))return {k:'undef'};
+  const t=v.slice(-3),big=Math.abs(t[2])>1e5&&Math.abs(t[2])>Math.abs(t[0]);
+  if(big&&Math.sign(t[0])===Math.sign(t[2])&&Math.sign(t[1])===Math.sign(t[2]))return {k:'inf',s:Math.sign(t[2])};
+  const L=v[5],tol=1e-3*(1+Math.abs(L));
+  if(Math.abs(v[4]-v[5])<tol&&Math.abs(v[5]-v[6])<tol&&Math.abs(v[6]-v[7])<tol){let r=v[7];if(Math.abs(r-Math.round(r))<1e-5)r=Math.round(r);return {k:'num',v:r}}
+  return {k:'dne'};
+}
+const show=j=>j.k==='num'?fmt(j.v):j.k==='inf'?(j.s>0?'+∞':'−∞'):j.k==='undef'?'undefined nearby':'does not exist (keeps changing)';
+let S=null;
+function readA(){const t=$('av').value.trim().toLowerCase().replace('−','-');if(t==='inf'||t==='+inf'||t==='infinity'||t==='∞')return Infinity;if(t==='-inf'||t==='-infinity'||t==='-∞')return -Infinity;const f=parse(clean(t));const v=f(0,0);if(!isFinite(v))throw 0;return v}
+function run(){
+  $('err').textContent='';
+  try{const f=parse(clean($('fx').value));const a=readA();const side=$('side').value;
+    let L,R,txt,tbl='';
+    if(!isFinite(a)){const j=judge(seq(f,a,0));L=R=j;
+      txt='<div class="big">lim<sub>x→'+(a>0?'+∞':'−∞')+'</sub> f(x) = <b>'+show(j)+'</b></div>';
+      tbl='<table class="num"><tr><th>x</th><th>f(x)</th></tr>'+seq(f,a,0).slice(0,8).map(p=>'<tr><td>'+fmt(p[0])+'</td><td>'+fmt(p[1])+'</td></tr>').join('')+'</table>'}
+    else{
+      const sr=seq(f,a,1),sl=seq(f,a,-1);R=judge(sr);L=judge(sl);
+      const eq=(L.k==='num'&&R.k==='num'&&Math.abs(L.v-R.v)<1e-4*(1+Math.abs(L.v)))||(L.k==='inf'&&R.k==='inf'&&L.s===R.s);
+      const fa=f(a,0);
+      txt='<div>Left: lim<sub>x→a⁻</sub> = <b>'+show(L)+'</b></div><div>Right: lim<sub>x→a⁺</sub> = <b>'+show(R)+'</b></div>';
+      if(side==='both')txt+='<div class="big">Two-sided limit: <b>'+(eq?show(L):'does not exist')+'</b></div>'+(eq?'':'<div>The left and right values are different, or one is infinite, so the limit does not exist.</div>');
+      else txt='<div class="big">lim<sub>x→a'+(side==='right'?'⁺':'⁻')+'</sub> f(x) = <b>'+show(side==='right'?R:L)+'</b></div>'+txt;
+      txt+='<div>f(a) = <b>'+(isFinite(fa)?fmt(fa):'undefined')+'</b>'+(eq&&L.k==='num'?(!isFinite(fa)?' (undefined, so there is a <b>hole</b> at x = a)':Math.abs(fa-L.v)<1e-6?' (equals the limit, so <b>continuous</b> here)':' (different from the limit: the point is moved)'):'')+'</div>';
+      tbl='<table class="num"><tr><th>x (left)</th><th>f(x)</th><th>x (right)</th><th>f(x)</th></tr>'+[0,1,2,3,4,5].map(i=>'<tr><td>'+fmt(sl[i][0])+'</td><td>'+fmt(sl[i][1])+'</td><td>'+fmt(sr[i][0])+'</td><td>'+fmt(sr[i][1])+'</td></tr>').join('')+'</table>'}
+    $('out').innerHTML=txt;$('tbl').innerHTML=tbl;S={f,a,L,R};draw();
+  }catch(e){$('err').textContent='Check your function and the value x approaches.';S=null;draw()}
+}
+function draw(){
+  const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+  const cs=getComputedStyle(document.body);ctx.fillStyle=cs.backgroundColor;ctx.fillRect(0,0,W,H);if(!S)return;
+  const {f,a}=S,fin=isFinite(a);const x0=fin?a-3:(a>0?-2:-20),x1=fin?a+3:(a>0?20:2);
+  const ys=[];for(let i=0;i<=200;i++){const y=f(x0+(x1-x0)*i/200,0);if(isFinite(y))ys.push(y)}ys.sort((p,q)=>p-q);
+  let y0=ys.length?ys[Math.floor(ys.length*.03)]:-5,y1=ys.length?ys[Math.floor(ys.length*.97)]:5;if(y1-y0<1){const m=(y0+y1)/2;y0=m-1;y1=m+1}const pad=(y1-y0)*.15;y0-=pad;y1+=pad;
+  const X=x=>(x-x0)/(x1-x0)*W,Y=y=>H-(y-y0)/(y1-y0)*H;
+  ctx.strokeStyle='#8a99aa';ctx.lineWidth=1;ctx.beginPath();if(x0<0&&x1>0){ctx.moveTo(X(0),0);ctx.lineTo(X(0),H)}if(y0<0&&y1>0){ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0))}ctx.stroke();
+  if(fin){ctx.setLineDash([5,4]);ctx.strokeStyle='#e0483e';ctx.beginPath();ctx.moveTo(X(a),0);ctx.lineTo(X(a),H);ctx.stroke();ctx.setLineDash([])}
+  ctx.strokeStyle='#2f6fed';ctx.lineWidth=2.3;ctx.beginPath();let pen=false,pv=0;
+  for(let px=0;px<=W;px++){const y=f(x0+px/W*(x1-x0),0);if(!isFinite(y)){pen=false;continue}const py=Y(y);if(Math.abs(py)>1e5){pen=false;continue}
+    if(pen&&Math.abs(py-pv)>H*.6)pen=false;if(!pen){ctx.moveTo(px,py);pen=true}else ctx.lineTo(px,py);pv=py}
+  ctx.stroke();
+  if(fin){[S.L,S.R].forEach((j,i)=>{if(j.k==='num'){const px=X(a),py=Y(j.v);ctx.beginPath();ctx.arc(px,py,5,0,7);ctx.fillStyle=cs.backgroundColor;ctx.fill();ctx.strokeStyle='#e0483e';ctx.lineWidth=2;ctx.stroke()}})
+    const fa=f(a,0);if(isFinite(fa)){ctx.beginPath();ctx.arc(X(a),Y(fa),4.5,0,7);ctx.fillStyle='#e0483e';ctx.fill()}}
+}
+['fx','av'].forEach(id=>$(id).addEventListener('input',run));$('side').onchange=run;addEventListener('resize',draw);new ResizeObserver(draw).observe(cv);run();
+</script>
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+</body>
+</html>

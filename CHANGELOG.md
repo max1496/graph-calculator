@@ -8,7 +8,18 @@ Newest first. Dates are in Korean time.
 - Hover (or tap on a phone) the points on the graph to see the vertex, roots and y-intercept with coordinates.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
-### Calculator (latest)
+### New pages (latest)
+- All topics (curriculum.html): pre-algebra to precalculus in one list, planned pages marked.
+- Math basics: slope and y-intercept with an interactive graph, coordinate plane, integers, order of operations, percents, ratios, equations.
+- Limit calculator: left, right and two-sided limits, infinite limits, limits at infinity, table of values and graph.
+- Normal distribution and z-scores: shaded bell curve, probability, percentile, 68-95-99.7 rule, and mean, median, standard deviation of your own data.
+- Practice and mistake notebook: 41 problems (word problems included) plus endless fresh problems. Wrong answers are saved in the browser with notes; retry, master, copy or print.
+- site.css: bold terms are now colored on study pages.
+- Intermediate Value Theorem, Quadratic and Linear pages rewritten for readability.
+- "Coming next" renamed to "Pages planned for later".
+- sitemap.xml now lists 28 pages.
+
+### Calculator
 - The starting graph is random each visit (x, sqrt(x), x^2, ...). Share links still open exactly what was shared.
 - Today's study card: a daily topic with Try it, Read the lesson and Another topic buttons.
 - Floor and other jump graphs: the vertical connector is gone. Filled and open dots now mark each jump. Floor is labeled "Floor function (Gauss bracket)".

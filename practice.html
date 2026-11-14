@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Practice Problems with Answers and a Mistake Notebook</title>
+<meta name="description" content="Practice problems from pre-algebra to precalculus, including word problems, with step-by-step solutions. Wrong answers are saved in a mistake notebook you can retry and print.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<link rel="stylesheet" href="/site.css">
+<style>
+:root{--bg:#ffffff;--ink:#1b2733;--sub:#6b7a8a;--line:#dfe6ee;--panel:#f1f5f9;--grid:#e8edf3;--axis:#7b8ca0}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--ink:#e6edf3;--sub:#8b9aab;--line:#26323e;--panel:#18212b;--grid:#1e2833;--axis:#5d6f82}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Pretendard",-apple-system,"Segoe UI","Noto Sans KR",sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 48px;line-height:1.6}
+a{color:#2f6fed}
+.w{width:min(100%,640px)}
+h1{font-size:22px;margin:4px 0 0}
+h2{font-size:17px;margin:22px 0 6px}
+.eq{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;text-align:center}
+.stage{width:min(100%,560px);aspect-ratio:4/3;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+label{display:block;font-size:15px;margin-top:8px}
+output{font-weight:700;margin-left:6px}
+input[type=range]{width:100%}
+.facts{background:var(--panel);border-radius:8px;padding:10px 14px;font-size:15px;margin-top:10px}
+.pts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pts label{margin:0}
+input[type=number]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+button{margin-top:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:8px 14px;font-size:14px;cursor:pointer}
+.res{margin-top:10px;font-size:16px}
+ul,ol{padding-left:20px;margin:6px 0}
+p{margin:6px 0}
+input:focus-visible,button:focus-visible{outline:2px solid #2f6fed;outline-offset:1px}
+.ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
+.ft a{color:var(--sub);margin:0;white-space:nowrap}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px}
+.err{color:#e0483e;font-size:14px;margin-top:6px}
+sup{font-size:.65em;line-height:0}
+table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
+.sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+
+.hl{color:#2f6fed;font-weight:700}.hl2{color:#e0483e;font-weight:700}.ok{color:#1a9d55;font-weight:700}
+ul.lines,ol.steps{padding-left:22px;line-height:1.75}ul.lines li,ol.steps li{margin:4px 0}
+details.ex{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:8px 14px;margin:8px 0}
+details.ex summary{cursor:pointer;font-weight:700;font-size:16px}
+details.sol{margin:6px 0}details.sol summary{cursor:pointer;color:#2f6fed}
+.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
+.lessons{display:grid;gap:8px}.lesson{display:block;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink)}.lesson h3{margin:0 0 2px;font-size:16px;color:#2f6fed}.lesson span{font-size:14px;color:var(--sub)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini canvas{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:6px}.mini figcaption{font-size:13px;color:var(--sub);text-align:center}.mini figure{margin:0}
+table.t th{text-align:left;font-size:14px;color:var(--sub);padding:6px;border-bottom:1px solid var(--line)}table.t td:first-child{white-space:normal;color:var(--ink)}
+h3{font-size:16px;margin:14px 0 4px}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/toc.js"></script>
+</head>
+<body>
+<div class="w"><a href="/curriculum.html">← All topics</a> &nbsp;·&nbsp; <a href="/">Graphing Calculator</a></div>
+<h1 class="w">Practice and Mistake Notebook</h1>
+<div class="w"><p class="sum"><b>In short:</b> Solve problems, check your answer, and every miss goes into your own notebook.</p></div>
+<div class="w">
+<style>
+.tabs{display:flex;gap:6px;margin:8px 0}.tabs button{margin:0;flex:1;padding:10px;font-size:15px}.tabs button.on{background:#2f6fed;color:#fff;border-color:#2f6fed}
+.row3{display:grid;grid-template-columns:1fr 1fr;gap:8px}select{font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;width:100%}
+.card2{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:12px 14px;margin:10px 0}.tag{display:inline-block;font-size:12px;border-radius:10px;padding:1px 8px;background:var(--bg);border:1px solid var(--line);color:var(--sub);margin-right:4px}
+.q{font-size:18px;line-height:1.7;margin:8px 0}.fb{margin-top:8px;line-height:1.7}.fb.good{color:var(--ok)}.fb.bad{color:var(--hl2)}
+.acts button{margin:6px 6px 0 0}.mast{opacity:.55}.mast .q{text-decoration:line-through}
+textarea.note{width:100%;font:inherit;font-size:15px;padding:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;min-height:46px}
+.sc{color:var(--sub);font-size:14px}@media print{.tabs,.acts,#pv,.noprint,.ft,#tocb{display:none!important}}
+</style>
+<div class="w">
+<div class="tabs"><button type="button" id="tp" class="on">Practice</button><button type="button" id="tn">Mistake notebook <span id="nc"></span></button></div>
+
+<div id="pv">
+  <div class="row3">
+    <label>Topic<select id="ft"><option value="">All topics</option></select></label>
+    <label>Kind<select id="fk"><option value="">All problems</option><option value="word">Word problems</option><option value="skill">Skills</option></select></label>
+  </div>
+  <div class="sc" id="sc"></div>
+  <div class="card2" id="card"></div>
+  <p class="sc">There are <b id="tot"></b> ready-made problems, plus endless new ones from the “fresh problem” button. A wrong answer goes into your notebook automatically.</p>
+</div>
+
+<div id="nv" hidden>
+  <p class="sc">Problems you got wrong are saved <b>in this browser only</b>. Write what you learned, retry them later, and mark them mastered.</p>
+  <div class="acts noprint"><button type="button" id="ex">Copy as text</button><button type="button" id="pr">Print</button><button type="button" id="sh">Show mastered</button></div>
+  <div id="nl"></div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+/* ---------- answer helpers ---------- */
+const NUM=s=>{s=String(s).trim().toLowerCase().replace(/[−–]/g,'-').replace(/^[a-z]\s*=\s*/,'').replace(/[$%°]/g,'');let m=/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/.exec(s);if(m)return +m[1]/+m[2];return /^-?\d*\.?\d+$/.test(s)?+s:NaN};
+function isRight(p,t){
+  t=String(t).trim();if(!t)return false;
+  if(typeof p.a==='number'){const v=NUM(t);return isFinite(v)&&Math.abs(v-p.a)<=Math.max(0.01,Math.abs(p.a)*0.002)}
+  if(Array.isArray(p.a)&&typeof p.a[0]==='number'){const v=t.toLowerCase().replace(/[−–]/g,'-').split(/[\s,;]+|and/).filter(Boolean).map(NUM);if(v.length!==p.a.length||v.some(x=>!isFinite(x)))return false;const a=[...v].sort((x,y)=>x-y),b=[...p.a].sort((x,y)=>x-y);return a.every((x,i)=>Math.abs(x-b[i])<0.01)}
+  const n=t.toLowerCase().replace(/\s+/g,'');return p.a.some(x=>x===n);
+}
+const showA=p=>typeof p.a==='number'?String(p.a):Array.isArray(p.a)&&typeof p.a[0]==='number'?p.a.join(' and '):p.a[0];
+/* ---------- ready-made bank: [topic, kind, question, answer, solution] ---------- */
+const BANK=[
+['Pre-algebra','skill','Solve 3<i>x</i> + 5 = 20.',5,'3<i>x</i> = 15, so <i>x</i> = <b>5</b>.'],
+['Pre-algebra','skill','What is 25% of 80?',20,'0.25 × 80 = <b>20</b>.'],
+['Pre-algebra','skill','Evaluate 4 + 3 × (8 − 2)² ÷ 6.',22,'(8 − 2)² = 36. 3 × 36 ÷ 6 = 18. 4 + 18 = <b>22</b>.'],
+['Pre-algebra','word','A recipe uses 2 cups of flour for 3 servings. How many cups for 12 servings?',8,'2/3 = <i>x</i>/12, so 3<i>x</i> = 24 and <i>x</i> = <b>8</b> cups.'],
+['Pre-algebra','word','Sam buys 4 notebooks at $2.50 each and a pen for $1.20. He pays with a $20 bill. How many dollars of change?',8.8,'4 × 2.50 = 10. 10 + 1.20 = 11.20. 20 − 11.20 = <b>8.80</b>.'],
+['Pre-algebra','skill','Evaluate −7 + 12 − (−3).',8,'−7 + 12 = 5. 5 − (−3) = 5 + 3 = <b>8</b>.'],
+['Pre-algebra','word','A shirt costs $40 and is on sale for 15% off. What is the sale price in dollars?',34,'15% of 40 = 6. 40 − 6 = <b>34</b>.'],
+['Linear','skill','Find the slope of the line through (1, 2) and (4, 11).',3,'(11 − 2)/(4 − 1) = 9/3 = <b>3</b>.'],
+['Linear','skill','What is the y-intercept of <i>y</i> = 2<i>x</i> − 7?',-7,'The constant term: <b>−7</b>.'],
+['Linear','word','A taxi charges $3 to start plus $2.50 per mile. How much is a 14-mile ride, in dollars?',38,'<i>C</i> = 2.5(14) + 3 = 35 + 3 = <b>38</b>.'],
+['Linear','skill','A line has slope −2 and passes through (0, 4). Find <i>y</i> when <i>x</i> = 5.',-6,'<i>y</i> = −2(5) + 4 = <b>−6</b>.'],
+['Linear','word','Plan A costs $30 plus $0.05 per minute. Plan B costs $20 plus $0.10 per minute. After how many minutes do they cost the same?',200,'30 + 0.05<i>m</i> = 20 + 0.10<i>m</i> gives 10 = 0.05<i>m</i>, so <i>m</i> = <b>200</b>.'],
+['Linear','word','A tank holds 50 liters and loses 2 liters every minute. In how many minutes is it empty?',25,'0 = 50 − 2<i>t</i>, so <i>t</i> = <b>25</b>.'],
+['Linear','skill','Solve the system <i>x</i> + <i>y</i> = 10 and <i>x</i> − <i>y</i> = 2. What is <i>x</i>?',6,'Add the equations: 2<i>x</i> = 12, so <i>x</i> = <b>6</b> (and <i>y</i> = 4).'],
+['Quadratic','skill','Find the roots of <i>x</i>² − 5<i>x</i> + 6 = 0. (Write both, like 1, 4)',[2,3],'(<i>x</i> − 2)(<i>x</i> − 3) = 0, so <b>2 and 3</b>.'],
+['Quadratic','skill','Find the x-coordinate of the vertex of <i>y</i> = <i>x</i>² − 6<i>x</i> + 5.',3,'<i>x</i> = −<i>b</i>/(2<i>a</i>) = 6/2 = <b>3</b>.'],
+['Quadratic','skill','Find the discriminant of <i>x</i>² + 2<i>x</i> + 5.',-16,'<i>b</i>² − 4<i>ac</i> = 4 − 20 = <b>−16</b>, so no real roots.'],
+['Quadratic','word','A ball is thrown so that its height is <i>h</i>(<i>t</i>) = −16<i>t</i>² + 64<i>t</i> + 5 feet. What is the maximum height in feet?',69,'Vertex at <i>t</i> = 2. <i>h</i>(2) = −64 + 128 + 5 = <b>69</b>.'],
+['Quadratic','word','A rectangle has a perimeter of 40 m. What is the largest possible area in m²?',100,'Area = <i>x</i>(20 − <i>x</i>), largest at <i>x</i> = 10: <b>100</b>.'],
+['Quadratic','word','A shop sells (200 − 5<i>p</i>) items at price <i>p</i> dollars. Which price in dollars gives the most revenue?',20,'<i>R</i> = −5<i>p</i>² + 200<i>p</i>, vertex at <i>p</i> = 200/10 = <b>20</b>.'],
+['Quadratic','skill','If <i>f</i>(<i>x</i>) = <i>x</i>² − 3, find <i>f</i>(−2).',1,'4 − 3 = <b>1</b>.'],
+['Functions','skill','If <i>f</i>(<i>x</i>) = 2<i>x</i> + 1, find <i>f</i>(3).',7,'2(3) + 1 = <b>7</b>.'],
+['Functions','skill','<i>f</i>(<i>x</i>) = 2<i>x</i> + 3. Find <i>f</i>⁻¹(9).',3,'Solve 2<i>x</i> + 3 = 9: <i>x</i> = <b>3</b>.'],
+['Functions','skill','Find ⌊−1.5⌋ (the floor).',-2,'Round down: <b>−2</b>.'],
+['Functions','skill','What is the smallest <i>x</i> in the domain of √(<i>x</i> − 4)?',4,'<i>x</i> − 4 ≥ 0, so <i>x</i> ≥ <b>4</b>.'],
+['Functions','skill','Is <i>x</i>² + <i>y</i>² = 9 a function of <i>x</i>? (yes or no)',['no'],'No. It fails the vertical line test. (0, 3) and (0, −3) share <i>x</i> = 0.'],
+['Polynomials','skill','What is the maximum number of real roots of a degree 5 polynomial?',5,'At most the degree: <b>5</b>.'],
+['Polynomials','skill','What is the maximum number of turning points of a degree 6 polynomial?',5,'<i>n</i> − 1 = <b>5</b>.'],
+['Polynomials','skill','Find the remainder when <i>x</i>² + 3<i>x</i> + 1 is divided by <i>x</i> − 2.',11,'Remainder theorem: <i>f</i>(2) = 4 + 6 + 1 = <b>11</b>.'],
+['Trigonometry','skill','What is sin 30°?',0.5,'A special angle: <b>1/2</b>.'],
+['Trigonometry','skill','What is tan 45°?',1,'<b>1</b>.'],
+['Trigonometry','skill','What is cos 60°?',0.5,'<b>1/2</b>.'],
+['Limits','skill','Find lim<sub><i>x</i>→3</sub> (2<i>x</i> + 1).',7,'Plug in: <b>7</b>.'],
+['Limits','skill','Find lim<sub><i>x</i>→1</sub> (<i>x</i>² − 1)/(<i>x</i> − 1).',2,'Factor and cancel: <i>x</i> + 1 → <b>2</b>.'],
+['Limits','skill','Find lim<sub><i>x</i>→∞</sub> (3<i>x</i> + 1)/(<i>x</i> + 2).',3,'Divide by <i>x</i>: <b>3</b>.'],
+['Limits','skill','Find lim<sub><i>x</i>→0⁺</sub> 1/<i>x</i>. (a number, or inf)',['inf','infinity','∞','+inf','+∞','+infinity'],'Tiny positive numbers give huge positive values: <b>+∞</b>.'],
+['Statistics','skill','Find the mean of 4, 8, 6, 5, 7.',6,'Sum 30 ÷ 5 = <b>6</b>.'],
+['Statistics','skill','Find the median of 3, 9, 1, 7, 5.',5,'Sorted: 1, 3, 5, 7, 9. The middle is <b>5</b>.'],
+['Statistics','skill','Test scores have μ = 70 and σ = 10. Find the z-score of 85.',1.5,'(85 − 70)/10 = <b>1.5</b>.'],
+['Statistics','skill','About what percent of normal data lies within 1 standard deviation of the mean?',68,'The empirical rule: about <b>68%</b>.'],
+['Statistics','word','Test A: 82 with μ = 75, σ = 5. Test B: 90 with μ = 80, σ = 8. What is the z-score of the higher z (Test A)?',1.4,'Test A: (82 − 75)/5 = <b>1.4</b>. Test B: 1.25. A is relatively higher.']
+].map((r,i)=>({id:'b'+i,t:r[0],k:r[1],q:r[2],a:r[3],s:r[4]}));
+/* ---------- generators (endless fresh problems) ---------- */
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pick=a=>a[ri(0,a.length-1)];
+const GEN=[
+()=>{const a=ri(2,9),x=ri(-8,12),b=ri(-15,15),c=a*x+b;return{t:'Pre-algebra',k:'skill',q:'Solve '+a+'<i>x</i> '+(b<0?'− '+(-b):'+ '+b)+' = '+c+'.',a:x,s:'Undo the constant: '+a+'<i>x</i> = '+(c-b)+'. Divide by '+a+': <i>x</i> = <b>'+x+'</b>.'}},
+()=>{const p=pick([10,15,20,25,30,40,60,75]),n=pick([40,60,80,120,200,240]);return{t:'Pre-algebra',k:'skill',q:'What is '+p+'% of '+n+'?',a:p*n/100,s:p/100+' × '+n+' = <b>'+p*n/100+'</b>.'}},
+()=>{const x1=ri(-4,4),y1=ri(-5,5),m=ri(-5,5)||2,dx=ri(1,5),x2=x1+dx,y2=y1+m*dx;return{t:'Linear',k:'skill',q:'Find the slope of the line through ('+x1+', '+y1+') and ('+x2+', '+y2+').',a:m,s:'('+y2+' − '+(y1<0?'('+y1+')':y1)+')/('+x2+' − '+(x1<0?'('+x1+')':x1)+') = '+(y2-y1)+'/'+dx+' = <b>'+m+'</b>.'}},
+()=>{const m=ri(-4,5)||3,b=ri(-8,8),x=ri(-3,6);return{t:'Linear',k:'skill',q:'For <i>y</i> = '+m+'<i>x</i> '+(b<0?'− '+(-b):'+ '+b)+', find <i>y</i> when <i>x</i> = '+x+'.',a:m*x+b,s:m+'('+x+') '+(b<0?'− '+(-b):'+ '+b)+' = <b>'+(m*x+b)+'</b>.'}},
+()=>{const f=ri(3,9),r=ri(2,6),h=ri(1,6);return{t:'Linear',k:'word',q:'A plumber charges $'+f+'0 to arrive plus $'+r+'0 per hour. How many dollars for '+h+' hours of work?',a:f*10+r*10*h,s:f+'0 + '+r+'0 × '+h+' = <b>'+(f*10+r*10*h)+'</b>.'}},
+()=>{let p=ri(-6,6),q=ri(-6,6);if(p===q)q+=3;return{t:'Quadratic',k:'skill',q:'Find the roots of <i>x</i>² '+(-(p+q)<0?'− '+(p+q):'+ '+(-(p+q)))+'<i>x</i> '+(p*q<0?'− '+(-p*q):'+ '+(p*q))+' = 0. (Write both, like 1, 4)',a:[p,q],s:'(<i>x</i> '+(p<0?'+ '+(-p):'− '+p)+')(<i>x</i> '+(q<0?'+ '+(-q):'− '+q)+') = 0, so <b>'+p+' and '+q+'</b>.'}},
+()=>{const a=ri(1,4),h=ri(-5,5),b=-2*a*h,c=ri(-6,6);return{t:'Quadratic',k:'skill',q:'Find the x-coordinate of the vertex of <i>y</i> = '+(a===1?'':a)+'<i>x</i>² '+(b<0?'− '+(-b):b>0?'+ '+b:'+ 0')+'<i>x</i> '+(c<0?'− '+(-c):'+ '+c)+'.',a:h,s:'<i>x</i> = −<i>b</i>/(2<i>a</i>) = '+(-b)+'/'+(2*a)+' = <b>'+h+'</b>.'}},
+()=>{const a=ri(1,5),b=ri(-6,6),c=ri(-8,8),x=ri(-3,4);return{t:'Quadratic',k:'skill',q:'If <i>f</i>(<i>x</i>) = '+a+'<i>x</i>² '+(b<0?'− '+(-b):'+ '+b)+'<i>x</i> '+(c<0?'− '+(-c):'+ '+c)+', find <i>f</i>('+x+').',a:a*x*x+b*x+c,s:a+'('+x+')² '+(b<0?'− '+(-b):'+ '+b)+'('+x+') '+(c<0?'− '+(-c):'+ '+c)+' = <b>'+(a*x*x+b*x+c)+'</b>.'}},
+()=>{const a=pick([1,2,3,-1,-2]),b=ri(-2,6),x=ri(1,4);const n=a*(x+b);return{t:'Limits',k:'skill',q:'Find lim<sub><i>x</i>→'+x+'</sub> '+(a===1?'':a===-1?'−':a)+'(<i>x</i> '+(b<0?'− '+(-b):'+ '+b)+').',a:n,s:'Plug in <i>x</i> = '+x+': <b>'+n+'</b>.'}},
+()=>{const mu=ri(50,90),sd=ri(4,12),k=pick([-2,-1,1,1.5,2,2.5]),x=mu+k*sd;return{t:'Statistics',k:'skill',q:'Scores have mean '+mu+' and standard deviation '+sd+'. Find the z-score of '+x+'.',a:k,s:'(' +x+' − '+mu+')/'+sd+' = <b>'+k+'</b>.'}},
+()=>{const v=[ri(2,12),ri(2,12),ri(2,12),ri(2,12),ri(2,12)];const sum=v.reduce((a,b)=>a+b,0);const fix=(5-sum%5)%5;v[4]+=fix;const s=v.reduce((a,b)=>a+b,0);return{t:'Statistics',k:'skill',q:'Find the mean of '+v.join(', ')+'.',a:s/5,s:'Sum '+s+' ÷ 5 = <b>'+s/5+'</b>.'}},
+()=>{const d=pick([30,45,60,90]);const T={30:['sin',0.5],45:['tan',1],60:['cos',0.5],90:['sin',1]}[d];return{t:'Trigonometry',k:'skill',q:'What is '+T[0]+' '+d+'°?',a:T[1],s:'A special angle: <b>'+T[1]+'</b>.'}}
+];
+/* ---------- state ---------- */
+let cur=null,tried=0,good=0,showMast=false;
+const KEY='gc-mistakes-v1';
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+let NB=load();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(NB))}catch(e){}$('nc').textContent=NB.filter(x=>!x.m).length?'('+NB.filter(x=>!x.m).length+')':''};
+const topics=[...new Set([...BANK.map(p=>p.t)])];
+topics.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;$('ft').appendChild(o)});
+$('tot').textContent=BANK.length;
+function nextProblem(fresh){
+  const ft=$('ft').value,fk=$('fk').value;
+  let pool=BANK.filter(p=>(!ft||p.t===ft)&&(!fk||p.k===fk));
+  const gens=GEN.map(g=>g()).filter(p=>(!ft||p.t===ft)&&(!fk||p.k===fk));
+  if(fresh&&gens.length)cur=pick(gens);
+  else{const all=pool.concat(gens);if(!all.length){cur=null;render();return}let tries=0;do{cur=pick(all);tries++}while(tries<6&&all.length>1&&cur.q===(window.lastQ||''));}
+  window.lastQ=cur&&cur.q;render();
+}
+function render(){
+  $('sc').textContent='This visit: '+good+' correct out of '+tried+' tried.';
+  const c=$('card');
+  if(!cur){c.innerHTML='No problem matches. Try another topic or kind.';return}
+  c.innerHTML='<span class="tag">'+cur.t+'</span><span class="tag">'+(cur.k==='word'?'word problem':'skill')+'</span><div class="q">'+cur.q+'</div>'+
+  '<input type="text" id="ans" placeholder="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="acts"><button type="button" id="chk">Check</button><button type="button" id="shs">Show solution</button><button type="button" id="nx">Next</button><button type="button" id="fr">Fresh problem</button></div><div class="fb" id="fb"></div>';
+  $('chk').onclick=check;$('ans').onkeydown=e=>{if(e.key==='Enter')check()};
+  $('shs').onclick=()=>{$('fb').className='fb';$('fb').innerHTML='<b>Answer: '+showA(cur)+'</b><br>'+cur.s;if(!cur.sv){cur.sv=true;addNB(cur,'(solution viewed)')}};
+  $('nx').onclick=()=>nextProblem(false);$('fr').onclick=()=>nextProblem(true);
+}
+function addNB(p,mine){
+  const ex=NB.find(x=>x.q===p.q&&x.t===p.t);
+  if(ex){ex.m=false;ex.n++;ex.my=mine;ex.d=new Date().toISOString().slice(0,10)}
+  else NB.unshift({id:Date.now()+''+Math.floor(Math.random()*999),t:p.t,k:p.k,q:p.q,a:p.a,s:p.s,my:mine,n:1,m:false,note:'',d:new Date().toISOString().slice(0,10)});
+  save();renderNB();
+}
+function check(){
+  const v=$('ans').value;if(!v.trim()){$('fb').className='fb bad';$('fb').textContent='Type an answer first.';return}
+  tried++;const ok=isRight(cur,v);
+  if(ok){good++;$('fb').className='fb good';$('fb').innerHTML='✓ Correct! <br>'+cur.s;const ex=NB.find(x=>x.q===cur.q&&x.t===cur.t);if(ex&&!ex.m){ex.ok=(ex.ok||0)+1;if(ex.ok>=2)ex.m=true;save();renderNB()}}
+  else{$('fb').className='fb bad';$('fb').innerHTML='✗ Not quite. It was added to your mistake notebook. Try again, or tap “Show solution”.';addNB(cur,v.trim())}
+  $('sc').textContent='This visit: '+good+' correct out of '+tried+' tried.';
+}
+/* ---------- notebook ---------- */
+function renderNB(){
+  const list=NB.filter(x=>showMast||!x.m);
+  $('nl').innerHTML=list.length?list.map(x=>'<div class="card2'+(x.m?' mast':'')+'" data-id="'+x.id+'"><span class="tag">'+x.t+'</span><span class="tag">missed '+x.n+'×</span><span class="tag">'+x.d+'</span>'+(x.m?'<span class="tag">mastered</span>':'')+
+  '<div class="q">'+x.q+'</div><div>Your answer: <b>'+(x.my||'–')+'</b> · Correct: <b>'+showA(x)+'</b></div><details class="sol"><summary>Show solution</summary><p>'+x.s+'</p></details>'+
+  '<textarea class="note" placeholder="Why did I miss it? What will I do next time?">'+(x.note||'').replace(/</g,'&lt;')+'</textarea><div class="acts"><button type="button" data-a="retry">Retry</button><button type="button" data-a="mast">'+(x.m?'Not mastered':'Mastered')+'</button><button type="button" data-a="del">Delete</button></div></div>').join(''):'<p>'+(NB.length?'All mastered. Nice work!':'No mistakes saved yet. Wrong answers will appear here.')+'</p>';
+}
+$('nl').addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const id=b.closest('.card2').dataset.id,x=NB.find(y=>y.id===id);if(!x)return;
+  if(b.dataset.a==='del'){NB=NB.filter(y=>y!==x)}else if(b.dataset.a==='mast'){x.m=!x.m}else{cur={t:x.t,k:x.k,q:x.q,a:x.a,s:x.s};go('p');render();window.scrollTo(0,0);return}
+  save();renderNB()});
+$('nl').addEventListener('input',e=>{if(e.target.classList.contains('note')){const x=NB.find(y=>y.id===e.target.closest('.card2').dataset.id);if(x){x.note=e.target.value;save()}}});
+$('sh').onclick=()=>{showMast=!showMast;$('sh').textContent=showMast?'Hide mastered':'Show mastered';renderNB()};
+$('pr').onclick=()=>{showMast=false;renderNB();window.print()};
+$('ex').onclick=()=>{const t=NB.filter(x=>!x.m).map((x,i)=>(i+1)+'. ['+x.t+'] '+x.q.replace(/<[^>]+>/g,'')+'\\n   My answer: '+(x.my||'-')+'  Correct: '+showA(x)+(x.note?'\\n   Note: '+x.note:'')).join('\\n\\n');
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{$('ex').textContent='Copied!'},()=>{prompt('Copy:',t)});setTimeout(()=>$('ex').textContent='Copy as text',1500)};
+function go(w){$('pv').hidden=w!=='p';$('nv').hidden=w!=='n';$('tp').classList.toggle('on',w==='p');$('tn').classList.toggle('on',w==='n');if(w==='n')renderNB();history.replaceState(null,'',w==='n'?'#notebook':location.pathname)}
+$('tp').onclick=()=>go('p');$('tn').onclick=()=>go('n');$('ft').onchange=$('fk').onchange=()=>nextProblem(false);
+save();nextProblem(false);if(location.hash==='#notebook')go('n');
+</script>
+</div>
+<div class="ft"><a href="/">Graphing Calculator</a><a href="/algebra-1.html">Algebra 1</a><a href="/algebra-2.html">Algebra 2</a><a href="/precalculus.html">Precalculus</a><a href="/parent-functions.html">Functions</a><a href="/linear-function.html">Linear</a><a href="/quadratic-function.html">Quadratic</a><a href="/regression.html">Regression</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></div>
+
+</body>
+</html>
