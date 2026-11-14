@@ -8,7 +8,12 @@ Newest first. Dates are in Korean time.
 - Hover (or tap on a phone) the points on the graph to see the vertex, roots and y-intercept with coordinates.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
-### New pages (latest)
+### Navigator and readability (latest)
+- Navigator on every study page: breadcrumb (Calculator > All topics > level > page), a reading-progress bar, a bottom-left button with the current section, a panel with "You are here", sections of this page, the full site map and search, and Previous / Up next cards at the bottom.
+- Algebra 1 and Algebra 2 pages rewritten: numbered path, three big ideas, short study tips, cheat sheet.
+- Domain and range section with an interactive picture (blue shadow on the x-axis, red on the y-axis) on What is a function?.
+
+### New pages
 - All topics (curriculum.html): pre-algebra to precalculus in one list, planned pages marked.
 - Math basics: slope and y-intercept with an interactive graph, coordinate plane, integers, order of operations, percents, ratios, equations.
 - Limit calculator: left, right and two-sided limits, infinite limits, limits at infinity, table of values and graph.

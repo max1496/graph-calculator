@@ -32,6 +32,7 @@ dd sup{font-size:.62em;line-height:0}
 .ft{font-size:14px;color:var(--sub);text-align:center;margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;max-width:640px}
 .ft a{color:var(--sub);margin:0;white-space:nowrap}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+.lead{font-size:18px;line-height:1.6}ul.lines{padding-left:22px;line-height:1.7}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -39,51 +40,51 @@ dd sup{font-size:.62em;line-height:0}
 <body>
 <div class="w"><a href="/">← Graphing Calculator</a> &nbsp;·&nbsp; <a href="/algebra-1.html">Algebra 1</a></div>
 <h1 class="w">Algebra 2</h1>
-<div class="w"><p class="sum"><b>In short:</b> Pick a topic below. Start at the top and work down.</p></div>
+<div class="w"><p class="sum"><b>In short:</b> A guided path from polynomial roots to rational functions. Six short steps.</p></div>
 <div class="w">
-  <p>Algebra 2 builds on Algebra 1 with polynomials of higher degree, their roots, and theorems that tell you what a graph must do. This page collects the interactive tools on this site that go with Algebra 2, in a sensible order to study them.</p>
+  <p class="lead">Algebra 2 is a <b>detective story</b>: given a polynomial, <span class="hl">where does it hit zero</span>, and what does the graph do in between? The theorems here let you answer before you draw anything.</p>
 
-  <h2>Polynomials and their roots</h2>
-  <div class="lessons">
-    <a class="lesson" href="/parent-functions.html"><h3>Parent functions</h3><span>See the basic shape, domain and range of the linear, quadratic, exponential, logarithm and trigonometric functions side by side.</span></a>
-    <a class="lesson" href="/trigonometry.html"><h3>Trigonometry</h3><span>Explore the unit circle, radians, special angles and the graphs of sine and cosine.</span></a>
-    <a class="lesson" href="/conic-sections.html"><h3>Ellipses, hyperbolas and conics</h3><span>Circles, ellipses, hyperbolas and parabolas with their equations, foci, vertices and asymptotes.</span></a>
-    <a class="lesson" href="/function-transformations.html"><h3>Function transformations</h3><span>Shift, stretch, reflect and rotate any parent function with sliders and see the new equation.</span></a>
-    <a class="lesson" href="/curriculum.html"><h3>All topics: pre-algebra to precalculus</h3><span>One list of every lesson, in order.</span></a>
-    <a class="lesson" href="/precalculus.html"><h3>Precalculus</h3><span>Functions and inverses, polynomials by degree, continuity and derivatives.</span></a>
-    <a class="lesson" href="/polynomial-degrees.html"><h3>Polynomials by degree</h3><span>Roots, turning points and end behavior from degree 1 to 6.</span></a>
-    <a class="lesson" href="/polynomial-from-roots.html"><h3>Polynomial from roots</h3><span>Enter roots and multiplicities to get the factored form, expanded form, end behavior and graph.</span></a>
-    <a class="lesson" href="/rational-functions.html"><h3>Rational functions</h3><span>Find vertical asymptotes, holes, horizontal or slant asymptotes and intercepts, with a graph.</span></a>
-    <a class="lesson" href="/rational-root-theorem.html"><h3>Rational Root Theorem</h3><span>List every possible rational root p/q, test them exactly, and see the factored form.</span></a>
-    <a class="lesson" href="/descartes-rule-of-signs.html"><h3>Descartes' Rule of Signs</h3><span>Count sign changes to find how many positive and negative real roots are possible.</span></a>
-    <a class="lesson" href="/intermediate-value-theorem.html"><h3>Intermediate Value Theorem</h3><span>Check whether a continuous function must reach a value k on an interval [a, b].</span></a>
-    <a class="lesson" href="/"><h3>Graphing calculator</h3><span>Plot any function, including piecewise functions, inequalities and trigonometric graphs with the x-axis in units of π.</span></a>
+  <h2>Your path</h2>
+  <p>Go in order, or jump to what you need. Each step is short.</p>
+  <ol class="path">
+    <li><a href="/function-transformations.html"><b>Function transformations<em>warm-up · tool</em></b><span>Slide, stretch and flip any graph. Everything later builds on this.</span></a></li>
+    <li><a href="/polynomial-from-roots.html"><b>Polynomial from roots<em>tool</em></b><span>Pick the roots, get the polynomial. See how multiplicity bends the graph.</span></a></li>
+    <li><a href="/rational-root-theorem.html"><b>Rational Root Theorem<em>tool</em></b><span>A short list of the only fractions that can be roots.</span></a></li>
+    <li><a href="/descartes-rule-of-signs.html"><b>Descartes' Rule of Signs<em>tool</em></b><span>Count sign changes to know how many positive and negative roots to hunt for.</span></a></li>
+    <li><a href="/rational-functions.html"><b>Rational functions<em>tool</em></b><span>Holes, asymptotes and intercepts: factoring pays off here.</span></a></li>
+    <li><a href="/conic-sections.html"><b>Ellipses and hyperbolas<em>lesson</em></b><span>Circles, ellipses, hyperbolas and parabolas with foci and asymptotes.</span></a></li>
+  </ol>
+
+  <h2>The big ideas</h2>
+  <div class="big3">
+    <div><b>Roots</b> are where the graph meets the x-axis. Every polynomial of degree <i>n</i> has <span class="hl">exactly <i>n</i> roots</span> (some may be complex).</div>
+    <div><b>Multiplicity</b> tells the graph what to do at a root: <span class="ok">odd = cross</span>, <span class="hl2">even = touch and turn</span>.</div>
+    <div><b>Rational functions</b> are fractions of polynomials. The <b>denominator</b> decides the holes and the vertical asymptotes.</div>
   </div>
 
-  <h2>Pages planned for later</h2>
-  <p class="soon">These topics do not have a page on this site yet: Exponential and logarithmic functions, sequences and series.</p>
-
-  <h2>How to study this unit</h2>
-  <ul>
-    <li>Start with polynomial from roots. Seeing how roots and multiplicity shape a graph makes the rest of the unit easier.</li>
-    <li>Use Descartes' Rule of Signs and the Rational Root Theorem together. Descartes tells you how many positive and negative roots to expect, and the Rational Root Theorem gives the list to test.</li>
-    <li>Move on to rational functions once you are comfortable factoring. Holes and vertical asymptotes both come from the denominator, so factoring is the key skill.</li>
-    <li>Use the Intermediate Value Theorem to show that a root exists even when you cannot solve the equation exactly.</li>
-    <li>Always check your answers on a graph. A root you found should appear where the curve meets the x-axis.</li>
+  <h2>Study tips</h2>
+  <ul class="lines">
+    <li>Do the steps in order the first time. <b>Factoring</b> is the skill that connects them.</li>
+    <li>Before you press a button, <b>guess</b> the graph. Then check. Guessing is how it sticks.</li>
+    <li>Stuck on a word? Use the search button at the bottom left, or read <a href="/what-is-a-function.html#domain-range">domain and range</a> again.</li>
+    <li>Always <b>check an answer on a graph</b>. A root should sit where the curve meets the x-axis.</li>
+    <li>Need practice? <a href="/practice.html">Problems and a mistake notebook</a> are waiting.</li>
   </ul>
 
-  <h2>Key formulas and theorems</h2>
-  <dl>
-    <dt>Factor form</dt><dd><i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>r</i><sub>1</sub>)(<i>x</i> − <i>r</i><sub>2</sub>)…(<i>x</i> − <i>r</i><sub><i>n</i></sub>)</dd>
-    <dt>Remainder theorem</dt><dd><i>f</i>(<i>c</i>) is the remainder when <i>f</i>(<i>x</i>) is divided by (<i>x</i> − <i>c</i>)</dd>
-    <dt>Factor theorem</dt><dd>(<i>x</i> − <i>c</i>) is a factor of <i>f</i>(<i>x</i>) exactly when <i>f</i>(<i>c</i>) = 0</dd>
-    <dt>Rational Root Theorem</dt><dd>possible roots = ±(factor of <i>a</i><sub>0</sub>) / (factor of <i>a</i><sub><i>n</i></sub>)</dd>
-    <dt>Descartes' Rule of Signs</dt><dd>positive roots = sign changes in <i>f</i>(<i>x</i>), or fewer by an even number</dd>
-    <dt>Intermediate Value Theorem</dt><dd><i>f</i> continuous, <i>k</i> between <i>f</i>(<i>a</i>) and <i>f</i>(<i>b</i>) ⇒ <i>f</i>(<i>c</i>) = <i>k</i> for some <i>c</i> in [<i>a</i>, <i>b</i>]</dd>
-    <dt>Rational function asymptotes</dt><dd>vertical: zeros of the denominator left after cancelling; horizontal: compare degrees</dd>
-    <dt>Fundamental Theorem of Algebra</dt><dd>a polynomial of degree <i>n</i> has exactly <i>n</i> complex roots, counted with multiplicity</dd>
-  </dl>
-  <p class="note">For a polynomial, a root where the factor appears an odd number of times is crossed by the graph, and a root with an even multiplicity is only touched.</p>
+  <h2>Cheat sheet</h2>
+  <table class="fm">
+    <tr><td>Factor form</td><td><i>f</i>(<i>x</i>) = <i>a</i>(<i>x</i> − <i>r</i><sub>1</sub>)(<i>x</i> − <i>r</i><sub>2</sub>)…</td></tr>
+    <tr><td>Remainder theorem</td><td><i>f</i>(<i>c</i>) is the remainder when dividing by (<i>x</i> − <i>c</i>)</td></tr>
+    <tr><td>Factor theorem</td><td>(<i>x</i> − <i>c</i>) is a factor exactly when <i>f</i>(<i>c</i>) = 0</td></tr>
+    <tr><td>Rational Root</td><td>possible roots = ±(factor of constant) / (factor of leading coefficient)</td></tr>
+    <tr><td>Descartes</td><td>positive roots = sign changes in <i>f</i>(<i>x</i>), or fewer by an even number</td></tr>
+    <tr><td>Intermediate Value</td><td><i>f</i> continuous and <i>k</i> between <i>f</i>(<i>a</i>), <i>f</i>(<i>b</i>) ⇒ <i>f</i>(<i>c</i>) = <i>k</i> for some <i>c</i></td></tr>
+    <tr><td>Asymptotes</td><td>vertical: zeros of the denominator left after cancelling. Horizontal: compare degrees</td></tr>
+    <tr><td>Fundamental Theorem</td><td>degree <i>n</i> ⇒ exactly <i>n</i> complex roots (with multiplicity)</td></tr>
+  </table>
+
+  <h2>Pages planned for later</h2>
+  <p class="soon">Exponential and logarithmic functions, sequences and series. (Not written yet.)</p>
 
   <h2>Books to study from</h2>
   <p>A textbook gives you far more practice problems than any website. These are good choices for Algebra 2.</p>
