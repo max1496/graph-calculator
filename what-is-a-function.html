@@ -90,6 +90,19 @@ h3{font-size:16px;margin:14px 0 4px}
   <li><b>(0, ∞)</b> means every number bigger than 0. <b>[0, ∞)</b> means 0 and everything bigger.</li>
 </ul>
 
+<h2 id="intervals">Intervals: writing domain and range</h2>
+<ul class="lines">
+  <li>An <b>interval</b> is a stretch of the number line. We use it to write domains and ranges in a short way.</li>
+  <li><b>( )</b> round bracket = the end is <span class="hl2">not included</span> (open dot ○).</li>
+  <li><b>[ ]</b> square bracket = the end is <span class="ok">included</span> (filled dot ●).</li>
+  <li><b>∞</b> and <b>−∞</b> never end, so they always get a round bracket.</li>
+  <li><b>∪</b> (union) glues pieces together. 1/<i>x</i> has domain (−∞, 0) ∪ (0, ∞).</li>
+</ul>
+<label>Pick a type<select id="ivt" style="font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;width:100%"></select></label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label>a<input type="text" id="iva" value="-2" inputmode="decimal"></label><label>b<input type="text" id="ivb" value="3" inputmode="decimal"></label></div>
+<canvas id="ivc" style="width:100%;height:90px;border:1px solid var(--line);border-radius:8px;margin-top:8px" aria-label="Number line"></canvas>
+<div class="facts" id="ivo" style="line-height:1.8"></div>
+
 <h2 id="equations">Equations and functions: how are they related?</h2>
 <ul class="lines">
   <li>An <b>equation</b> is a statement with an equals sign, like 2<i>x</i> + 1 = 7. It is true for some values and false for others. <b>Solving</b> it means finding the values that make it true.</li>
@@ -193,6 +206,35 @@ function draw(){
   document.getElementById('drt').innerHTML='<div><span class="hl">Domain:</span> '+f[2]+'</div><div><span class="hl2">Range:</span> '+f[3]+'</div>';
 }
 sel.onchange=draw;addEventListener('resize',draw);draw();
+})();
+</script>
+<script>
+(function(){
+const T=[
+['Open: a < x < b','(a, b)','a < x < b',[[0,1,1,1]]],['Closed: a ≤ x ≤ b','[a, b]','a ≤ x ≤ b',[[0,1,0,0]]],['Half-open: a ≤ x < b','[a, b)','a ≤ x < b',[[0,1,0,1]]],['Half-open: a < x ≤ b','(a, b]','a < x ≤ b',[[0,1,1,0]]],
+['Right ray: x > a','(a, ∞)','x > a',[[0,2,1,1]]],['Right ray: x ≥ a','[a, ∞)','x ≥ a',[[0,2,0,1]]],['Left ray: x < b','(−∞, b)','x < b',[[-1,1,1,1]]],['Left ray: x ≤ b','(−∞, b]','x ≤ b',[[-1,1,1,0]]],
+['Everything except a','(−∞, a) ∪ (a, ∞)','x ≠ a',[[-1,0,1,1],[0,2,1,1]]],['All real numbers','(−∞, ∞)','any x',[[-1,2,1,1]]]];
+const sel=document.getElementById('ivt'),cv=document.getElementById('ivc'),$=id=>document.getElementById(id);
+T.forEach((t,i)=>{const o=document.createElement('option');o.value=i;o.textContent=t[0];sel.appendChild(o)});
+function draw(){
+ const t=T[+sel.value];let a=parseFloat($('iva').value.replace('−','-')),b=parseFloat($('ivb').value.replace('−','-'));if(!isFinite(a))a=0;if(!isFinite(b))b=1;if(a>b)[a,b]=[b,a];
+ const fix=s=>s.replace(/a/g,'a').replace(/\ba\b/g,a).replace(/\bb\b/g,b);
+ const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);
+ const cs=getComputedStyle(document.body);g.fillStyle=cs.backgroundColor;g.fillRect(0,0,W,H);
+ const m=Math.max(Math.abs(a),Math.abs(b),4)+2,X=x=>W/2+x/m*(W/2-12),y=H/2+8;
+ g.strokeStyle='#8a99aa';g.lineWidth=2;g.beginPath();g.moveTo(8,y);g.lineTo(W-8,y);g.stroke();g.fillStyle=cs.color;g.font='12px sans-serif';g.textAlign='center';
+ for(let i=Math.ceil(-m);i<=m;i++){g.beginPath();g.moveTo(X(i),y-4);g.lineTo(X(i),y+4);g.stroke();if(Math.abs(i)%Math.ceil(m/6)===0||i===a||i===b)g.fillText(i,X(i),y+20)}
+ const idx=t[3],pts=[a,b];
+ idx.forEach(([l,h,lo,ho])=>{const L=l<0?-m:l===0?a:b,R=h>1?m:h===0?a:b;
+   // map: 0=a,1=b,2=+inf ; -1=-inf
+   const lv=l===-1?-m:(l===0?a:b),hv=h===2?m:(h===0?a:b);
+   g.strokeStyle='#2f6fed';g.lineWidth=6;g.globalAlpha=.6;g.beginPath();g.moveTo(X(lv),y);g.lineTo(X(hv),y);g.stroke();g.globalAlpha=1;
+   if(l!==-1){g.beginPath();g.arc(X(lv),y,6,0,7);g.fillStyle=lo?cs.backgroundColor:'#2f6fed';g.fill();g.lineWidth=2;g.strokeStyle='#2f6fed';g.stroke()}
+   if(h!==2){g.beginPath();g.arc(X(hv),y,6,0,7);g.fillStyle=ho?cs.backgroundColor:'#2f6fed';g.fill();g.lineWidth=2;g.strokeStyle='#2f6fed';g.stroke()}
+   [[l===-1,-1],[h===2,1]].forEach(([on,dir])=>{if(!on)return;g.fillStyle='#2f6fed';g.beginPath();const ex=dir<0?X(-m)+2:X(m)-2;g.moveTo(ex,y);g.lineTo(ex-dir*10,y-6);g.lineTo(ex-dir*10,y+6);g.fill()})});
+ $('ivo').innerHTML='<div><span class="hl">Interval notation:</span> '+fix(t[1])+'</div><div><span class="hl">Inequality:</span> '+fix(t[2])+'</div>';
+}
+sel.value=0;sel.onchange=draw;$('iva').oninput=$('ivb').oninput=draw;addEventListener('resize',draw);draw();
 })();
 </script>
 </body>

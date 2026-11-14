@@ -13,6 +13,7 @@ var SITE=[
 ['Math basics (slope, intercept, fractions, percent)','/basics.html','basics pre-algebra middle school elementary slope intercept fraction percent ratio order of operations integers'],
 ['Practice problems and mistake notebook','/practice.html','practice problems word problems answers mistake notebook wrong answers review quiz'],
 ['What is a function?','/what-is-a-function.html','function input output rule vertical line test relation'],
+['Intervals: interval notation, brackets, union','/what-is-a-function.html#intervals','interval notation bracket parenthesis open closed union infinity inequality number line'],
 ['Domain and range (with a picture)','/what-is-a-function.html#domain-range','domain range interval notation bracket shadow'],
 ['Equations and functions','/what-is-a-function.html#equations','equation solve f(x)=g(x) intersection zeros roots relationship'],
 ['Floor function (Gauss bracket)','/what-is-a-function.html#floor','floor ceiling greatest integer gauss bracket step round down'],
@@ -60,7 +61,7 @@ document.body.insertBefore(cr,document.body.firstChild);
 var bar=document.createElement('div');bar.id='rbar';document.body.appendChild(bar);
 /* previous / next */
 if(lvl){var flat=[];PATH.forEach(function(L){L[1].forEach(function(p){flat.push(p[0])})});var i=flat.indexOf(slug),pr=flat[i-1],nx=flat[i+1];var ft=document.querySelector('.ft');
- if(ft&&(pr||nx)){var d=document.createElement('div');d.id='pn';d.innerHTML=(pr?'<a href="'+urlOf[pr]+'"><small>← Previous</small><b>'+esc(nameOf[pr])+'</b></a>':'')+(nx?'<a href="'+urlOf[nx]+'"><small>Up next →</small><b>'+esc(nameOf[nx])+'</b></a>':'');ft.parentNode.insertBefore(d,ft)}}
+ if(ft&&(pr||nx)){var d=document.createElement('div');d.id='pn';d.innerHTML=(pr?'<a href="'+urlOf[pr]+'"><small>← Previous lesson · '+esc(lvlOf[pr])+'</small><b>'+esc(nameOf[pr])+'</b></a>':'')+(nx?'<a href="'+urlOf[nx]+'"><small>Next lesson → '+(lvlOf[nx]!==lvl?'(new level: '+esc(lvlOf[nx])+')':esc(lvlOf[nx]))+'</small><b>'+esc(nameOf[nx])+'</b></a>':'');ft.parentNode.insertBefore(d,ft)}}
 /* panel */
 var hs=[].slice.call(document.querySelectorAll('h2')).filter(function(h){return h.offsetParent!==null});
 hs.forEach(function(h,i){if(!h.id)h.id='sec-'+(i+1)});

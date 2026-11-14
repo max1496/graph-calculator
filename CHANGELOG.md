@@ -8,7 +8,13 @@ Newest first. Dates are in Korean time.
 - Hover (or tap on a phone) the points on the graph to see the vertex, roots and y-intercept with coordinates.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
-### Navigator and readability (latest)
+### Latest
+- Practice: 14 SAT-style problems (multiple choice and type-in) and 12 challenge problems. Filter by Kind.
+- Notebook simplified: add your own notes (problem + answer) and review them. Wrong answers still land there by themselves. Copy, Print and Mastered removed.
+- Intervals section with a number-line picture on What is a function?.
+- Precalculus page no longer lists What is a function?. "Your path" renamed "Lessons in order". Previous/Next cards now show the level.
+
+### Navigator and readability
 - Navigator on every study page: breadcrumb (Calculator > All topics > level > page), a reading-progress bar, a bottom-left button with the current section, a panel with "You are here", sections of this page, the full site map and search, and Previous / Up next cards at the bottom.
 - Algebra 1 and Algebra 2 pages rewritten: numbered path, three big ideas, short study tips, cheat sheet.
 - Domain and range section with an interactive picture (blue shadow on the x-axis, red on the y-axis) on What is a function?.

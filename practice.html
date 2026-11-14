@@ -65,7 +65,7 @@ h3{font-size:16px;margin:14px 0 4px}
 .q{font-size:18px;line-height:1.7;margin:8px 0}.fb{margin-top:8px;line-height:1.7}.fb.good{color:var(--ok)}.fb.bad{color:var(--hl2)}
 .acts button{margin:6px 6px 0 0}.mast{opacity:.55}.mast .q{text-decoration:line-through}
 textarea.note{width:100%;font:inherit;font-size:15px;padding:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;min-height:46px}
-.sc{color:var(--sub);font-size:14px}@media print{.tabs,.acts,#pv,.noprint,.ft,#tocb{display:none!important}}
+.sc{color:var(--sub);font-size:14px}
 </style>
 <div class="w">
 <div class="tabs"><button type="button" id="tp" class="on">Practice</button><button type="button" id="tn">Mistake notebook <span id="nc"></span></button></div>
@@ -73,16 +73,20 @@ textarea.note{width:100%;font:inherit;font-size:15px;padding:6px;border:1px soli
 <div id="pv">
   <div class="row3">
     <label>Topic<select id="ft"><option value="">All topics</option></select></label>
-    <label>Kind<select id="fk"><option value="">All problems</option><option value="word">Word problems</option><option value="skill">Skills</option></select></label>
+    <label>Kind<select id="fk"><option value="">All problems</option><option value="skill">Skills</option><option value="word">Word problems</option><option value="sat">SAT-style</option><option value="challenge">Challenge</option></select></label>
   </div>
   <div class="sc" id="sc"></div>
   <div class="card2" id="card"></div>
-  <p class="sc">There are <b id="tot"></b> ready-made problems, plus endless new ones from the “fresh problem” button. A wrong answer goes into your notebook automatically.</p>
+  <p class="sc">There are <b id="tot"></b> ready-made problems (skills, word problems, SAT-style and challenge), plus endless new ones from the “Fresh problem” button. A wrong answer goes into your notebook automatically.</p>
 </div>
 
 <div id="nv" hidden>
-  <p class="sc">Problems you got wrong are saved <b>in this browser only</b>. Write what you learned, retry them later, and mark them mastered.</p>
-  <div class="acts noprint"><button type="button" id="ex">Copy as text</button><button type="button" id="pr">Print</button><button type="button" id="sh">Show mastered</button></div>
+  <p class="sc">Your own place to review. Wrong answers land here by themselves, and you can add anything you want to remember. Saved <b>in this browser only</b>.</p>
+  <details class="card2" id="addbox"><summary><b>＋ Add my own note</b></summary>
+    <label>Problem, or what I want to remember<textarea class="note" id="nq" placeholder="e.g. Solve 2x² − 8 = 0"></textarea></label>
+    <label>Answer, or the right way<textarea class="note" id="na" placeholder="e.g. x = 2 or −2. Move 8, divide by 2, take ± the square root."></textarea></label>
+    <div class="acts"><button type="button" id="nsave">Save to notebook</button></div>
+  </details>
   <div id="nl"></div>
 </div>
 </div>
@@ -92,11 +96,13 @@ const $=id=>document.getElementById(id);
 const NUM=s=>{s=String(s).trim().toLowerCase().replace(/[−–]/g,'-').replace(/^[a-z]\s*=\s*/,'').replace(/[$%°]/g,'');let m=/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/.exec(s);if(m)return +m[1]/+m[2];return /^-?\d*\.?\d+$/.test(s)?+s:NaN};
 function isRight(p,t){
   t=String(t).trim();if(!t)return false;
+  if(p.o)return t.toUpperCase()===p.a;
   if(typeof p.a==='number'){const v=NUM(t);return isFinite(v)&&Math.abs(v-p.a)<=Math.max(0.01,Math.abs(p.a)*0.002)}
   if(Array.isArray(p.a)&&typeof p.a[0]==='number'){const v=t.toLowerCase().replace(/[−–]/g,'-').split(/[\s,;]+|and/).filter(Boolean).map(NUM);if(v.length!==p.a.length||v.some(x=>!isFinite(x)))return false;const a=[...v].sort((x,y)=>x-y),b=[...p.a].sort((x,y)=>x-y);return a.every((x,i)=>Math.abs(x-b[i])<0.01)}
   const n=t.toLowerCase().replace(/\s+/g,'');return p.a.some(x=>x===n);
 }
-const showA=p=>typeof p.a==='number'?String(p.a):Array.isArray(p.a)&&typeof p.a[0]==='number'?p.a.join(' and '):p.a[0];
+const LET='ABCD';
+const showA=p=>p.o?p.a+') '+p.o[LET.indexOf(p.a)].replace(/<[^>]+>/g,''):typeof p.a==='number'?String(p.a):Array.isArray(p.a)&&typeof p.a[0]==='number'?p.a.join(' and '):p.a[0];
 /* ---------- ready-made bank: [topic, kind, question, answer, solution] ---------- */
 const BANK=[
 ['Pre-algebra','skill','Solve 3<i>x</i> + 5 = 20.',5,'3<i>x</i> = 15, so <i>x</i> = <b>5</b>.'],
@@ -140,7 +146,35 @@ const BANK=[
 ['Statistics','skill','Test scores have μ = 70 and σ = 10. Find the z-score of 85.',1.5,'(85 − 70)/10 = <b>1.5</b>.'],
 ['Statistics','skill','About what percent of normal data lies within 1 standard deviation of the mean?',68,'The empirical rule: about <b>68%</b>.'],
 ['Statistics','word','Test A: 82 with μ = 75, σ = 5. Test B: 90 with μ = 80, σ = 8. What is the z-score of the higher z (Test A)?',1.4,'Test A: (82 − 75)/5 = <b>1.4</b>. Test B: 1.25. A is relatively higher.']
-].map((r,i)=>({id:'b'+i,t:r[0],k:r[1],q:r[2],a:r[3],s:r[4]}));
+
+,
+['SAT-style','sat','If 3<i>x</i> + 4 = 19, what is the value of 6<i>x</i> + 8?','D','6<i>x</i> + 8 = 2(3<i>x</i> + 4) = 2(19) = <b>38</b>. No need to find <i>x</i>.',['10','19','30','38']],
+['SAT-style','sat','A line in the <i>xy</i>-plane passes through (0, 3) and (4, 11). What is its slope?','B','(11 − 3)/(4 − 0) = 8/4 = <b>2</b>.',['1','2','3','4']],
+['SAT-style','sat','What is the minimum value of <i>f</i>(<i>x</i>) = <i>x</i>² − 4<i>x</i> + 7?','B','Vertex at <i>x</i> = 2. <i>f</i>(2) = 4 − 8 + 7 = <b>3</b>.',['2','3','4','7']],
+['SAT-style','sat','2<i>x</i> + 3<i>y</i> = 12 and <i>x</i> − <i>y</i> = 1. What is the value of <i>x</i> + <i>y</i>? (type a number)',5,'<i>x</i> = <i>y</i> + 1, so 2<i>y</i> + 2 + 3<i>y</i> = 12, <i>y</i> = 2, <i>x</i> = 3. <i>x</i> + <i>y</i> = <b>5</b>.'],
+['SAT-style','sat','Which expression is equivalent to (<i>x</i> + 3)² − (<i>x</i> − 3)²?','B','The <i>x</i>² and 9 cancel. 6<i>x</i> − (−6<i>x</i>) = <b>12<i>x</i></b>.',['6','12<i>x</i>','2<i>x</i>² + 18','12']],
+['SAT-style','sat','Pens cost $2 and notebooks cost $5. Maya buys 8 items for $28 in total. How many notebooks did she buy?','C','<i>p</i> + <i>n</i> = 8 and 2<i>p</i> + 5<i>n</i> = 28. 2(8 − <i>n</i>) + 5<i>n</i> = 28 gives 3<i>n</i> = 12, so <i>n</i> = <b>4</b>.',['2','3','4','5']],
+['SAT-style','sat','The mean of five numbers is 12. Four of them are 8, 10, 15 and 11. What is the fifth number? (type a number)',16,'Total = 5 × 12 = 60. Known sum = 44. Fifth = 60 − 44 = <b>16</b>.'],
+['SAT-style','sat','A right triangle has legs of length 6 and 8. What is the length of the hypotenuse?','C','6² + 8² = 100, so the hypotenuse is <b>10</b>.',['8','9','10','14']],
+['SAT-style','sat','If <i>f</i>(<i>x</i>) = 2<i>x</i> − 5 and <i>f</i>(<i>a</i>) = 11, what is <i>a</i>?','C','2<i>a</i> − 5 = 11, so 2<i>a</i> = 16 and <i>a</i> = <b>8</b>.',['3','6','8','16']],
+['SAT-style','sat','A population of 500 doubles every 3 years. What is the population after 9 years?','C','9 years = 3 doublings. 500 × 2³ = <b>4000</b>.',['1500','2500','4000','4500']],
+['SAT-style','sat','The circle (<i>x</i> − 2)² + (<i>y</i> + 1)² = 25 has what radius? (type a number)',5,'<i>r</i>² = 25, so <i>r</i> = <b>5</b>.'],
+['SAT-style','sat','In a right triangle, sin <i>θ</i> = 3/5 and <i>θ</i> is acute. What is cos <i>θ</i>?','B','Sides 3, 4, 5. cos <i>θ</i> = adjacent/hypotenuse = <b>4/5</b>.',['3/4','4/5','5/4','5/3']],
+['SAT-style','sat','Which equation has no real solutions?','B','<i>x</i>² + 2<i>x</i> + 5 = 0 has discriminant 4 − 20 = −16 &lt; 0. The others have real roots.',['<i>x</i>² − 4 = 0','<i>x</i>² + 2<i>x</i> + 5 = 0','<i>x</i>² − 2<i>x</i> − 3 = 0','2<i>x</i>² − 8 = 0']],
+['SAT-style','sat','A price rises from $40 to $55. By what percent did it increase? (type a number)',37.5,'(55 − 40)/40 = 0.375 = <b>37.5%</b>.'],
+['Challenge','challenge','The sum of two numbers is 20 and their product is 91. What is the larger number?',13,'<i>x</i>² − 20<i>x</i> + 91 = (<i>x</i> − 7)(<i>x</i> − 13). The numbers are 7 and <b>13</b>.'],
+['Challenge','challenge','If <i>x</i> + 1/<i>x</i> = 5, what is <i>x</i>² + 1/<i>x</i>²?',23,'Square both sides: <i>x</i>² + 2 + 1/<i>x</i>² = 25, so the answer is <b>23</b>.'],
+['Challenge','challenge','How many diagonals does a hexagon have?',9,'<i>n</i>(<i>n</i> − 3)/2 = 6 × 3/2 = <b>9</b>.'],
+['Challenge','challenge','A cubic <i>p</i>(<i>x</i>) has roots 1, 2 and 3, and <i>p</i>(0) = −12. Find <i>p</i>(4).',12,'<i>p</i> = <i>a</i>(<i>x</i> − 1)(<i>x</i> − 2)(<i>x</i> − 3). <i>p</i>(0) = −6<i>a</i> = −12, so <i>a</i> = 2. <i>p</i>(4) = 2 · 3 · 2 · 1 = <b>12</b>.'],
+['Challenge','challenge','Find the sum of all integers from 1 to 100 that are divisible by 3 or 5.',2418,'Multiples of 3: 1683. Multiples of 5: 1050. Multiples of 15 counted twice: 315. 1683 + 1050 − 315 = <b>2418</b>.'],
+['Challenge','challenge','What is the remainder when 2¹⁰ is divided by 7?',2,'2³ = 8 ≡ 1 (mod 7). 2¹⁰ = (2³)³ · 2 ≡ 2. The remainder is <b>2</b>.'],
+['Challenge','challenge','A rectangle\'s length is 3 more than twice its width. Its area is 65. What is its perimeter?',36,'<i>w</i>(2<i>w</i> + 3) = 65 gives <i>w</i> = 5 and <i>l</i> = 13. Perimeter = 2(5 + 13) = <b>36</b>.'],
+['Challenge','challenge','<i>f</i>(<i>x</i>) = <i>x</i>² + <i>bx</i> + <i>c</i> has roots 2 and −5. Find <i>f</i>(1).',-6,'<i>f</i> = (<i>x</i> − 2)(<i>x</i> + 5) = <i>x</i>² + 3<i>x</i> − 10. <i>f</i>(1) = <b>−6</b>.'],
+['Challenge','challenge','How many pairs of positive integers (<i>x</i>, <i>y</i>) satisfy 2<i>x</i> + 3<i>y</i> = 24?',3,'<i>y</i> must be even: <i>y</i> = 2, 4, 6 gives <i>x</i> = 9, 6, 3. That is <b>3</b> pairs.'],
+['Challenge','challenge','Solve log₂(<i>x</i>) + log₂(<i>x</i> − 2) = 3.',4,'<i>x</i>(<i>x</i> − 2) = 8, so <i>x</i>² − 2<i>x</i> − 8 = 0, <i>x</i> = 4 or −2. Only <b>4</b> works.'],
+['Challenge','challenge','Find the sum of the infinite series 8 + 4 + 2 + 1 + …',16,'First term 8, ratio 1/2: 8/(1 − 1/2) = <b>16</b>.'],
+['Challenge','challenge','The area of a circle equals its circumference. What is the radius?',2,'π<i>r</i>² = 2π<i>r</i>, so <i>r</i> = <b>2</b>.']
+].map((r,i)=>({id:'b'+i,t:r[0],k:r[1],q:r[2],a:r[3],s:r[4],o:r[5]||null}));
 /* ---------- generators (endless fresh problems) ---------- */
 const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pick=a=>a[ri(0,a.length-1)];
 const GEN=[
@@ -162,7 +196,7 @@ let cur=null,tried=0,good=0,showMast=false;
 const KEY='gc-mistakes-v1';
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
 let NB=load();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(NB))}catch(e){}$('nc').textContent=NB.filter(x=>!x.m).length?'('+NB.filter(x=>!x.m).length+')':''};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(NB))}catch(e){}$('nc').textContent=NB.length?'('+NB.length+')':''};
 const topics=[...new Set([...BANK.map(p=>p.t)])];
 topics.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;$('ft').appendChild(o)});
 $('tot').textContent=BANK.length;
@@ -178,40 +212,41 @@ function render(){
   $('sc').textContent='This visit: '+good+' correct out of '+tried+' tried.';
   const c=$('card');
   if(!cur){c.innerHTML='No problem matches. Try another topic or kind.';return}
-  c.innerHTML='<span class="tag">'+cur.t+'</span><span class="tag">'+(cur.k==='word'?'word problem':'skill')+'</span><div class="q">'+cur.q+'</div>'+
-  '<input type="text" id="ans" placeholder="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="acts"><button type="button" id="chk">Check</button><button type="button" id="shs">Show solution</button><button type="button" id="nx">Next</button><button type="button" id="fr">Fresh problem</button></div><div class="fb" id="fb"></div>';
-  $('chk').onclick=check;$('ans').onkeydown=e=>{if(e.key==='Enter')check()};
+  c.innerHTML='<span class="tag">'+cur.t+'</span><span class="tag">'+({word:'word problem',skill:'skill',sat:'SAT-style',challenge:'challenge'}[cur.k]||cur.k)+'</span><div class="q">'+cur.q+'</div>'+
+  (cur.o?'<div id="mc">'+cur.o.map((x,i)=>'<label style="display:block;margin:6px 0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)"><input type="radio" name="mc" value="'+LET[i]+'"> <b>'+LET[i]+'</b>) '+x+'</label>').join('')+'</div>':'<input type="text" id="ans" placeholder="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false">')+'<div class="acts"><button type="button" id="chk">Check</button><button type="button" id="shs">Show solution</button><button type="button" id="nx">Next</button><button type="button" id="fr">Fresh problem</button></div><div class="fb" id="fb"></div>';
+  $('chk').onclick=check;if($('ans'))$('ans').onkeydown=e=>{if(e.key==='Enter')check()};
   $('shs').onclick=()=>{$('fb').className='fb';$('fb').innerHTML='<b>Answer: '+showA(cur)+'</b><br>'+cur.s;if(!cur.sv){cur.sv=true;addNB(cur,'(solution viewed)')}};
   $('nx').onclick=()=>nextProblem(false);$('fr').onclick=()=>nextProblem(true);
 }
 function addNB(p,mine){
   const ex=NB.find(x=>x.q===p.q&&x.t===p.t);
-  if(ex){ex.m=false;ex.n++;ex.my=mine;ex.d=new Date().toISOString().slice(0,10)}
-  else NB.unshift({id:Date.now()+''+Math.floor(Math.random()*999),t:p.t,k:p.k,q:p.q,a:p.a,s:p.s,my:mine,n:1,m:false,note:'',d:new Date().toISOString().slice(0,10)});
+  if(ex){ex.n++;ex.my=mine;ex.d=new Date().toISOString().slice(0,10)}
+  else NB.unshift({id:Date.now()+''+Math.floor(Math.random()*999),t:p.t,k:p.k,q:p.q,a:p.a,s:p.s,o:p.o||null,my:mine,n:1,note:'',d:new Date().toISOString().slice(0,10)});
   save();renderNB();
 }
 function check(){
-  const v=$('ans').value;if(!v.trim()){$('fb').className='fb bad';$('fb').textContent='Type an answer first.';return}
+  const v=cur.o?((document.querySelector('input[name=mc]:checked')||{}).value||''):$('ans').value;if(!v.trim()){$('fb').className='fb bad';$('fb').textContent=cur.o?'Pick a choice first.':'Type an answer first.';return}
   tried++;const ok=isRight(cur,v);
-  if(ok){good++;$('fb').className='fb good';$('fb').innerHTML='✓ Correct! <br>'+cur.s;const ex=NB.find(x=>x.q===cur.q&&x.t===cur.t);if(ex&&!ex.m){ex.ok=(ex.ok||0)+1;if(ex.ok>=2)ex.m=true;save();renderNB()}}
+  if(ok){good++;$('fb').className='fb good';$('fb').innerHTML='✓ Correct! <br>'+cur.s;}
   else{$('fb').className='fb bad';$('fb').innerHTML='✗ Not quite. It was added to your mistake notebook. Try again, or tap “Show solution”.';addNB(cur,v.trim())}
   $('sc').textContent='This visit: '+good+' correct out of '+tried+' tried.';
 }
 /* ---------- notebook ---------- */
+const ESC=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function renderNB(){
-  const list=NB.filter(x=>showMast||!x.m);
-  $('nl').innerHTML=list.length?list.map(x=>'<div class="card2'+(x.m?' mast':'')+'" data-id="'+x.id+'"><span class="tag">'+x.t+'</span><span class="tag">missed '+x.n+'×</span><span class="tag">'+x.d+'</span>'+(x.m?'<span class="tag">mastered</span>':'')+
-  '<div class="q">'+x.q+'</div><div>Your answer: <b>'+(x.my||'–')+'</b> · Correct: <b>'+showA(x)+'</b></div><details class="sol"><summary>Show solution</summary><p>'+x.s+'</p></details>'+
-  '<textarea class="note" placeholder="Why did I miss it? What will I do next time?">'+(x.note||'').replace(/</g,'&lt;')+'</textarea><div class="acts"><button type="button" data-a="retry">Retry</button><button type="button" data-a="mast">'+(x.m?'Not mastered':'Mastered')+'</button><button type="button" data-a="del">Delete</button></div></div>').join(''):'<p>'+(NB.length?'All mastered. Nice work!':'No mistakes saved yet. Wrong answers will appear here.')+'</p>';
+  $('nl').innerHTML=NB.length?NB.map(x=>{
+    const own=!!x.own,q=own?ESC(x.q).replace(/\n/g,'<br>'):x.q;
+    const ans=own?ESC(x.s||'').replace(/\n/g,'<br>')||'(no answer written)':'<div>Your answer: <b>'+ESC(x.my||'–')+'</b></div><div>Correct: <b>'+ESC(showA(x))+'</b></div><div style="margin-top:4px">'+x.s+'</div>';
+    return '<div class="card2" data-id="'+x.id+'"><span class="tag">'+(own?'my note':x.t)+'</span><span class="tag">'+x.d+'</span>'+(!own&&x.n>1?'<span class="tag">missed '+x.n+'×</span>':'')+
+    '<div class="q">'+q+'</div><details class="sol"><summary>Show answer</summary><div style="margin-top:6px">'+ans+'</div></details>'+
+    '<textarea class="note" placeholder="My note: what should I remember?">'+ESC(x.note||'')+'</textarea><div class="acts">'+(own?'':'<button type="button" data-a="retry">Try again</button>')+'<button type="button" data-a="del">Delete</button></div></div>'}).join(''):'<p>Nothing here yet. Wrong answers will appear by themselves, or add your own note above.</p>';
 }
 $('nl').addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const id=b.closest('.card2').dataset.id,x=NB.find(y=>y.id===id);if(!x)return;
-  if(b.dataset.a==='del'){NB=NB.filter(y=>y!==x)}else if(b.dataset.a==='mast'){x.m=!x.m}else{cur={t:x.t,k:x.k,q:x.q,a:x.a,s:x.s};go('p');render();window.scrollTo(0,0);return}
+  if(b.dataset.a==='del'){if(!confirm('Delete this entry?'))return;NB=NB.filter(y=>y!==x)}else{cur={t:x.t,k:x.k,q:x.q,a:x.a,s:x.s,o:x.o||null};go('p');render();window.scrollTo(0,0);return}
   save();renderNB()});
 $('nl').addEventListener('input',e=>{if(e.target.classList.contains('note')){const x=NB.find(y=>y.id===e.target.closest('.card2').dataset.id);if(x){x.note=e.target.value;save()}}});
-$('sh').onclick=()=>{showMast=!showMast;$('sh').textContent=showMast?'Hide mastered':'Show mastered';renderNB()};
-$('pr').onclick=()=>{showMast=false;renderNB();window.print()};
-$('ex').onclick=()=>{const t=NB.filter(x=>!x.m).map((x,i)=>(i+1)+'. ['+x.t+'] '+x.q.replace(/<[^>]+>/g,'')+'\\n   My answer: '+(x.my||'-')+'  Correct: '+showA(x)+(x.note?'\\n   Note: '+x.note:'')).join('\\n\\n');
-  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{$('ex').textContent='Copied!'},()=>{prompt('Copy:',t)});setTimeout(()=>$('ex').textContent='Copy as text',1500)};
+$('nsave').onclick=()=>{const q=$('nq').value.trim();if(!q){$('nq').focus();return}
+  NB.unshift({id:Date.now()+'',own:true,t:'My note',k:'own',q:q,s:$('na').value.trim(),note:'',d:new Date().toISOString().slice(0,10)});$('nq').value='';$('na').value='';$('addbox').open=false;save();renderNB()};
 function go(w){$('pv').hidden=w!=='p';$('nv').hidden=w!=='n';$('tp').classList.toggle('on',w==='p');$('tn').classList.toggle('on',w==='n');if(w==='n')renderNB();history.replaceState(null,'',w==='n'?'#notebook':location.pathname)}
 $('tp').onclick=()=>go('p');$('tn').onclick=()=>go('n');$('ft').onchange=$('fk').onchange=()=>nextProblem(false);
 save();nextProblem(false);if(location.hash==='#notebook')go('n');
