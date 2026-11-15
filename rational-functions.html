@@ -38,6 +38,7 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+ul.lines,ol.steps{padding-left:22px}.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -79,7 +80,16 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
   <p>The x-intercepts are the zeros of the numerator after cancelling. The y-intercept is <i>f</i>(0) = <i>N</i>(0) / <i>D</i>(0), which does not exist if the denominator is 0 at <i>x</i> = 0.</p>
 
   <h2>Worked example</h2>
-  <p>Take <i>f</i>(<i>x</i>) = (<i>x</i>² − 1) / (<i>x</i>² − <i>x</i> − 2). Factor both parts: (<i>x</i> − 1)(<i>x</i> + 1) / ((<i>x</i> − 2)(<i>x</i> + 1)). The factor <i>x</i> + 1 cancels, so there is a hole at <i>x</i> = −1. The simplified function is (<i>x</i> − 1) / (<i>x</i> − 2), whose value at −1 is 2/3, so the hole is the point (−1, 2/3). The remaining denominator gives a vertical asymptote at <i>x</i> = 2. The degrees are equal and both leading coefficients are 1, so the horizontal asymptote is <i>y</i> = 1. The x-intercept is 1 and the y-intercept is 1/2. The calculator above shows all of this on the graph.</p>
+  <div class="key2"><i>f</i>(<i>x</i>) = (<i>x</i>² − 1) / (<i>x</i>² − <i>x</i> − 2)</div>
+  <ol class="steps">
+    <li><b>Factor</b> both parts: (<i>x</i> − 1)(<i>x</i> + 1) / ((<i>x</i> − 2)(<i>x</i> + 1))</li>
+    <li><b>Cancel</b> the common factor <i>x</i> + 1. That makes a <span class="hl2">hole</span> at <i>x</i> = −1.</li>
+    <li>The simplified function is (<i>x</i> − 1)/(<i>x</i> − 2). At <i>x</i> = −1 it equals 2/3, so the hole is the point <b>(−1, 2/3)</b>.</li>
+    <li>The denominator that is left gives a <span class="hl">vertical asymptote</span> at <b><i>x</i> = 2</b>.</li>
+    <li>Equal degrees, both leading coefficients 1: <span class="hl">horizontal asymptote</span> <b><i>y</i> = 1</b>.</li>
+    <li>Intercepts: x-intercept <b>1</b>, y-intercept <b>1/2</b>.</li>
+  </ol>
+  <p>The calculator above shows all of this on the graph.</p>
 
   <h2>Good to know</h2>
   <ul>

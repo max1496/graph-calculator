@@ -38,6 +38,7 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+ul.lines,ol.steps{padding-left:22px}.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -72,8 +73,15 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
   </ol>
 
   <h2>Worked example</h2>
-  <p>Find the rational roots of 2<i>x</i>³ − 3<i>x</i>² − 8<i>x</i> + 12. The constant term is 12, with factors 1, 2, 3, 4, 6, 12. The leading coefficient is 2, with factors 1, 2. The possible rational roots are ±1, ±2, ±3, ±4, ±6, ±12, ±1/2 and ±3/2.</p>
-  <p>Testing shows <i>f</i>(2) = 0, <i>f</i>(−2) = 0 and <i>f</i>(3/2) = 0. So the polynomial factors as (2<i>x</i> − 3)(<i>x</i> − 2)(<i>x</i> + 2). The calculator above does exactly this and also shows the factored form.</p>
+  <div class="key2">Find the rational roots of 2<i>x</i>³ − 3<i>x</i>² − 8<i>x</i> + 12.</div>
+  <ol class="steps">
+    <li><b>Constant term 12</b> has factors <span class="hl">1, 2, 3, 4, 6, 12</span>.</li>
+    <li><b>Leading coefficient 2</b> has factors <span class="hl2">1, 2</span>.</li>
+    <li>Possible roots (<span class="hl">top</span> ÷ <span class="hl2">bottom</span>, with ±):<br>±1, ±2, ±3, ±4, ±6, ±12, ±1/2, ±3/2</li>
+    <li><b>Test them.</b> <i>f</i>(2) = 0, <i>f</i>(−2) = 0 and <i>f</i>(3/2) = 0. ✓</li>
+    <li>Factored form: <b>(2<i>x</i> − 3)(<i>x</i> − 2)(<i>x</i> + 2)</b></li>
+  </ol>
+  <p>The calculator above does all of this and shows the factored form.</p>
 
   <h2>Good to know</h2>
   <ul>

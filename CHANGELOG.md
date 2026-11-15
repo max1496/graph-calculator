@@ -9,6 +9,11 @@ Newest first. Dates are in Korean time.
 - Explanations are collapsed at first. Tap a title to show or hide.
 
 ### Latest
+- Worked examples rewritten as numbered steps with color (Descartes, Rational Root, Rational functions, Polynomial from roots).
+- Limits: the table of values shows 4 rows on each side.
+- Lesson cards on Algebra 1 and 2 are tagged interactive, read or practice, with a one-line explanation.
+
+### Earlier today
 - Practice: 14 SAT-style problems (multiple choice and type-in) and 12 challenge problems. Filter by Kind.
 - Notebook simplified: add your own notes (problem + answer) and review them. Wrong answers still land there by themselves. Copy, Print and Mastered removed.
 - Intervals section with a number-line picture on What is a function?.

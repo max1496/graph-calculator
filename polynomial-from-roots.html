@@ -38,6 +38,7 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+ul.lines,ol.steps{padding-left:22px}.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -68,7 +69,12 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
   </ol>
 
   <h2>Example</h2>
-  <p>Roots −2 and 3 give (<i>x</i> + 2)(<i>x</i> − 3) = <i>x</i>² − <i>x</i> − 6. With <i>a</i> = 1 the y-intercept is −6. To make the graph pass through (0, 12) instead, use <i>a</i> = −2, because <i>y</i>(0) = <i>a</i>(0 + 2)(0 − 3) = −6<i>a</i>. Try it in the calculator above.</p>
+  <ul class="lines">
+    <li>Roots <b>−2</b> and <b>3</b> give (<i>x</i> + 2)(<i>x</i> − 3) = <b><i>x</i>² − <i>x</i> − 6</b>.</li>
+    <li>With <i>a</i> = 1 the y-intercept is <span class="hl2">−6</span>.</li>
+    <li>To pass through <b>(0, 12)</b> instead, use <b><i>a</i> = −2</b>, because <i>y</i>(0) = <i>a</i>(2)(−3) = −6<i>a</i>.</li>
+    <li>Try it in the calculator above.</li>
+  </ul>
 
   <h2>Roots and the shape of the graph</h2>
   <ul>

@@ -228,7 +228,7 @@ function run(){
       if(side==='both')txt+='<div class="big">Two-sided limit: <b>'+(eq?show(L):'does not exist')+'</b></div>'+(eq?'':'<div>The left and right values are different, or one is infinite, so the limit does not exist.</div>');
       else txt='<div class="big">lim<sub>x→a'+(side==='right'?'⁺':'⁻')+'</sub> f(x) = <b>'+show(side==='right'?R:L)+'</b></div>'+txt;
       txt+='<div>f(a) = <b>'+(isFinite(fa)?fmt(fa):'undefined')+'</b>'+(eq&&L.k==='num'?(!isFinite(fa)?' (undefined, so there is a <b>hole</b> at x = a)':Math.abs(fa-L.v)<1e-6?' (equals the limit, so <b>continuous</b> here)':' (different from the limit: the point is moved)'):'')+'</div>';
-      tbl='<table class="num"><tr><th>x (left)</th><th>f(x)</th><th>x (right)</th><th>f(x)</th></tr>'+[0,1,2,3,4,5].map(i=>'<tr><td>'+fmt(sl[i][0])+'</td><td>'+fmt(sl[i][1])+'</td><td>'+fmt(sr[i][0])+'</td><td>'+fmt(sr[i][1])+'</td></tr>').join('')+'</table>'}
+      tbl='<table class="num"><tr><th>x (left)</th><th>f(x)</th><th>x (right)</th><th>f(x)</th></tr>'+[0,1,2,3].map(i=>'<tr><td>'+fmt(sl[i][0])+'</td><td>'+fmt(sl[i][1])+'</td><td>'+fmt(sr[i][0])+'</td><td>'+fmt(sr[i][1])+'</td></tr>').join('')+'</table>'}
     $('out').innerHTML=txt;$('tbl').innerHTML=tbl;S={f,a,L,R};draw();
   }catch(e){$('err').textContent='Check your function and the value x approaches.';S=null;draw()}
 }

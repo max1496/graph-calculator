@@ -38,6 +38,7 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:8px 10px;border:
 sup{font-size:.65em;line-height:0}
 table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td:first-child{color:var(--sub);white-space:nowrap;padding-right:14px}
 .sum{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;font-size:16px;line-height:1.6;margin:0}
+ul.lines,ol.steps{padding-left:22px}.key2{background:var(--panel);border-left:4px solid #2f6fed;padding:10px 14px;border-radius:6px;margin:12px 0;line-height:1.65}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/toc.js"></script>
@@ -67,8 +68,21 @@ table{border-collapse:collapse;width:100%;font-size:15px}td{padding:6px;border-b
   </ul>
 
   <h2>Worked example</h2>
-  <p>Let <i>f</i>(<i>x</i>) = <i>x</i>³ − 3<i>x</i>² − 4<i>x</i> + 12. The signs of the coefficients are + − − +, which has 2 sign changes (from + to −, and from − to +). So there are 2 or 0 positive roots.</p>
-  <p>Now <i>f</i>(−<i>x</i>) = −<i>x</i>³ − 3<i>x</i>² + 4<i>x</i> + 12. The signs are − − + +, which has 1 sign change, so there is exactly 1 negative root. The actual roots are 3, 2 and −2, which matches the case of 2 positive roots and 1 negative root.</p>
+  <div class="key2"><i>f</i>(<i>x</i>) = <i>x</i>³ − 3<i>x</i>² − 4<i>x</i> + 12</div>
+  <h3>Step 1: positive roots</h3>
+  <ul class="lines">
+    <li>Signs of the coefficients: <b>+ − − +</b></li>
+    <li>Sign changes: + → − <span class="ok">(1)</span> and − → + <span class="ok">(2)</span>. That is <b>2 changes</b>.</li>
+    <li>So there are <span class="hl">2 or 0</span> positive roots.</li>
+  </ul>
+  <h3>Step 2: negative roots</h3>
+  <ul class="lines">
+    <li>Replace <i>x</i> with −<i>x</i>: <i>f</i>(−<i>x</i>) = −<i>x</i>³ − 3<i>x</i>² + 4<i>x</i> + 12</li>
+    <li>Signs: <b>− − + +</b>. Only <b>1 change</b>.</li>
+    <li>So there is <span class="hl">exactly 1</span> negative root.</li>
+  </ul>
+  <h3>Check</h3>
+  <p>The real roots are <b>3, 2 and −2</b>: two positive, one negative. ✓ It matches the "2 positive, 1 negative" case.</p>
 
   <h2>How to use the result</h2>
   <ul>
